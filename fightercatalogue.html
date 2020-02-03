@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Fighter Catalogue</title>
+		<link rel="stylesheet" href="css/fightencyclopediacss.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/scripts.js"></script> 
+        <script>
+            function showFilterMenu() {
+                var x = document.getElementById("filterMenu");
+                var y = document.getElementById("filterWeightMenu");
+                var z = document.getElementById("filterGenderMenu");
+
+                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+                    x.style.display = 'block';
+                } else {
+                    x.style.display = 'none';
+                }
+                y.style.display = "none";
+                z.style.display = "none";
+            }
+            function closeFilterMenu() {
+                var x = document.getElementById("filterMenu");
+                x.style.display = "none";
+            }
+            function filterAlphabeticalRankingRandom(id) {
+                var x = document.getElementById("currentFilter");
+                var y = document.getElementById(id);
+                x.innerHTML = y.innerHTML + "&#8595;";
+                /*sort database table alphabetically*/
+                closeFilterMenu();
+            }
+            window.onscroll = function ()
+            {
+                TriggerJumpToTopButton()
+            };
+
+            function TriggerJumpToTopButton() {
+                var x = document.getElementById("jumpToTopButton");
+                if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
+            }
+            function jumpToTop() {
+                window.pageYOffset = 0; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+            }
+            function showWeightFilterMenu() {
+                var x = document.getElementById("filterWeightMenu");
+                var y = document.getElementById("filterMenu");
+                var z = document.getElementById("filterGenderMenu");
+                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+                    x.style.display = 'block';
+                } else {
+                    x.style.display = 'none';
+                }
+                y.style.display = "none";
+                z.style.display = "none";
+            }
+            function closeWeightFilterMenu() {
+                var x = document.getElementById("filterWeightMenu");
+                x.style.display = "none";
+            }
+            function filterWeightClass(id) {
+                var x = document.getElementById("currentWeightFilter");
+                var y = document.getElementById(id);
+                x.innerHTML = y.innerHTML + "&#8595;";
+                /*sort database table alphabetically*/
+                closeWeightFilterMenu();
+            }
+            function showGenderFilterMenu() {
+                var x = document.getElementById("filterGenderMenu");
+                var y = document.getElementById("filterMenu");
+                var z = document.getElementById("filterWeightMenu");
+                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+                    x.style.display = 'block';
+                } else {
+                    x.style.display = 'none';
+                }
+                y.style.display = "none";
+                z.style.display = "none";
+            }
+            function closeGenderFilterMenu() {
+                var x = document.getElementById("filterGenderMenu");
+                x.style.display = "none";
+            }
+            function filterGender(id) {
+                var x = document.getElementById("currentGenderFilter");
+                var y = document.getElementById(id);
+                x.innerHTML = y.innerHTML + "&#8595;";
+                /*sort database table alphabetically*/
+                closeGenderFilterMenu();
+            }
+        </script>
+<body onload="start()">
+    <header>
+            <div class="header">
+                <div class="persistenttitlegrid">
+                    <div class="cell1">
+                        <a href="index.html"><img src="img/logo.png" class="logo" alt="123" /></a>
+                    </div>
+                    <div class="cell2">
+                        <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
+                        <div class="widescreenmenulinks" id="menuOptions">
+                            <ul>
+                                <li><a href="index.html" id="homeLink">Home</a></li>
+                                <li><a href="" id="fightCatalogueLink">Fight Catalogue</a></li>
+                                <li><a href="fightercatalogue.html" id="fighterCatalogueLink">Fighter Catalogue</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cell3">
+                        <input type="text" id="searchField" placeholder="Search..." />
+                        <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                    </div>
+                    <div class="cell4">
+                        <span>Browse the past, present and future of boxing</span>
+                    </div>
+                </div>
+                <div class="mobileheader">
+                    <div class="mobileheaderone"><a class="menubutton" onclick="openMenu()" id="openMenuButton">&#9776;</a></div>
+                    <div class="mobileheadertwo"><p class="mobiletitle">The Fight Encyclopedia</p></div>
+                    <div class="mobileheaderthree"><p class="mobileslogan">Browse the past, present and future of boxing</p></div>
+                </div>
+                <div class="popupmenu" id="popupMenu">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+                    <img src="img/logo.png" class="logo" alt="123" />
+                    <div class="popupmenulinks">
+                        <a href="index.html">Home</a>
+                        <a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a>
+                        <a href="fightercatalogue.html">Fighter Catalogue</a>
+                        <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                        <input type="text" id="searchField" placeholder="Search..." />
+                    </div>
+                </div>
+            </div>	
+    </header>
+    <div class="pagedescription">
+        <p>Browse the current catalogue of boxers!</p>
+    </div>
+    <div class="cataloguefilters">
+        <div class="currentfilterselection">
+            <p>Sort by: <a href="javascript:void(0)" class="filterlink" onclick="showFilterMenu()" id="currentFilter">Alphabetical&#8595;</a></p>
+        </div>
+        <div class="filtermenu" id="filterMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="alphabeticalFilter">Alphabetical</a>
+                </li>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="rankingFilter">Ranking</a>
+                </li>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="randomFilter">Random</a>
+                </li>
+            </ul>
+        </div>
+        <div class="currentweightselection">
+            <p>Weight Class: <a href="javascript:void(0)" class="filterlink" onclick="showWeightFilterMenu()" id="currentWeightFilter">All weights&#8595;</a></p>
+        </div>
+        <div class="filterweightmenu" id="filterWeightMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeWeightFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="allWeights">All weights</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="heavyweight">Heavyweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="cruiserweight">Cruiserweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="lightheavyweight">Light heavyweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="supermiddleweight">Super middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="middleweight">Middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="lightmiddleweight">Light Middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="welterweight">Welterweight</a>
+                </li>
+            </ul>
+        </div>
+        <div class="currentgenederselection">
+            <p>Gender: <a href="javascript:void(0)" class="filterlink" onclick="showGenderFilterMenu()" id="currentGenderFilter">Men&#8595;</a></p>
+        </div>
+        <div class="filtergendermenu" id="filterGenderMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeGenderFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterGender(this.id)" id="men">Men</a>
+                </li>
+                <li>
+                    <a onclick="filterGender(this.id)" id="women">Women</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="cataloguegrid">
+        <div class="catalogueentry">
+            <a href="fightercard.html">
+                <img src="img/deontaywilder.jpg" class="catalogueimage" />
+                <p>Deontay Wilder</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/resizefuryxcf.jpg" class="catalogueimage" />
+                <p>Tyson Fury</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="jumptopbuttonspace">
+            <button onclick="jumpToTop()" id="jumpToTopButton" class="jumptopbutton">&#8657;<p>Top</p></button>
+        </div>
+    </div>
+</body>
+</html>
