@@ -208,6 +208,9 @@ body {
     .last5table td {
         border: 1px ridge #12343b;
     }
+    .last5table a{
+        color: var(--links-font-color);
+    }
 .six {
     grid-column: 1 / 4;
     grid-row: 11 / 13;
@@ -743,7 +746,14 @@ tr {
     padding-top: 1px;
     border-bottom: 2px ridge gray;
 }
-
+.footer {
+    grid-column: 1/9;
+    grid-row: 25;
+    background-color: var(--content-background-color);
+}
+.footer p{
+    font-size:16px;
+}
 @media only screen and (min-width: 568px) {
     .popupmenu img{
         height:100px;
@@ -1373,7 +1383,9 @@ tr {
         grid-column: 3 / 4;
         grid-row: 8;
     }
-
+    .footer{
+        grid-column:1/12;
+    }
     .nextbuttonspace {
         grid-column: 8/9;
         grid-row: 8;
@@ -1482,6 +1494,7 @@ tr {
         height:150px;
         width:150px;
     }
+
 }
 
 @media only screen and (min-width: 1250px) {
@@ -1843,11 +1856,5 @@ tr {
 }
 
 @media only screen and (min-width: 1900px) {
-    .testtext {
-        grid-column: 4/9;
-        grid-row: 20;
-    }
-    .testtext p{
-        font-size:32px;
-    }
+
 }
