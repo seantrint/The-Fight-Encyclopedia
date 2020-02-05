@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Home</title>
+		<link rel="stylesheet" href="../css/fightencyclopediacss.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <script src="../js/scripts.js"></script> 
+    <script>
+		function displayResult() {
+		var x = document.getElementById("resultcard");
+		var button = document.getElementById("resultButton");
+		x.style.display = "block";
+		button.style.display = "none";
+		}
+		function showStatsA() {
+			var buttonMin = document.getElementById("fighterbuttonAMin");
+			var buttonFull = document.getElementById("fighterbuttonAFull");
+			var backFace = document.getElementById("backface1");
+			buttonMin.style.display = "block";
+			buttonFull.style.display = "none";
+			backFace.style.display = "block";
+		}
+		function hideStatsA() {
+			var buttonMin = document.getElementById("fighterbuttonAMin");
+			var buttonFull = document.getElementById("fighterbuttonAFull");
+			var backFace = document.getElementById("backface1");
+			buttonMin.style.display = "none";
+			buttonFull.style.display = "block";
+			backFace.style.display = "none";
+		}
+		function showStatsB() {
+			var buttonMin = document.getElementById("fighterbuttonBMin");
+			var buttonFull = document.getElementById("fighterbuttonBFull");
+			var backFace = document.getElementById("backface2");
+			buttonMin.style.display = "block";
+			buttonFull.style.display = "none";
+			backFace.style.display = "block";
+			buttonMin.style.justifySelf = "right";
+		}
+		function hideStatsB() {
+			var buttonMin = document.getElementById("fighterbuttonBMin");
+			var buttonFull = document.getElementById("fighterbuttonBFull");
+			var backFace = document.getElementById("backface2");
+			buttonMin.style.display = "none";
+			buttonFull.style.display = "block";
+			backFace.style.display = "none";
+		}
+    </script>		
+	</head>
+<body onload="start()">
+    <div id="backgroundwrapper">
+        <header id="pageLayout">
+            <link href="https://fonts.googleapis.com/css?family=Inria+Serif&display=swap" rel="stylesheet">
+            <!-- <div class="header">
+                <div class="persistenttitlegrid">
+                    <div class="cell1">
+                        <a href="index.html"><img src="img/logo.png" class="logo" alt="123" /></a>
+                    </div>
+                    <div class="cell2">
+                        <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
+                        <div class="widescreenmenulinks" id="menuOptions">
+                            <ul>
+                                <li><a href="index.html" id="homeLink">Home</a></li>
+                                <li><a href="" id="fightCatalogueLink">Fight Catalogue</a></li>
+                                <li><a href="fightercatalogue.html" id="fighterCatalogueLink">Fighter Catalogue</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cell3">
+                        <input type="text" id="searchField" placeholder="Search..." />
+                        <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                    </div>
+                    <div class="cell4">
+                        <span>Browse the past, present and future of boxing</span>
+                    </div>
+
+                </div>
+                <div class="mobileheader">
+                    <div class="mobileheaderone"><a class="menubutton" onclick="openMenu()" id="openMenuButton">&#9776;</a></div>
+                    <div class="mobileheadertwo"><p class="mobiletitle">The Fight Encyclopedia</p></div>
+                    <div class="mobileheaderthree"><p class="mobileslogan">Browse the past, present and future of boxing</p></div>
+
+                </div>
+                <div class="popupmenu" id="popupMenu">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
+                    <img src="img/logo.png" class="logo" alt="123" />
+                    <div class="popupmenulinks">
+                        <a href="index.html">Home</a>
+                        <a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a>
+                        <a href="fightercatalogue.html">Fighter Catalogue</a>
+                        <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                        <input type="text" id="searchField" placeholder="Search..." />
+
+                    </div>
+
+
+                </div>
+            </div> -->
+        </header>
+
+
+<!--         <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script> -->
+        </div>
+        <div id="content">
+            <div class="featuredfightersspace">
+                <div class="featuredfightersspaceone">
+                    <p>Random collection/category of 5 fighters here</p>
+                </div>
+                <div class="featuredfightersspacetwo">
+                    <div class="featuredfighterimages">
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/anthonyjoshua.jpg" class="featuredfighterimg" alt="fighterB" />
+                    </div>
+                </div>
+                <div class="featuredfightersspacethree">
+                    <div class="cataloguelink"><a href="fightercatalogue.html">See full Catalogue &#8658;</a></div>
+                </div>
+            </div>
+            <div class="featuredfightsspace">
+                <div class="featuredfightsspaceone">
+                    <p>Random collection/category of 5 fights here</p>
+                </div>
+                <div class="featuredfightsspacetwo">
+                    <div class="featuredfighterimages">
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                    </div>
+                </div>
+                <div class="featuredfightsspacethree">
+                    <div class="cataloguelink"><a asp-area="" asp-page="/FightCatalogue">See full Catalogue &#8658;</a></div>
+                </div>
+            </div>
+            <div class="previousbuttonspace">
+                <button class="nextpreviousbutton" id="previousButton" onclick="changeFight()">&#8656;</button>
+            </div>
+            <div class="nextbuttonspace">
+                <button class="nextpreviousbutton" id="nextButton" onclick="changeFight()">&#8658;</button>
+            </div>
+            <div class="one">
+                <div class="polaroid">
+                    <h1>Upcoming fights</h1>
+                    <h2 id="upComingFightName">Deontay Wilder vs Tyson Fury</h2>
+                    <p id="upComingFightDivision">Heavyweight</p>
+                    <p id="upComingFightLocation">Location</p>
+                    <p id="upComingFightDate">February 22nd, 2020</p>
+                </div>
+            </div>
+            <div class="three">
+                <div class="frontfaceA">
+                    <button id="fighterbuttonAFull" class="fighterbuttonimageFull" onclick="showStatsA()"><img src="img/deontaywilder.jpg" class="frontfaceimg" alt="fighterA" /></button>
+                    <button id="fighterbuttonAMin" class="fighterbuttonimageMin" onclick="hideStatsA()"><img src="img/deontaywilder.jpg" class="frontfaceimg" alt="fighterB" /></button>
+                    <div class="fightername"><p>Deontay Wilder</p><table class="fighterrecord"><tr><td id="fighterInfoWins">42</td><td id="fighterInfoLosses">0</td><td id="fighterInfoDraws">1</td></tr></table></div>
+
+                </div>
+                <div class="backfaceA" id="backface1">
+                    <table class="statstable">
+                        <tr><td class="statslabelcell">Age </td><td><span id="fighterAAge"> 34</span></td></tr>
+                        <tr><td class="statslabelcell">Height </td><td><span id="fighterAHeight"> 6'7"</span></td></tr>
+                        <tr><td class="statslabelcell">Reach </td><td><span id="fighterAReach"> 83"</span></td></tr>
+                        <tr><td class="statslabelcell">Average Weight </td><td><span id="fighterAWeightRange"> 218lbs</span></td></tr>
+                        <tr><td class="statslabelcell">Odds </td><td><span id="fighterAOdds"> 11/10</span> (Aggregate)</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="four">
+                <div class="frontfaceB">
+                    <button id="fighterbuttonBFull" class="fighterbuttonimageFull" onclick="showStatsB()"><img src="img/resizefuryxcf.jpg" class="frontfaceimg" /></button>
+                    <button id="fighterbuttonBMin" class="fighterbuttonimageMin" onclick="hideStatsB()"><img src="img/resizefuryxcf.jpg" class="frontfaceimg" /></button>
+                    <div class="fightername"><p>Tyson Fury</p><table class="fighterrecord"><tr><td id="fighterInfoWins">29</td><td id="fighterInfoLosses">0</td><td id="fighterInfoDraws">1</td></tr></table></div>
+                </div>
+                <div class="backfaceB" id="backface2">
+                    <table class="statstable">
+                        <tr><td class="statslabelcell">Age </td><td><span id="fighterBAge"> 31</span></td></tr>
+                        <tr><td class="statslabelcell">Height </td><td><span id="fighterBHeight"> 6'9"</span></td></tr>
+                        <tr><td class="statslabelcell">Reach </td><td><span id="fighterBReach"> 85"</span></td></tr>
+                        <tr><td class="statslabelcell">Average Weight </td><td><span id="fighterBWeightRange"> 255lbs</span></td></tr>
+                        <tr><td class="statslabelcell">Odds </td><td><span id="fighterBOdds"> 8/11</span> (Aggregate)</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="five">
+                <table class="last5table">
+                    <tr><th colspan="4">Last 5 fights</th></tr>
+                    <tr><td><i>Date</i></td><td><i>Opponent</i></td><td><i>Result</i></td></tr>
+                    <tr><td>2019/9/14</td><td>Otto Wallin</td><td style="background-color:green">Win (UD)</td></tr>
+                    <tr><td>2019/06/15</td><td>Tom Schwarz</td><td style="background-color:green">Win (TKO)</td></tr>
+                    <tr><td>2018/12/01</td><td>Deontay Wilder</td><td style="background-color:cornflowerblue">Draw</td></tr>
+                    <tr><td>2018/08/18</td><td>Francesco Pianeta</td><td style="background-color:green">Win (PTS)</td></tr>
+                    <tr><td>2018/06/09</td><td>Sefer Seferi</td><td style="background-color:green">RTD</td></tr>
+                    <tr><th colspan="4"><a href="fightercard.html">See full record, stats & more...</a></th></tr>
+                </table>
+            </div>
+            <div class="six">
+                <table class="last5table">
+                    <tr><th colspan="4">Last 5 fights</th></tr>
+                    <tr><td><i>Date</i></td><td><i>Opponent</i></td><td><i>Result</i></td></tr>
+                    <tr><td>2019/11/23</td><td><a>Luis Ortiz</a></td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><td>2019/05/18</td><td>Dominic Breazeale</td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><td>2018/12/01</td><td>Tyson Fury</td><td style="background-color:cornflowerblue">Draw</td></tr>
+                    <tr><td>2018/03/03</td><td>Luis Ortiz</td><td style="background-color:green">Win (TKO)</td></tr>
+                    <tr><td>2017/11/04</td><td>Bermane Stiverne</td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><th colspan="4"><a href="fightercard.html">See full record, stats & more...</a></th></tr>
+                </table>
+            </div>
+            <div class="seven">
+                <button class="resultbutton" id="resultButton" onclick="displayResult()">Find tickets</button>
+                <div class="resultcard" id="resultcard">
+                    <p>Result</p>
+                </div>
+            </div>
+            <div class="footer" id="footer">
+                <!-- <p>The Fight Encycolpedia &trade; - 2020</p> -->
+            </div> 
+        </div>		
+</body>	
+</html>
+	

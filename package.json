@@ -1,0 +1,22 @@
+{
+  "name": "the-fight-encyclopedia",
+  "version": "1.0.0",
+  "description": "Boxing record collection and display",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seantrint/The-Fight-Encyclopedia.git"
+  },
+  "author": "sean trant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seantrint/The-Fight-Encyclopedia/issues"
+  },
+  "homepage": "https://github.com/seantrint/The-Fight-Encyclopedia#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
