@@ -337,11 +337,10 @@ tr {
     display: none;
 }
     .popupmenu a {
-        padding: 2% 14% 14% 0%;
+        /*padding: 2% 14% 14% 0%;*/
         text-decoration: none;
         font-size: 18px;
         display: block;
-        float: left;
         color: var(--links-font-color);
         text-decoration: underline;
     }
@@ -350,19 +349,14 @@ tr {
             text-decoration: underline;
         }
     .popupmenu input {
-        position: absolute;
-        margin-top: 81%;
-        margin-left: -57%;
         border: 1px ridge gray;
         border-radius: 4px;
         box-sizing: border-box;
         width: 75%;
+        margin-top:5px;
     }
     .popupmenu button {
-        position: absolute;
-        margin-top: 81%;
-        margin-left: -71%;
-        background: none;
+       background: none;
         border: none;
         color: var(--links-font-color);
         font-size: 16px;
@@ -383,6 +377,17 @@ tr {
 .popupmenulinks{
     margin-top:10%;
 }
+    .popupmenulinks ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+    }
+    .popupmenulinks li a{
+        text-align:left;
+        padding:5%;
+        width: 100%;
+    }
 .mobiletitle {
     font-size: 22px;
 }
@@ -768,16 +773,10 @@ tr {
         border-bottom:2px ridge gray;
     }
         .popupmenu a {
-            float: left;
-            padding: 5%;
             font-size: 14px;
-            margin-top:-2%;
         }
     .popupmenulinks {
         margin-top: initial;
-    }
-    .popupmenu .closebtn {
-        margin-top:-5%;
     }
     .popupmenu input {
         margin-left:5%;
@@ -828,14 +827,7 @@ tr {
         width: 70%;
     }
     .popupmenu input {
-        margin-top: 12%;
-        margin-left: -65%;
         width: 45%;
-    }
-
-    .popupmenu button {
-        margin-top: 12%;
-        margin-left: -70%;
     }
     .featuredfightsspace img, .featuredfightersspace img {
         width: 20%;
@@ -848,21 +840,7 @@ tr {
         font-size: 16px;
     }
 }
-@media only screen and (min-width: 414px) and (min-height:736px) {
-    .popupmenu a {
-        padding: 12%;
-        margin-top: -2%;
-    }
-    .popupmenu input {
-        margin-top: 99%;
-        margin-left: -60%;
-    }
 
-    .popupmenu button {
-        margin-top: 99%;
-        margin-left: -70%;
-    }
-}
 @media only screen and (min-width: 640px) {
 }
 @media only screen and (min-width: 667px) {
@@ -878,9 +856,7 @@ tr {
         height: 60%;
         width: 70%;
     }
-    .popupmenu button {
-        margin-left: -69%;
-    }
+
 }
 
 @media only screen and (min-width: 731px) {
@@ -956,10 +932,6 @@ tr {
     .filtergendermenu {
         margin-left: 78%;
         margin-top: 40px;
-    }
-    .popupmenu button {
-        margin-top: 12%;
-        margin-left: -69%;
     }
     .featuredfightsspace img, .featuredfightersspace img {
         width: 15%;

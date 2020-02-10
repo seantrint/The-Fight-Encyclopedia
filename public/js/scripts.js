@@ -1,8 +1,12 @@
+async function getFromDb(){
+    console.log('one \\ backslash? ')
+    fetch('/api');
+}
 async function fetchLayoutPage(){
     //use fetch() to get layout.html as text
     //use DOMParser to parse text to html
     //append html to page, should be able to drop it into an empty <header>  
-    const response = await fetch('../layout.html');
+    const response = await fetch('layout.html');
     const text = await response.text();
     var parser = new DOMParser();
     var header = document.getElementById('pageLayout');
@@ -10,6 +14,7 @@ async function fetchLayoutPage(){
 
     header.innerHTML = sharedLayout.documentElement.innerHTML;
     await loadPageName();
+    await getFromDb();
 }
 async function loadPageName() {
     var docTitle = document.title;
@@ -28,6 +33,7 @@ async function loadPageName() {
         fighterCatalogueLink.style.display = 'none';
     }
 }
+
 function showMenuLinks() {
     var x = document.getElementById("menuOptions");
 

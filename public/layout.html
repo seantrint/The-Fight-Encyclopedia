@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Home</title>
-		<link rel="stylesheet" href="../css/fightencyclopediacss.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	</head>
     <div id="backgroundwrapper">
         <header>
             <link href="https://fonts.googleapis.com/css?family=Inria+Serif&display=swap" rel="stylesheet">
@@ -32,7 +25,6 @@
                     <div class="cell4">
                         <span>Browse the past, present and future of boxing</span>
                     </div>
-
                 </div>
                 <div class="mobileheader">
                     <div class="mobileheaderone"><a class="menubutton" onclick="openMenu()" id="openMenuButton">&#9776;</a></div>
@@ -44,21 +36,20 @@
                     <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
                     <img src="img/logo.png" class="logo" alt="123" />
                     <div class="popupmenulinks">
-                        <a href="index.html">Home</a>
-                        <a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a>
-                        <a href="fightercatalogue.html">Fighter Catalogue</a>
-                        <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
-                        <input type="text" id="searchField" placeholder="Search..." />
-
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a></li>
+                            <li><a href="fightercatalogue.html">Fighter Catalogue</a></li>
+                            <li>
+                                <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                                <input type="text" id="searchField" placeholder="Search..." />
+                            </li>
+                        </ul>
                     </div>
-
-
                 </div>
             </div>
         </header>
 	</div>
-
-
         <footer>
                 <div class="footer">
                     2019 - The Fight Encyclopedia - <a>This is a footer</a>
