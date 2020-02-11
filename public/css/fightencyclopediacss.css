@@ -608,13 +608,13 @@ tr {
         text-align: center;
         width: 33.333%;
     }
-#fighterInfoWins{
+#fighterAInfoWins, #fighterBInfoWins{
     color:green;
 }
-#fighterInfoLosses{
+#fighterAInfoLosses, #fighterBInfoLosses{
     color:red;
 }
-#fighterInfoDraws{
+#fighterAInfoDraws, #fighterBInfoDraws{
     color:blue;
 }
 .tab1, .tab2, .tab3 {

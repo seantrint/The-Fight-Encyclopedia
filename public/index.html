@@ -8,45 +8,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
         <script src="js/scripts.js"></script> 
     <script>
-		function displayResult() {
-		var x = document.getElementById("resultcard");
-		var button = document.getElementById("resultButton");
-		x.style.display = "block";
-		button.style.display = "none";
-		}
-		function showStatsA() {
-			var buttonMin = document.getElementById("fighterbuttonAMin");
-			var buttonFull = document.getElementById("fighterbuttonAFull");
-			var backFace = document.getElementById("backface1");
-			buttonMin.style.display = "block";
-			buttonFull.style.display = "none";
-			backFace.style.display = "block";
-		}
-		function hideStatsA() {
-			var buttonMin = document.getElementById("fighterbuttonAMin");
-			var buttonFull = document.getElementById("fighterbuttonAFull");
-			var backFace = document.getElementById("backface1");
-			buttonMin.style.display = "none";
-			buttonFull.style.display = "block";
-			backFace.style.display = "none";
-		}
-		function showStatsB() {
-			var buttonMin = document.getElementById("fighterbuttonBMin");
-			var buttonFull = document.getElementById("fighterbuttonBFull");
-			var backFace = document.getElementById("backface2");
-			buttonMin.style.display = "block";
-			buttonFull.style.display = "none";
-			backFace.style.display = "block";
-			buttonMin.style.justifySelf = "right";
-		}
-		function hideStatsB() {
-			var buttonMin = document.getElementById("fighterbuttonBMin"); 
-			var buttonFull = document.getElementById("fighterbuttonBFull");
-			var backFace = document.getElementById("backface2");
-			buttonMin.style.display = "none";
-			buttonFull.style.display = "block";
-			backFace.style.display = "none";
-		}
     </script>		
 	</head>
 <body onload="start()">
@@ -100,25 +61,24 @@
                 </div>
             </div>
             <div class="previousbuttonspace">
-                <button class="nextpreviousbutton" id="previousButton" onclick="changeFight()">&#8656;</button>
+                <button class="nextpreviousbutton" id="previousButton" onclick="previousFight()">&#8656;</button>
             </div>
             <div class="nextbuttonspace">
-                <button class="nextpreviousbutton" id="nextButton" onclick="changeFight()">&#8658;</button>
+                <button class="nextpreviousbutton" id="nextButton" onclick="nextFight()">&#8658;</button>
             </div>
             <div class="one">
                 <div class="polaroid">
                     <h1>Upcoming fights</h1>
-                    <h2 id="upComingFightName">Deontay Wilder vs Tyson Fury</h2>
-                    <p id="upComingFightDivision">Heavyweight</p>
-                    <p id="upComingFightLocation">Location</p>
-                    <p id="upComingFightDate">February 22nd, 2020</p>
+                    <h2 id="upComingFightName"></h2>
+                    <p id="upComingFightDivision"></p>
+                    <p id="upComingFightLocation"></p>
+                    <p id="upComingFightDate"></p>
                 </div>
             </div>
             <div class="three">
                 <div class="frontfaceA">
-                    <button id="fighterbuttonAFull" class="fighterbuttonimageFull" onclick="showStatsA()"><img src="img/deontaywilder.jpg" class="frontfaceimg" alt="fighterA" /></button>
-                    <button id="fighterbuttonAMin" class="fighterbuttonimageMin" onclick="hideStatsA()"><img src="img/deontaywilder.jpg" class="frontfaceimg" alt="fighterB" /></button>
-                    <div class="fightername"><p>Deontay Wilder</p><table class="fighterrecord"><tr><td id="fighterInfoWins">42</td><td id="fighterInfoLosses">0</td><td id="fighterInfoDraws">1</td></tr></table></div>
+                    <button id="fighterbuttonAFull" class="fighterbuttonimageFull" ><img src="img/deontaywilder.jpg" class="frontfaceimg" alt="fighterA" /></button>
+                    <div class="fightername"><p id="fighterAName"></p><table class="fighterrecord"><tr><td id="fighterAInfoWins"></td><td id="fighterAInfoLosses"></td><td id="fighterAInfoDraws"></td></tr></table></div>
 
                 </div>
                 <div class="backfaceA" id="backface1">
@@ -133,9 +93,8 @@
             </div>
             <div class="four">
                 <div class="frontfaceB">
-                    <button id="fighterbuttonBFull" class="fighterbuttonimageFull" onclick="showStatsB()"><img src="img/resizefuryxcf.jpg" class="frontfaceimg" /></button>
-                    <button id="fighterbuttonBMin" class="fighterbuttonimageMin" onclick="hideStatsB()"><img src="img/resizefuryxcf.jpg" class="frontfaceimg" /></button>
-                    <div class="fightername"><p>Tyson Fury</p><table class="fighterrecord"><tr><td id="fighterInfoWins">29</td><td id="fighterInfoLosses">0</td><td id="fighterInfoDraws">1</td></tr></table></div>
+                    <button id="fighterbuttonBFull" class="fighterbuttonimageFull" ><img src="img/resizefuryxcf.jpg" class="frontfaceimg" /></button>
+                    <div class="fightername"><p id="fighterBName"></p><table class="fighterrecord"><tr><td id="fighterBInfoWins"></td><td id="fighterBInfoLosses"></td><td id="fighterBInfoDraws"></td></tr></table></div>
                 </div>
                 <div class="backfaceB" id="backface2">
                     <table class="statstable">
@@ -171,12 +130,12 @@
                     <tr><th colspan="4"><a href="fightercard.html">See full record, stats & more...</a></th></tr>
                 </table>
             </div>
-            <div class="seven">
+            <!-- <div class="seven">
                 <button class="resultbutton" id="resultButton" onclick="displayResult()">Find tickets</button>
                 <div class="resultcard" id="resultcard">
                     <p>Result</p>
                 </div>
-            </div>
+            </div> -->
             <div class="footer" id="footer">
                  <p>The Fight Encycolpedia &trade; - 2020</p> 
             </div> 

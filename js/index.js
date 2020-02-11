@@ -1,35 +1,72 @@
 const express = require('express');
 const app = express();
 const sql = require("mssql");
-const pcName = 'WINDOWS-25B0042';
 
-app.use(express.static('public'));
-
-app.listen(3000, () => console.log('listening at 3000'));
-app.get('/api', function(request,response){
-    const config = {
-        user: 'admUser',
-        password: 'password',
-        server: 'WINDOWS-25B0042',  
-        database: 'testdata', 
-        options:{
-            instanceName:'SQLEXPRESS'
-        }
+const config = {
+    user: 'admUser',
+    password: 'password',
+    server: 'WINDOWS-25B0042',  
+    database: 'testdata', 
+    options:{
+        instanceName:'SQLEXPRESS'
     }
-    //console.log(config.user);
-    sql.connect(config, function(err){
-        if(err)
-        {
-            console.log(err);
-        }
-        const req = new sql.Request();
-        req.query('select * from dbo.UpcomingFights', function (err, recordset){
+}
+sql.connect(config, function(err){
+    if(err)
+    {
+        console.log(err);
+    }
+})
+app.use(express.static('public'));
+app.listen(3000, () => console.log('listening at 3000'));
+
+app.get('/getUpcomingFights', function(request,response){
+
+        request = new sql.Request();
+        request.query('select * from dbo.UpcomingFights', function (err, recordset){
             if(err)
             {
                 console.log(err);
             }
-            response.send(recordset);      
-            console.log(recordset.recordset[0].FightLocation);
+            response.send(recordset);
         })
-    })
+})
+
+app.get('/getUpcomingFighterNames', function(request,response){
+    
+    request = new sql.Request();
+    request.query('select s1.BoxerName, s2.BoxerName from' 
+        +'( select b.BoxerName, u.UpcomingFightID'
+        +' from Boxer b'
+        +' inner join UpcomingFights u on u.BoxerAID = b.BoxerId) s1'
+        +' inner join'
+        +'(  select b.BoxerName, u.UpcomingFightID'
+        +' from Boxer b'
+        +' inner join UpcomingFights u on u.BoxerBID = b.BoxerId) s2'
+        +' on s1.UpcomingFightID = s2.UpcomingFightID', function (err, recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);
+        })    
+})
+
+app.get('/getUpcomingFighterRecords',function(request,response){
+    request = new sql.Request();
+    request.query('select s1.TotalWins, s1.TotalWinsKO, s1.TotalLosses, s1.TotalDraws, s2.TotalWins, s2.TotalWinsKO, s2.TotalLosses, s2.TotalDraws from'
+        +'( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
+        +' from BoxerRecord b'
+        +' inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
+        +' inner join'
+        +' ( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
+        +' from BoxerRecord b'
+        +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
+        +' on s1.UpcomingFightID = s2.UpComingFightID', function (err, recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);  
+        })
 })
