@@ -608,13 +608,13 @@ tr {
         text-align: center;
         width: 33.333%;
     }
-#fighterAInfoWins, #fighterBInfoWins{
+#fighterAInfoWins, #fighterBInfoWins, #fighterInfoWins{
     color:green;
 }
-#fighterAInfoLosses, #fighterBInfoLosses{
+#fighterAInfoLosses, #fighterBInfoLosses, #fighterInfoLosses{
     color:red;
 }
-#fighterAInfoDraws, #fighterBInfoDraws{
+#fighterAInfoDraws, #fighterBInfoDraws, #fighterInfoDraws{
     color:blue;
 }
 .tab1, .tab2, .tab3 {
@@ -1393,7 +1393,6 @@ tr {
 
     .frontfaceimg {
         height: 220px;
-        width: 100%;
     }
     .resultbutton {
         height: 55px;

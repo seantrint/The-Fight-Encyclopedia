@@ -70,3 +70,41 @@ app.get('/getUpcomingFighterRecords',function(request,response){
             response.send(recordset);  
         })
 })
+
+app.get('/getUpcomingFighterStats',function(request,response){
+    request = new sql.Request();
+    request.query('select s1.Age, s1.Height, s1.Reach, s1.Nationality, s2.Age, s2.Height, s2.Reach, s2.Nationality from'
+        +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
+        +'  from BoxerStats b'
+        +'  inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
+        +'  inner join'
+        +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
+        +'  from BoxerStats b'
+        +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
+        +'  on s1.UpcomingFightID = s2.UpComingFightID', function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);  
+        })
+})
+
+app.get('/getUpcomingFighterImages',function(request,response){
+    request = new sql.Request();
+    request.query('select s1.BoxerImageReference, s2.BoxerImageReference from'
+        +'( select b.BoxerImageReference, u.UpcomingFightID'
+        +'  from BoxerImage b' 
+        +'  inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
+        +'  inner join' 
+        +'( select b.BoxerImageReference, u.UpcomingFightID'
+        +'  from BoxerImage b' 
+        +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
+        +'  on s1.UpcomingFightID = s2.UpComingFightID', function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);  
+        })
+})
