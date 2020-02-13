@@ -88,8 +88,9 @@ function showMenuLinks() {
         x.style.display = 'none';
     }
 }
-function start() {
-    fetchLayoutPage();
+async function start() {
+    await fetchLayoutPage();
+    await addImagesToFighterPreviewBox();
 }
 function openMenu() {
     var x = document.getElementById("popupMenu");
@@ -206,5 +207,19 @@ async function previousFight(){
         //last 5 fights
     }
     console.log(upcomingFightCount);
+
+}
+async function addImagesToFighterPreviewBox(){
+    const randomFighterImages = await fetch('/getRandomFighterImages');    
+    var randomFighterImagesData = await randomFighterImages.json();
+
+    for(var i =0;i <8;i++ ){
+        //elements seem to start filling from center and work their way left
+        //also need anchor tag here?
+        var testImage = document.createElement('img');
+        testImage.setAttribute('src',randomFighterImagesData.recordset[i].BoxerImageReference);
+        testImage.className = 'featuredfighterimg';   
+        document.getElementById('FeaturedFighterImages').appendChild(testImage);       
+    }
 
 }

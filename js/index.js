@@ -108,3 +108,18 @@ app.get('/getUpcomingFighterImages',function(request,response){
             response.send(recordset);  
         })
 })
+
+app.get('/getRandomFighterImages',function(request,response){
+    request = new sql.Request();
+    request.query('SELECT * FROM dbo.BoxerImage' 
+    +' WHERE (ABS(CAST'
+    +' ((BINARY_CHECKSUM(*) *' 
+    +' RAND()) as int)) % 100) < 80'
+        ,function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);  
+        })
+})
