@@ -23,7 +23,7 @@ app.listen(3000, () => console.log('listening at 3000'));
 app.get('/getUpcomingFights', function(request,response){
 
         request = new sql.Request();
-        request.query('select * from dbo.UpcomingFights', function (err, recordset){
+        request.query('select FightLocation,FightDate,FightDivision from dbo.UpcomingFights', function (err, recordset){
             if(err)
             {
                 console.log(err);
@@ -109,6 +109,36 @@ app.get('/getUpcomingFighterImages',function(request,response){
         })
 })
 
+app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',function(request,response){
+    var boxerName = request.params.boxerName;
+    console.log(boxerName);
+    request = new sql.Request();
+    request.query(' select b.FightDate, b.OpponentName, b.FightResult'
+                +' from BoxerFightHistory b'
+                +' inner join UpcomingFights u on u.BoxerAID = b.BoxerID'
+                +' inner join Boxer c on c.BoxerId = u.BoxerAID where c.BoxerName = '+"'"+boxerName+"'", function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);
+        })  
+})
+app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',function(request,response){
+    var boxerName = request.params.boxerName;
+    console.log(boxerName);
+    request = new sql.Request();
+    request.query(' select b.FightDate, b.OpponentName, b.FightResult'
+                +' from BoxerFightHistory b'
+                +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID'
+                +' inner join Boxer c on c.BoxerId = u.BoxerBID where c.BoxerName = '+"'"+boxerName+"'", function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);
+        })  
+})
 app.get('/getRandomFighterImages',function(request,response){
     request = new sql.Request();
     request.query('SELECT * FROM dbo.BoxerImage' 
@@ -122,4 +152,43 @@ app.get('/getRandomFighterImages',function(request,response){
             }
             response.send(recordset);  
         })
+})
+app.get('/getAllBoxers',function(request,response){
+    request = new sql.Request();
+    request.query('select BoxerName from dbo.Boxer', function(err, recordset){
+        if(err)
+        {
+            console.log(err);
+        }
+        response.send(recordset);
+    })
+})
+app.get('/getBoxerImage/:boxerName',function(request,response){
+    var boxerName = request.params.boxerName;
+    request = new sql.Request();
+    request.query('select i.BoxerImageReference from BoxerImage i'
+                  +' inner join Boxer b'
+                  +' on b.BoxerId = i.BoxerID'
+                  +' where b.BoxerName = '+"'"+boxerName+"'",function(err,recordset){
+        if(err)
+        {
+            console.log(err);
+        }
+        response.send(recordset);        
+    })
+})
+app.get('/filterCatalogueByWeight/:primaryWeight',function(request,response){
+    var primaryWeight = request.params.primaryWeight;
+
+    request = new sql.Request();
+    request.query('	select b.BoxerName from Boxer b'
+        +' inner join BoxerStats s'
+        +' on b.BoxerId = s.BoxerID'
+        +' where s.Division = '+"'"+primaryWeight+"'",function(err,recordset){
+                        if(err)
+                        {
+                            console.log(err);
+                        }
+                        response.send(recordset);                                  
+                      })
 })

@@ -36,15 +36,19 @@
                     <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
                     <img src="img/logo.png" class="logo" alt="123" />
                     <div class="popupmenulinks">
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a></li>
-                            <li><a href="fightercatalogue.html">Fighter Catalogue</a></li>
-                            <li>
-                                <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
-                                <input type="text" id="searchField" placeholder="Search..." />
-                            </li>
-                        </ul>
+                        <div class="popupmenulink1">
+                            <a href="index.html">Home</a>
+                        </div>
+                        <div class="popupmenulink2">
+                            <a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a>
+                        </div>
+                        <div class="popupmenulink3">
+                            <a href="fightercatalogue.html">Fighter Catalogue</a>
+                        </div>
+                        <div class="popupmenulink4">
+                            <input type="text" id="searchField" placeholder="Search..." />
+                            <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>

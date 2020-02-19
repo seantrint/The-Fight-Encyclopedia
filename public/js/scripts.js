@@ -16,6 +16,12 @@ async function loadUpcomingFightsData(){
     //the same class name and append the right recordset to each?
 
     //heading
+    console.log(upcomingFightsData.recordset);
+    for (var key in upcomingFightsData.recordset) {
+        for (var key1 in upcomingFightsData.recordset[key]) {
+            console.log(upcomingFightsData.recordset[key][key1]);
+        }
+    }
     document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[0].FightDivision;
     document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[0].FightLocation;
     document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[0].FightDate;
@@ -25,6 +31,10 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[0];
     document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[1];
     
+    var fighterAName = document.getElementById('fighterAName').textContent;
+    var fighterBName = document.getElementById('fighterBName').textContent;
+
+
     //overall records
     document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[0].TotalWins[0];
     document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].TotalLosses[0];
@@ -46,7 +56,36 @@ async function loadUpcomingFightsData(){
     //images
     document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
     document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+
     //last 5 fights
+    const upcomingFightsLastFiveA = await fetch('/getUpcomingFighterLastFiveFightsA/'+fighterAName);
+    var upcomingFightsLastFiveDataA = await upcomingFightsLastFiveA.json();
+    const upcomingFightsLastFiveB = await fetch('/getUpcomingFighterLastFiveFightsB/'+fighterBName);
+    var upcomingFightsLastFiveDataB = await upcomingFightsLastFiveB.json();
+
+    var i = 0;
+    var j = 0;
+    for (var key in upcomingFightsLastFiveDataA.recordset) {
+        for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
+            var testDiv = document.createElement('div');
+            testDiv.className = 'last5gridAChild';
+            testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+            testDiv.id = "Last5GridAChild"+i;
+            document.getElementById('Last5gridA').appendChild(testDiv);
+            i++;
+        }
+    }
+    for (var key in upcomingFightsLastFiveDataB.recordset) {
+        for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
+            var testDiv = document.createElement('div');
+            testDiv.className = 'last5gridBChild';
+            testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+            testDiv.id = 'Last5GridBChild'+j;
+            j++;
+            document.getElementById('Last5gridB').appendChild(testDiv);
+        }
+    }
+
 }
 async function fetchLayoutPage(){
     //use fetch() to get layout.html as text
@@ -73,9 +112,11 @@ async function loadPageName() {
         console.log("if doctitle = home");
         homeLink.style.display = 'none';
         await loadUpcomingFightsData();
+        await addImagesToFighterPreviewBox();
     }
     else if (docTitle == "Fighter Catalogue") {
         fighterCatalogueLink.style.display = 'none';
+        await loadFighterCatalogue();
     }
 }
 
@@ -90,7 +131,6 @@ function showMenuLinks() {
 }
 async function start() {
     await fetchLayoutPage();
-    await addImagesToFighterPreviewBox();
 }
 function openMenu() {
     var x = document.getElementById("popupMenu");
@@ -130,7 +170,10 @@ async function nextFight(){
         //names
         document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-    
+        var fighterAName = document.getElementById('fighterAName').textContent;
+        var fighterBName = document.getElementById('fighterBName').textContent;
+        console.log(fighterAName+" , "+fighterBName);
+
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
         document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[0];
@@ -154,6 +197,29 @@ async function nextFight(){
         document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
     
         //last 5 fights
+        const upcomingFightsLastFiveA = await fetch('/getUpcomingFighterLastFiveFightsA/'+fighterAName);
+        var upcomingFightsLastFiveDataA = await upcomingFightsLastFiveA.json();
+        const upcomingFightsLastFiveB = await fetch('/getUpcomingFighterLastFiveFightsB/'+fighterBName);
+        var upcomingFightsLastFiveDataB = await upcomingFightsLastFiveB.json();
+        var i=0;
+        var j=0;
+
+        for (var key in upcomingFightsLastFiveDataA.recordset) {
+            for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
+                var testDiv = document.getElementById('Last5GridAChild'+i);
+                testDiv.className = 'last5gridAChild';
+                testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                i++;
+            }
+        }
+        for (var key in upcomingFightsLastFiveDataB.recordset) {
+            for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
+                var testDiv = document.getElementById('Last5GridBChild'+j);
+                testDiv.className = 'last5gridBChild';
+                testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                j++;
+            }
+        }
     }
     console.log(upcomingFightCount);
 }
@@ -181,7 +247,10 @@ async function previousFight(){
         //names
         document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];    
-        
+        var fighterAName = document.getElementById('fighterAName').textContent;
+        var fighterBName = document.getElementById('fighterBName').textContent;
+        console.log(fighterAName+" , "+fighterBName);
+
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
         document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[0];
@@ -205,6 +274,29 @@ async function previousFight(){
         document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
         
         //last 5 fights
+        const upcomingFightsLastFiveA = await fetch('/getUpcomingFighterLastFiveFightsA/'+fighterAName);
+        var upcomingFightsLastFiveDataA = await upcomingFightsLastFiveA.json();
+        const upcomingFightsLastFiveB = await fetch('/getUpcomingFighterLastFiveFightsB/'+fighterBName);
+        var upcomingFightsLastFiveDataB = await upcomingFightsLastFiveB.json();
+        var i=0;
+        var j=0;
+
+        for (var key in upcomingFightsLastFiveDataA.recordset) {
+            for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
+                var testDiv = document.getElementById('Last5GridAChild'+i);
+                testDiv.className = 'last5gridAChild';
+                testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                i++;
+            }
+        }
+        for (var key in upcomingFightsLastFiveDataB.recordset) {
+            for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
+                var testDiv = document.getElementById('Last5GridBChild'+j);
+                testDiv.className = 'last5gridBChild';
+                testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                j++;
+            }
+        }        
     }
     console.log(upcomingFightCount);
 
@@ -222,4 +314,147 @@ async function addImagesToFighterPreviewBox(){
         document.getElementById('FeaturedFighterImages').appendChild(testImage);       
     }
 
+}
+async function loadFighterCatalogue(){
+    const fighterCatalogue = await fetch('/getAllBoxers');
+    var fighterCatalogueData = await fighterCatalogue.json();
+    var i =0;
+    for (var key in fighterCatalogueData.recordset) {
+        for (var key1 in fighterCatalogueData.recordset[key]) {
+            const fighterImageApi = await fetch('/getBoxerImage/'+fighterCatalogueData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            var catalogueEntryDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+            var linkToCard = document.createElement('a');
+
+            linkToCard.href = 'fightercard.html';
+            linkToCard.id = 'linktocardid'+i;
+            nameParagraph.textContent = fighterCatalogueData.recordset[key][key1]; 
+            nameParagraph.id = 'fighternameid'+i;
+            fighterImage.className = 'catalogueimage';
+            fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            linkToCard.appendChild(fighterImage);
+            linkToCard.appendChild(nameParagraph);
+
+            catalogueEntryDiv.className = 'catalogueentry';
+            catalogueEntryDiv.id = 'catalogueentry'+i;
+            catalogueEntryDiv.appendChild(linkToCard);
+
+            document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
+            i++; 
+        }
+    }    
+}
+function showFilterMenu() {
+    var x = document.getElementById("filterMenu");
+    var y = document.getElementById("filterWeightMenu");
+    var z = document.getElementById("filterGenderMenu");
+
+    if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+    y.style.display = "none";
+    z.style.display = "none";
+}
+function closeFilterMenu() {
+    var x = document.getElementById("filterMenu");
+    x.style.display = "none";
+}
+function filterAlphabeticalRankingRandom(id) {
+    var x = document.getElementById("currentFilter");
+    var y = document.getElementById(id);
+    x.innerHTML = y.innerHTML + "&#8595;";
+    /*sort database table alphabetically*/
+    closeFilterMenu();
+}
+window.onscroll = function ()
+{
+    TriggerJumpToTopButton()
+};
+
+function TriggerJumpToTopButton() {
+    var x = document.getElementById("jumpToTopButton");
+    if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+function jumpToTop() {
+    window.pageYOffset = 0; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+}
+function showWeightFilterMenu() {
+    var x = document.getElementById("filterWeightMenu");
+    var y = document.getElementById("filterMenu");
+    var z = document.getElementById("filterGenderMenu");
+    if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+    y.style.display = "none";
+    z.style.display = "none";
+}
+function closeWeightFilterMenu() {
+    var x = document.getElementById("filterWeightMenu");
+    x.style.display = "none";
+}
+async function filterWeightClass(id) {
+    var x = document.getElementById("currentWeightFilter");
+    var y = document.getElementById(id);
+    console.log(y.innerHTML);
+    x.innerHTML = y.innerHTML + "&#8595;";
+
+    const filteredWeight = await fetch('/filterCatalogueByWeight/'+y.innerHTML);
+    var filteredWeightData = await filteredWeight.json();
+    var i=0;
+
+    if(y.innerHTML === 'All weights'){
+        await loadFighterCatalogue();
+    }
+    else{
+        for (var key in filteredWeightData.recordset) {
+            for (var key1 in filteredWeightData.recordset[key]) {
+                const fighterImageApi = await fetch('/getBoxerImage/'+filteredWeightData.recordset[key][key1]);
+                var fighterImageApiData = await fighterImageApi.json();
+
+                var fighterImage = document.getElementById('fighterimageid'+i);
+                var nameParagraph = document.getElementById('fighternameid'+i);
+
+                nameParagraph.textContent = filteredWeightData.recordset[key][key1]; 
+                fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+                i++;
+                }     
+            }
+        }
+    closeWeightFilterMenu();
+}
+function showGenderFilterMenu() {
+    var x = document.getElementById("filterGenderMenu");
+    var y = document.getElementById("filterMenu");
+    var z = document.getElementById("filterWeightMenu");
+    if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+    y.style.display = "none";
+    z.style.display = "none";
+}
+function closeGenderFilterMenu() {
+    var x = document.getElementById("filterGenderMenu");
+    x.style.display = "none";
+}
+function filterGender(id) {
+    var x = document.getElementById("currentGenderFilter");
+    var y = document.getElementById(id);
+    x.innerHTML = y.innerHTML + "&#8595;";
+    /*sort database table alphabetically*/
+    closeGenderFilterMenu();
 }

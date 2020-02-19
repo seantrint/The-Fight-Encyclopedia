@@ -7,94 +7,6 @@
 		<link rel="stylesheet" href="css/fightencyclopediacss.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <script src="js/scripts.js"></script> 
-        <script>
-            function showFilterMenu() {
-                var x = document.getElementById("filterMenu");
-                var y = document.getElementById("filterWeightMenu");
-                var z = document.getElementById("filterGenderMenu");
-
-                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
-                    x.style.display = 'block';
-                } else {
-                    x.style.display = 'none';
-                }
-                y.style.display = "none";
-                z.style.display = "none";
-            }
-            function closeFilterMenu() {
-                var x = document.getElementById("filterMenu");
-                x.style.display = "none";
-            }
-            function filterAlphabeticalRankingRandom(id) {
-                var x = document.getElementById("currentFilter");
-                var y = document.getElementById(id);
-                x.innerHTML = y.innerHTML + "&#8595;";
-                /*sort database table alphabetically*/
-                closeFilterMenu();
-            }
-            window.onscroll = function ()
-            {
-                TriggerJumpToTopButton()
-            };
-
-            function TriggerJumpToTopButton() {
-                var x = document.getElementById("jumpToTopButton");
-                if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
-                    x.style.display = "block";
-                } else {
-                    x.style.display = "none";
-                }
-            }
-            function jumpToTop() {
-                window.pageYOffset = 0; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
-            }
-            function showWeightFilterMenu() {
-                var x = document.getElementById("filterWeightMenu");
-                var y = document.getElementById("filterMenu");
-                var z = document.getElementById("filterGenderMenu");
-                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
-                    x.style.display = 'block';
-                } else {
-                    x.style.display = 'none';
-                }
-                y.style.display = "none";
-                z.style.display = "none";
-            }
-            function closeWeightFilterMenu() {
-                var x = document.getElementById("filterWeightMenu");
-                x.style.display = "none";
-            }
-            function filterWeightClass(id) {
-                var x = document.getElementById("currentWeightFilter");
-                var y = document.getElementById(id);
-                x.innerHTML = y.innerHTML + "&#8595;";
-                /*sort database table alphabetically*/
-                closeWeightFilterMenu();
-            }
-            function showGenderFilterMenu() {
-                var x = document.getElementById("filterGenderMenu");
-                var y = document.getElementById("filterMenu");
-                var z = document.getElementById("filterWeightMenu");
-                if ( window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
-                    x.style.display = 'block';
-                } else {
-                    x.style.display = 'none';
-                }
-                y.style.display = "none";
-                z.style.display = "none";
-            }
-            function closeGenderFilterMenu() {
-                var x = document.getElementById("filterGenderMenu");
-                x.style.display = "none";
-            }
-            function filterGender(id) {
-                var x = document.getElementById("currentGenderFilter");
-                var y = document.getElementById(id);
-                x.innerHTML = y.innerHTML + "&#8595;";
-                /*sort database table alphabetically*/
-                closeGenderFilterMenu();
-            }
-        </script>
 <body onload="start()">
     <header id="pageLayout">
     </header>
@@ -167,8 +79,8 @@
         </div>
     </div>
 
-    <div class="cataloguegrid">
-        <div class="catalogueentry">
+    <div class="cataloguegrid" id="CatalogueGrid">
+        <!-- <div class="catalogueentry">
             <a href="fightercard.html">
                 <img src="img/deontaywilder.jpg" class="catalogueimage" />
                 <p>Deontay Wilder</p>
@@ -209,7 +121,7 @@
                 <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
                 <p>Anthony Joshua</p>
             </a>
-        </div>
+        </div> -->
         <div class="jumptopbuttonspace">
             <button onclick="jumpToTop()" id="jumpToTopButton" class="jumptopbutton">&#8657;<p>Top</p></button>
         </div>
