@@ -21,9 +21,9 @@ app.use(express.static('public'));
 app.listen(3000, () => console.log('listening at 3000'));
 
 app.get('/getUpcomingFights', function(request,response){
-
+    
         request = new sql.Request();
-        request.query('select FightLocation,FightDate,FightDivision from dbo.UpcomingFights', function (err, recordset){
+        request.query('select FightLocation,FightDate,FightDivision from UpcomingFights', function (err, recordset){
             if(err)
             {
                 console.log(err);
@@ -32,8 +32,8 @@ app.get('/getUpcomingFights', function(request,response){
         })
 })
 
-app.get('/getUpcomingFighterNames', function(request,response){
-    
+app.get('/getUpcomingFighterNames', function(request,response){    
+
     request = new sql.Request();
     request.query('select s1.BoxerName, s2.BoxerName from' 
         +'( select b.BoxerName, u.UpcomingFightID'
@@ -53,6 +53,7 @@ app.get('/getUpcomingFighterNames', function(request,response){
 })
 
 app.get('/getUpcomingFighterRecords',function(request,response){
+
     request = new sql.Request();
     request.query('select s1.TotalWins, s1.TotalWinsKO, s1.TotalLosses, s1.TotalDraws, s2.TotalWins, s2.TotalWinsKO, s2.TotalLosses, s2.TotalDraws from'
         +'( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
@@ -72,6 +73,7 @@ app.get('/getUpcomingFighterRecords',function(request,response){
 })
 
 app.get('/getUpcomingFighterStats',function(request,response){
+
     request = new sql.Request();
     request.query('select s1.Age, s1.Height, s1.Reach, s1.Nationality, s2.Age, s2.Height, s2.Reach, s2.Nationality from'
         +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
@@ -91,6 +93,7 @@ app.get('/getUpcomingFighterStats',function(request,response){
 })
 
 app.get('/getUpcomingFighterImages',function(request,response){
+
     request = new sql.Request();
     request.query('select s1.BoxerImageReference, s2.BoxerImageReference from'
         +'( select b.BoxerImageReference, u.UpcomingFightID'
@@ -110,8 +113,9 @@ app.get('/getUpcomingFighterImages',function(request,response){
 })
 
 app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',function(request,response){
+
     var boxerName = request.params.boxerName;
-    console.log(boxerName);
+
     request = new sql.Request();
     request.query(' select b.FightDate, b.OpponentName, b.FightResult'
                 +' from BoxerFightHistory b'
@@ -125,8 +129,9 @@ app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',function(request,respons
         })  
 })
 app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',function(request,response){
+
     var boxerName = request.params.boxerName;
-    console.log(boxerName);
+
     request = new sql.Request();
     request.query(' select b.FightDate, b.OpponentName, b.FightResult'
                 +' from BoxerFightHistory b'
@@ -140,8 +145,9 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',function(request,respons
         })  
 })
 app.get('/getRandomFighterImages',function(request,response){
+
     request = new sql.Request();
-    request.query('SELECT * FROM dbo.BoxerImage' 
+    request.query('SELECT * FROM BoxerImage' 
     +' WHERE (ABS(CAST'
     +' ((BINARY_CHECKSUM(*) *' 
     +' RAND()) as int)) % 100) < 80'
@@ -154,8 +160,9 @@ app.get('/getRandomFighterImages',function(request,response){
         })
 })
 app.get('/getAllBoxers',function(request,response){
+
     request = new sql.Request();
-    request.query('select BoxerName from dbo.Boxer', function(err, recordset){
+    request.query('select b.BoxerName from Boxer b order by BoxerName asc', function(err, recordset){
         if(err)
         {
             console.log(err);
@@ -164,7 +171,9 @@ app.get('/getAllBoxers',function(request,response){
     })
 })
 app.get('/getBoxerImage/:boxerName',function(request,response){
+
     var boxerName = request.params.boxerName;
+
     request = new sql.Request();
     request.query('select i.BoxerImageReference from BoxerImage i'
                   +' inner join Boxer b'
@@ -177,18 +186,88 @@ app.get('/getBoxerImage/:boxerName',function(request,response){
         response.send(recordset);        
     })
 })
-app.get('/filterCatalogueByWeight/:primaryWeight',function(request,response){
+
+app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight',function(request,response){
+
+    var sortCriteria = request.params.sortCriteria;
     var primaryWeight = request.params.primaryWeight;
+
+    request = new sql.Request();
+    if(primaryWeight !== 'All weights'){
+        if(sortCriteria === 'Alphabetical'){
+            request.query('select b.BoxerName' 
+                         +' from Boxer b'
+                         +' inner join BoxerStats s'
+                         +' on b.BoxerId = s.BoxerID'
+                         +' where s.Division = '+"'"+primaryWeight+"'"
+                         +' order by b.BoxerName asc', function(err, recordset){
+                if(err)
+                {
+                    console.log(err);
+                }
+                response.send(recordset);
+            })        
+        }
+        if(sortCriteria === 'Ranking'){
+            //need think about how ranking will work in db     
+        }    
+        if(sortCriteria === 'Random'){
+            request.query('select b.BoxerName' 
+                         +' from Boxer b'
+                         +' inner join BoxerStats s'
+                         +' on b.BoxerId = s.BoxerID'
+                         +' where s.Division = '+"'"+primaryWeight+"'"
+                         +' order by newid()', function(err, recordset){
+                if(err)
+                {
+                    console.log(err);
+                }
+                response.send(recordset);
+            })                
+        }
+    }
+    else{
+        if(sortCriteria === 'Alphabetical'){
+            request.query('select b.BoxerName' 
+                         +' from Boxer b'
+                         +' order by b.BoxerName asc', function(err, recordset){
+                if(err)
+                {
+                    console.log(err);
+                }
+                response.send(recordset);
+            })        
+        }
+        if(sortCriteria === 'Ranking'){
+            //need think about how ranking will work in db     
+        }    
+        if(sortCriteria === 'Random'){
+            request.query('select b.BoxerName' 
+                         +' from Boxer b'
+                         +' order by newid()', function(err, recordset){
+                if(err)
+                {
+                    console.log(err);
+                }
+                response.send(recordset);
+            })                
+        }       
+    }
+})
+app.get('/filterCatalogueByGender/:genderFilter',function(request,response){
+
+    var genderFilter = request.params.genderFilter;
 
     request = new sql.Request();
     request.query('	select b.BoxerName from Boxer b'
         +' inner join BoxerStats s'
         +' on b.BoxerId = s.BoxerID'
-        +' where s.Division = '+"'"+primaryWeight+"'",function(err,recordset){
+        +' where s.Gender = '+"'"+genderFilter+"'"
+        +' order by b.BoxerName asc',function(err,recordset){
                         if(err)
                         {
                             console.log(err);
                         }
                         response.send(recordset);                                  
-                      })
+                      })    
 })

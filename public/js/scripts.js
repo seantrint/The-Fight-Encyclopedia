@@ -318,6 +318,7 @@ async function addImagesToFighterPreviewBox(){
 async function loadFighterCatalogue(){
     const fighterCatalogue = await fetch('/getAllBoxers');
     var fighterCatalogueData = await fighterCatalogue.json();
+
     var i =0;
     for (var key in fighterCatalogueData.recordset) {
         for (var key1 in fighterCatalogueData.recordset[key]) {
@@ -366,11 +367,49 @@ function closeFilterMenu() {
     var x = document.getElementById("filterMenu");
     x.style.display = "none";
 }
-function filterAlphabeticalRankingRandom(id) {
-    var x = document.getElementById("currentFilter");
-    var y = document.getElementById(id);
-    x.innerHTML = y.innerHTML + "&#8595;";
-    /*sort database table alphabetically*/
+
+async function filterAlphabeticalRankingRandom(id) {
+    var currentSortingFilter = document.getElementById("currentFilter");
+    var selectedSortingFilter = document.getElementById(id);
+    var currentWeightFilter = document.getElementById("currentWeightFilter").innerHTML;
+    currentSortingFilter.innerHTML = selectedSortingFilter.innerHTML;
+    
+    const sortSelection = await fetch('/sortBoxerCatalogue/'+selectedSortingFilter.innerHTML+'/'+currentWeightFilter);
+    var sortSelectionData = await sortSelection.json();
+    var i =0;
+
+    //remove existing elements
+    await clearCatalogue();
+
+    for (var key in sortSelectionData.recordset) {
+        for (var key1 in sortSelectionData.recordset[key]) {
+            const fighterImageApi = await fetch('/getBoxerImage/'+sortSelectionData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            var catalogueEntryDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+            var linkToCard = document.createElement('a');
+
+            linkToCard.href = 'fightercard.html';
+            linkToCard.id = 'linktocardid'+i;
+            nameParagraph.textContent = sortSelectionData.recordset[key][key1]; 
+            nameParagraph.id = 'fighternameid'+i;
+            fighterImage.className = 'catalogueimage';
+            fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            linkToCard.appendChild(fighterImage);
+            linkToCard.appendChild(nameParagraph);
+
+            catalogueEntryDiv.className = 'catalogueentry';
+            catalogueEntryDiv.id = 'catalogueentry'+i;
+            catalogueEntryDiv.appendChild(linkToCard);
+
+            document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
+            i++; 
+        }     
+    }
     closeFilterMenu();
 }
 window.onscroll = function ()
@@ -405,34 +444,59 @@ function closeWeightFilterMenu() {
     var x = document.getElementById("filterWeightMenu");
     x.style.display = "none";
 }
-async function filterWeightClass(id) {
-    var x = document.getElementById("currentWeightFilter");
-    var y = document.getElementById(id);
-    console.log(y.innerHTML);
-    x.innerHTML = y.innerHTML + "&#8595;";
+async function clearCatalogue(){
+    var z = document.getElementsByClassName('catalogueentry');
+    var elemId='';
 
-    const filteredWeight = await fetch('/filterCatalogueByWeight/'+y.innerHTML);
+    for (var j =0; j < z.length; j+1){
+        elemId = document.getElementById(z[j].id);
+        elemId.remove();
+    }
+}
+async function filterWeightClass(id) {
+    var currentWeightFilter = document.getElementById("currentWeightFilter");
+    var selectedWeightFilter = document.getElementById(id);
+    var currentSortingFilter = document.getElementById("currentFilter").innerHTML;
+    currentWeightFilter.innerHTML = selectedWeightFilter.innerHTML;
+
+    const filteredWeight = await fetch('/sortBoxerCatalogue/'+currentSortingFilter+'/'+selectedWeightFilter.innerHTML);
     var filteredWeightData = await filteredWeight.json();
     var i=0;
 
-    if(y.innerHTML === 'All weights'){
-        await loadFighterCatalogue();
+    
+    //delete existing elements
+    await clearCatalogue();
+
+    //all weights
+    for (var key in filteredWeightData.recordset) {
+        for (var key1 in filteredWeightData.recordset[key]) {
+            const fighterImageApi = await fetch('/getBoxerImage/'+filteredWeightData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            var catalogueEntryDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+            var linkToCard = document.createElement('a');
+
+            linkToCard.href = 'fightercard.html';
+            linkToCard.id = 'linktocardid'+i;
+            nameParagraph.textContent = filteredWeightData.recordset[key][key1]; 
+            nameParagraph.id = 'fighternameid'+i;
+            fighterImage.className = 'catalogueimage';
+            fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            linkToCard.appendChild(fighterImage);
+            linkToCard.appendChild(nameParagraph);
+
+            catalogueEntryDiv.className = 'catalogueentry';
+            catalogueEntryDiv.id = 'catalogueentry'+i;
+            catalogueEntryDiv.appendChild(linkToCard);
+
+            document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
+            i++; 
+        }     
     }
-    else{
-        for (var key in filteredWeightData.recordset) {
-            for (var key1 in filteredWeightData.recordset[key]) {
-                const fighterImageApi = await fetch('/getBoxerImage/'+filteredWeightData.recordset[key][key1]);
-                var fighterImageApiData = await fighterImageApi.json();
-
-                var fighterImage = document.getElementById('fighterimageid'+i);
-                var nameParagraph = document.getElementById('fighternameid'+i);
-
-                nameParagraph.textContent = filteredWeightData.recordset[key][key1]; 
-                fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
-                i++;
-                }     
-            }
-        }
     closeWeightFilterMenu();
 }
 function showGenderFilterMenu() {
@@ -451,10 +515,45 @@ function closeGenderFilterMenu() {
     var x = document.getElementById("filterGenderMenu");
     x.style.display = "none";
 }
-function filterGender(id) {
-    var x = document.getElementById("currentGenderFilter");
-    var y = document.getElementById(id);
-    x.innerHTML = y.innerHTML + "&#8595;";
-    /*sort database table alphabetically*/
+async function filterGender(id) {
+    var currentGenderFilter = document.getElementById("currentGenderFilter");
+    var selectedGenderFilter = document.getElementById(id);
+    currentGenderFilter.innerHTML = selectedGenderFilter.innerHTML;
+
+    const filteredGender = await fetch('/filterCatalogueByGender/'+selectedGenderFilter.innerHTML);
+    var filteredGenderData = await filteredGender.json();
+    var i=0;
+  
+    //delete existing elements
+    await clearCatalogue();
+    for (var key in filteredGenderData.recordset) {
+        for (var key1 in filteredGenderData.recordset[key]) {
+            const fighterImageApi = await fetch('/getBoxerImage/'+filteredGenderData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            var catalogueEntryDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+            var linkToCard = document.createElement('a');
+
+            linkToCard.href = 'fightercard.html';
+            linkToCard.id = 'linktocardid'+i;
+            nameParagraph.textContent = filteredGenderData.recordset[key][key1]; 
+            nameParagraph.id = 'fighternameid'+i;
+            fighterImage.className = 'catalogueimage';
+            fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            linkToCard.appendChild(fighterImage);
+            linkToCard.appendChild(nameParagraph);
+
+            catalogueEntryDiv.className = 'catalogueentry';
+            catalogueEntryDiv.id = 'catalogueentry'+i;
+            catalogueEntryDiv.appendChild(linkToCard);
+
+            document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
+            i++; 
+            }     
+        }
     closeGenderFilterMenu();
 }
