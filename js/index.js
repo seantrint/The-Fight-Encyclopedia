@@ -170,6 +170,22 @@ app.get('/getAllBoxers',function(request,response){
         response.send(recordset);
     })
 })
+app.get('/getBoxerStats/:boxerName',function(request,response){
+    var boxerName = request.params.boxerName;
+
+    request = new sql.Request();
+    request.query('select s.Alias, s.Age, s.Division, s.Height, s.Reach, s.Nationality from BoxerStats s'
+    +' inner join Boxer b'
+    +' on b.BoxerId = s.BoxerID'
+    +' where b.BoxerName = '
+    +"'"+boxerName+"'",function(err,recordset){
+        if(err)
+        {
+            console.log(err);
+        }
+        response.send(recordset);           
+    })
+})
 app.get('/getBoxerImage/:boxerName',function(request,response){
 
     var boxerName = request.params.boxerName;

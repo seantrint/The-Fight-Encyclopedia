@@ -1,5 +1,5 @@
 var upcomingFightCount = 0;
-
+//add error handling
 async function loadUpcomingFightsData(){
     const upcomingFights = await fetch('/getUpcomingFights');
     const upcomingFightsNames = await fetch('/getUpcomingFighterNames');
@@ -43,7 +43,7 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].TotalLosses[1];
     document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].TotalDraws[1];
     
-    //stats
+    //stats - replace with loop
     document.getElementById('fighterAAge').textContent = upcomingFightsStatsData.recordset[0].Age[0];
     document.getElementById('fighterBAge').textContent = upcomingFightsStatsData.recordset[0].Age[1];
     document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[0].Height[0];
@@ -315,6 +315,14 @@ async function addImagesToFighterPreviewBox(){
     }
 
 }
+async function toFighterCard(divId){
+    window.location.href='fightercard.html';
+    var boxerName = document.getElementById(divId).textContent;
+    console.log(boxerName);
+    const fighterCard = await fetch('/getBoxerStats/'+boxerName);
+    var fighterCardData = await fighterCard.json();    
+    console.log(fighterCardData);
+}
 async function loadFighterCatalogue(){
     const fighterCatalogue = await fetch('/getAllBoxers');
     var fighterCatalogueData = await fighterCatalogue.json();
@@ -330,21 +338,26 @@ async function loadFighterCatalogue(){
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
-            linkToCard.href = 'fightercard.html';
+            //linkToCard.href = 'fightercard.html';
+
             linkToCard.id = 'linktocardid'+i;
             nameParagraph.textContent = fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
             fighterImage.className = 'catalogueimage';
             fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
             fighterImage.id = 'fighterimageid'+i;
-
+            
             linkToCard.appendChild(fighterImage);
             linkToCard.appendChild(nameParagraph);
-
+            linkToCard.style.cursor = 'pointer';
+            
+            linkToCard.onclick = async function(){
+                await toFighterCard(this.id);
+            }
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
             catalogueEntryDiv.appendChild(linkToCard);
-
+            
             document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
             i++; 
         }
