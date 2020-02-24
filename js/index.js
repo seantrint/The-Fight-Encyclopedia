@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const sql = require("mssql");
+const path = require('path');
+
+app.set('view engine', 'ejs');
 
 const config = {
     user: 'admUser',
@@ -20,6 +23,22 @@ sql.connect(config, function(err){
 app.use(express.static('public'));
 app.listen(3000, () => console.log('listening at 3000'));
 
+//routes for pages - need .ejs pages
+app.get('/',function(request,response){
+    response.render('../public/index');
+})
+app.get('/fighterCatalogue',function(request,response){
+    response.render('../public/fightercatalogue');
+})
+app.get('/fighterCard/:boxerName',function(request,response){
+    var boxerName = request.params.boxerName;
+    var pathToCard = path.resolve(__dirname+'../../public/fightercard.html');
+    console.log(boxerName);
+    response.render('../public/fightercard',{boxer: boxerName});
+})
+
+
+//data
 app.get('/getUpcomingFights', function(request,response){
     
         request = new sql.Request();
@@ -117,10 +136,11 @@ app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',function(request,respons
     var boxerName = request.params.boxerName;
 
     request = new sql.Request();
-    request.query(' select b.FightDate, b.OpponentName, b.FightResult'
+    request.query(' select top (5) b.FightDate, b.OpponentName, b.FightResult'
                 +' from BoxerFightHistory b'
                 +' inner join UpcomingFights u on u.BoxerAID = b.BoxerID'
-                +' inner join Boxer c on c.BoxerId = u.BoxerAID where c.BoxerName = '+"'"+boxerName+"'", function(err,recordset){
+                +' inner join Boxer c on c.BoxerId = u.BoxerAID where c.BoxerName = '+"'"+boxerName+"'"
+                +' order by FightDate desc', function(err,recordset){
             if(err)
             {
                 console.log(err);
@@ -133,10 +153,11 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',function(request,respons
     var boxerName = request.params.boxerName;
 
     request = new sql.Request();
-    request.query(' select b.FightDate, b.OpponentName, b.FightResult'
+    request.query(' select top (5) b.FightDate, b.OpponentName, b.FightResult'
                 +' from BoxerFightHistory b'
                 +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID'
-                +' inner join Boxer c on c.BoxerId = u.BoxerBID where c.BoxerName = '+"'"+boxerName+"'", function(err,recordset){
+                +' inner join Boxer c on c.BoxerId = u.BoxerBID where c.BoxerName = '+"'"+boxerName+"'"
+                +' order by FightDate desc', function(err,recordset){
             if(err)
             {
                 console.log(err);
@@ -202,7 +223,38 @@ app.get('/getBoxerImage/:boxerName',function(request,response){
         response.send(recordset);        
     })
 })
+app.get('/getBoxerRecord/:boxerName',function(request,response){
 
+    var boxerName = request.params.boxerName;
+
+    request = new sql.Request();
+    request.query('select s.TotalWins, s.TotalWinsKO, s.TotalLosses, s.TotalDraws from BoxerRecord s'
+                  +' inner join Boxer b'
+                  +' on b.BoxerId = s.BoxerID'
+                  +' where b.BoxerName = '+"'"+boxerName+"'",function(err,recordset){
+        if(err)
+        {
+            console.log(err);
+        }
+        response.send(recordset);        
+    })
+})
+app.get('/getBoxerFightHistory/:boxerName',function(request,response){
+
+    var boxerName = request.params.boxerName;
+
+    request = new sql.Request();
+    request.query('select f.FightDate, f.FightWeight, f.OpponentName, f.OpponentRecord, f.FightLocation, f.FightResult from BoxerFightHistory f'
+                  +' inner join Boxer b'
+                  +' on b.BoxerId = f.BoxerID'
+                  +' where b.BoxerName = '+"'"+boxerName+"'",function(err,recordset){
+        if(err)
+        {
+            console.log(err);
+        }
+        response.send(recordset);        
+    })
+})
 app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight',function(request,response){
 
     var sortCriteria = request.params.sortCriteria;

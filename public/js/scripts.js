@@ -88,10 +88,7 @@ async function loadUpcomingFightsData(){
 
 }
 async function fetchLayoutPage(){
-    //use fetch() to get layout.html as text
-    //use DOMParser to parse text to html
-    //append html to page, should be able to drop it into an empty <header>  
-    const response = await fetch('layout.html');
+    const response = await fetch('/layout.html');
     const text = await response.text();
     var parser = new DOMParser();
     var header = document.getElementById('pageLayout');
@@ -114,12 +111,69 @@ async function loadPageName() {
         await loadUpcomingFightsData();
         await addImagesToFighterPreviewBox();
     }
-    else if (docTitle == "Fighter Catalogue") {
+    if (docTitle == "Fighter Catalogue") {
         fighterCatalogueLink.style.display = 'none';
         await loadFighterCatalogue();
     }
+    if(docTitle == "Fighter Card"){
+        await loadFighterCard();
+    }
 }
+async function loadFighterCard(){
+    var boxerName = document.getElementById('boxerName').textContent;
 
+    const boxerStats = await fetch('/getBoxerStats/'+boxerName);
+    const boxerImage = await fetch('/getBoxerImage/'+boxerName);
+    const boxerRecord = await fetch('/getBoxerRecord/'+boxerName);
+    const boxerFightHistory = await fetch('/getBoxerFightHistory/'+boxerName);
+    var boxerStatsData = await boxerStats.json();
+    var boxerImageData = await boxerImage.json();
+    var boxerRecordData = await boxerRecord.json();
+    var boxerFightHistoryData = await boxerFightHistory.json();
+
+    var imagepath = '/'+boxerImageData.recordset[0].BoxerImageReference;
+
+    document.getElementById('fighterInfoImage').src = imagepath;
+    var i = 0;
+    var j = 0;
+    //stats
+    for (var key in boxerStatsData.recordset) {
+        for (var key1 in boxerStatsData.recordset[key]) {
+            var testDiv = document.createElement('div');
+            testDiv.className = 'fighterinfostatsspaceContent';
+            testDiv.textContent = boxerStatsData.recordset[key][key1];
+            testDiv.id = 'fighterInfoStatsspaceContent'+i;
+            testDiv.style.gridRow = i+1;
+            i++;
+            document.getElementById('fighterInfoStatsSpace').appendChild(testDiv);
+        }
+    }
+
+    //overall record
+    document.getElementById('fighterInfoWins').textContent = boxerRecordData.recordset[0].TotalWins+' ('+boxerRecordData.recordset[0].TotalWinsKO+' KOs)';
+    document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].TotalLosses;
+    document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].TotalDraws;
+
+    //fight history
+    for (var key in boxerFightHistoryData.recordset) {
+        for (var key1 in boxerFightHistoryData.recordset[key]) {
+            var testDiv = document.createElement('div');
+            testDiv.className = 'fighterinfohistoryspaceContent';
+            testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
+            if(testDiv.textContent === 'Win (TKO)'){
+                testDiv.style.backgroundColor = 'green';
+                //testDiv.style.width = '50%';
+                testDiv.style.textAlign = 'center';
+            }
+            testDiv.id = 'fighterInfoHistoryspaceContent'+j;
+            document.getElementById('fighterInfoHistorySpace').appendChild(testDiv);
+        }
+    }
+    var string = "foo",
+    substring = "ofo";
+
+    console.log(string.indexOf(substring) !== -1);
+}
 function showMenuLinks() {
     var x = document.getElementById("menuOptions");
 
@@ -315,14 +369,6 @@ async function addImagesToFighterPreviewBox(){
     }
 
 }
-async function toFighterCard(divId){
-    window.location.href='fightercard.html';
-    var boxerName = document.getElementById(divId).textContent;
-    console.log(boxerName);
-    const fighterCard = await fetch('/getBoxerStats/'+boxerName);
-    var fighterCardData = await fighterCard.json();    
-    console.log(fighterCardData);
-}
 async function loadFighterCatalogue(){
     const fighterCatalogue = await fetch('/getAllBoxers');
     var fighterCatalogueData = await fighterCatalogue.json();
@@ -351,8 +397,10 @@ async function loadFighterCatalogue(){
             linkToCard.appendChild(nameParagraph);
             linkToCard.style.cursor = 'pointer';
             
-            linkToCard.onclick = async function(){
-                await toFighterCard(this.id);
+            linkToCard.onclick = async function(divId){
+                divId = this.id;
+                var boxerName = document.getElementById(divId).textContent;
+                window.location.href = 'fighterCard/'+boxerName;
             }
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
@@ -362,6 +410,10 @@ async function loadFighterCatalogue(){
             i++; 
         }
     }    
+}
+async function navigateToFighterCard(divId){
+    var boxerName = divId.textContent;
+    window.location.href = 'fighterCard/'+boxerName;
 }
 function showFilterMenu() {
     var x = document.getElementById("filterMenu");
@@ -404,7 +456,6 @@ async function filterAlphabeticalRankingRandom(id) {
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
-            linkToCard.href = 'fightercard.html';
             linkToCard.id = 'linktocardid'+i;
             nameParagraph.textContent = sortSelectionData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
@@ -414,6 +465,13 @@ async function filterAlphabeticalRankingRandom(id) {
 
             linkToCard.appendChild(fighterImage);
             linkToCard.appendChild(nameParagraph);
+            linkToCard.style.cursor = 'pointer';
+            
+            linkToCard.onclick = async function(divId){
+                divId = this.id;
+                var boxerName = document.getElementById(divId).textContent;
+                window.location.href = 'fighterCard/'+boxerName;
+            }
 
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
@@ -491,7 +549,6 @@ async function filterWeightClass(id) {
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
-            linkToCard.href = 'fightercard.html';
             linkToCard.id = 'linktocardid'+i;
             nameParagraph.textContent = filteredWeightData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
@@ -501,6 +558,13 @@ async function filterWeightClass(id) {
 
             linkToCard.appendChild(fighterImage);
             linkToCard.appendChild(nameParagraph);
+            linkToCard.style.cursor = 'pointer';
+            
+            linkToCard.onclick = async function(divId){
+                divId = this.id;
+                var boxerName = document.getElementById(divId).textContent;
+                window.location.href = 'fighterCard/'+boxerName;
+            }
 
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
@@ -549,7 +613,6 @@ async function filterGender(id) {
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
-            linkToCard.href = 'fightercard.html';
             linkToCard.id = 'linktocardid'+i;
             nameParagraph.textContent = filteredGenderData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
@@ -559,7 +622,14 @@ async function filterGender(id) {
 
             linkToCard.appendChild(fighterImage);
             linkToCard.appendChild(nameParagraph);
-
+            linkToCard.style.cursor = 'pointer';
+            
+            linkToCard.onclick = async function(divId){
+                divId = this.id;
+                var boxerName = document.getElementById(divId).textContent;
+                window.location.href = 'fighterCard/'+boxerName;
+            }
+            
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
             catalogueEntryDiv.appendChild(linkToCard);

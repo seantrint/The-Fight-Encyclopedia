@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Fighter Catalogue</title>
+		<link rel="stylesheet" href="/css/fightencyclopediacss.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="/js/scripts.js"></script> 
+<body onload="start()">
+    <header id="pageLayout">
+    </header>
+    <div class="pagedescription">
+        <p>Browse the current catalogue of boxers!</p>
+    </div>
+    <div class="cataloguefilters">
+        <div class="currentfilterselection">
+            <p>Sort by: <a href="javascript:void(0)" class="filterlink" onclick="showFilterMenu()" id="currentFilter">Alphabetical</a>&#8595;</p>
+        </div>
+        <div class="filtermenu" id="filterMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="alphabeticalFilter">Alphabetical</a>
+                </li>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="rankingFilter">Ranking</a>
+                </li>
+                <li>
+                    <a onclick="filterAlphabeticalRankingRandom(this.id)" id="randomFilter">Random</a>
+                </li>
+            </ul>
+        </div>
+        <div class="currentweightselection">
+            <p>Weight Class: <a href="javascript:void(0)" class="filterlink" onclick="showWeightFilterMenu()" id="currentWeightFilter">All weights</a>&#8595;</p>
+        </div>
+        <div class="filterweightmenu" id="filterWeightMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeWeightFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="allWeights">All weights</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="heavyweight">Heavyweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="cruiserweight">Cruiserweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="lightheavyweight">Light heavyweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="supermiddleweight">Super middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="middleweight">Middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="lightmiddleweight">Light Middleweight</a>
+                </li>
+                <li>
+                    <a onclick="filterWeightClass(this.id)" id="welterweight">Welterweight</a>
+                </li>
+            </ul>
+        </div>
+        <div class="currentgenederselection">
+            <p>Gender: <a href="javascript:void(0)" class="filterlink" onclick="showGenderFilterMenu()" id="currentGenderFilter">Men</a>&#8595;</p>
+        </div>
+        <div class="filtergendermenu" id="filterGenderMenu">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeGenderFilterMenu()">&times;</a>
+            <ul>
+                <li>
+                    <a onclick="filterGender(this.id)" id="men">Men</a>
+                </li>
+                <li>
+                    <a onclick="filterGender(this.id)" id="women">Women</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="cataloguegrid" id="CatalogueGrid">
+        <!-- <div class="catalogueentry">
+            <a href="fightercard.html">
+                <img src="img/deontaywilder.jpg" class="catalogueimage" />
+                <p>Deontay Wilder</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/resizefuryxcf.jpg" class="catalogueimage" />
+                <p>Tyson Fury</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div>
+        <div class="catalogueentry">
+            <a asp-page="/FighterCard">
+                <img src="img/anthonyjoshua.jpg" class="catalogueimage" />
+                <p>Anthony Joshua</p>
+            </a>
+        </div> -->
+        <div class="jumptopbuttonspace">
+            <button onclick="jumpToTop()" id="jumpToTopButton" class="jumptopbutton">&#8657;<p>Top</p></button>
+        </div>
+    </div>
+</body>
+</html>

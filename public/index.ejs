@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Home</title>
+		<link rel="stylesheet" href="/css/fightencyclopediacss.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <script src="/js/scripts.js"></script> 
+    <script>
+    </script>		
+	</head>
+<body onload="start()">
+    <div id="backgroundwrapper">
+        <header id="pageLayout">
+        </header>
+        </div>
+        <div id="content">
+            <div class="featuredfightersspace">
+                <div class="featuredfightersspaceone">
+                    <p>Random collection/category of 5 fighters here</p>
+                </div>
+                <div class="featuredfightersspacetwo">
+                    <div class="featuredfighterimages" id="FeaturedFighterImages">
+                    </div>
+                </div>
+                <div class="featuredfightersspacethree">
+                    <div class="cataloguelink"><a href="/fightercatalogue">See full Catalogue &#8658;</a></div>
+                </div>
+            </div>
+            <div class="featuredfightsspace">
+                <div class="featuredfightsspaceone">
+                    <p>Random collection/category of 5 fights here</p>
+                </div>
+                <div class="featuredfightsspacetwo">
+                    <div class="featuredfighterimages">
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                        <img src="img/placeholderring.jpg" class="featuredfighterimg" alt="fighterB" />
+                    </div>
+                </div>
+                <div class="featuredfightsspacethree">
+                    <div class="cataloguelink"><a asp-area="" asp-page="/FightCatalogue">See full Catalogue &#8658;</a></div>
+                </div>
+            </div>
+            <div class="previousbuttonspace">
+                <button class="nextpreviousbutton" id="previousButton" onclick="previousFight()">&#8656;</button>
+            </div>
+            <div class="nextbuttonspace">
+                <button class="nextpreviousbutton" id="nextButton" onclick="nextFight()">&#8658;</button>
+            </div>
+            <div class="one">
+                <div class="polaroid">
+                    <h1>Upcoming fights</h1>
+                    <h2 id="upComingFightName"></h2>
+                    <p id="upComingFightDivision"></p>
+                    <p id="upComingFightLocation"></p>
+                    <p id="upComingFightDate"></p>
+                </div>
+            </div>
+            <div class="three">
+                    <button id="fighterbuttonAFull" class="fighterbuttonimageFull" ><img src="" class="frontfaceimg" alt="fighterA" id="fighterAImage"/></button>
+                    <div class="fightername"><p id="fighterAName"></p><table class="fighterrecord"><tr><td id="fighterAInfoWins"></td><td id="fighterAInfoLosses"></td><td id="fighterAInfoDraws"></td></tr></table></div>
+                    <table class="statstable">
+                        <tr><td class="statslabelcell">Age </td><td><span id="fighterAAge"></span></td></tr>
+                        <tr><td class="statslabelcell">Height </td><td><span id="fighterAHeight"></span></td></tr>
+                        <tr><td class="statslabelcell">Reach </td><td><span id="fighterAReach"></span></td></tr>
+                        <tr><td class="statslabelcell">Nationality </td><td><span id="fighterANationality"></span></td></tr>
+                    </table>
+                    <!-- <div class="statsgrid">
+                        <div class="statsgridagelabel">
+                            <span>Age </span>
+                        </div>
+                        <div class="statsgridagevalue">
+                            <span id="fighterAAge"></span>
+                        </div>
+                        <div class="statsgridheight">
+                            <span>Height </span>
+                            <span id="fighterAHeight"></span>
+                        </div>
+                        <div class="statsgridreach">
+                            <span>Reach </span>
+                            <span id="fighterAReach"></span>
+                        </div>
+                        <div class="statsgridnationality">
+                            <span>Nationality </span>
+                            <span id="fighterANationality"></span>
+                        </div>
+                    </div> -->
+            </div>
+            <div class="four">
+                    <button id="fighterbuttonBFull" class="fighterbuttonimageFull" ><img src="" class="frontfaceimg" id="fighterBImage"/></button>
+                    <div class="fightername"><p id="fighterBName"></p><table class="fighterrecord"><tr><td id="fighterBInfoWins"></td><td id="fighterBInfoLosses"></td><td id="fighterBInfoDraws"></td></tr></table></div>
+                    <table class="statstable">
+                        <tr><td class="statslabelcell">Age </td><td><span id="fighterBAge"></span></td></tr>
+                        <tr><td class="statslabelcell">Height </td><td><span id="fighterBHeight"></span></td></tr>
+                        <tr><td class="statslabelcell">Reach </td><td><span id="fighterBReach"></span></td></tr>
+                        <tr><td class="statslabelcell">Nationality </td><td><span id="fighterBNationality"></span></td></tr>
+                    </table>                
+                <!-- <div class="statsgrid">
+                    <div class="statsgridage">
+                        <span>Age </span>
+                        <span id="fighterBAge"></span>
+                    </div>
+                    <div class="statsgridheight">
+                        <span>Height </span>
+                        <span id="fighterBHeight"></span>
+                        </div>
+                    <div class="statsgridreach">
+                        <span>Reach </span>
+                        <span id="fighterBReach"></span>
+                    </div>
+                    <div class="statsgridnationality">
+                        <span>Nationality </span>
+                        <span id="fighterBNationality"></span>
+                    </div>
+                </div> -->
+            </div>
+            <div class="five">
+                <!-- <table class="last5table">
+                    <tr><th colspan="4">Last 5 fights</th></tr>
+                    <tr><td><i>Date</i></td><td><i>Opponent</i></td><td><i>Result</i></td></tr>
+                    <tr><td>2019/9/14</td><td><a>Otto Wallin</a></td><td style="background-color:green">Win (UD)</td></tr>
+                    <tr><td>2019/06/15</td><td><a>Tom Schwarz</a></td><td style="background-color:green">Win (TKO)</td></tr>
+                    <tr><td>2018/12/01</td><td><a>Deontay Wilder</a></td><td style="background-color:cornflowerblue">Draw</td></tr>
+                    <tr><td>2018/08/18</td><td><a>Francesco Pianeta</a></td><td style="background-color:green">Win (PTS)</td></tr>
+                    <tr><td>2018/06/09</td><td><a>Sefer Seferi</a></td><td style="background-color:green">RTD</td></tr>
+                    <tr><th colspan="4"><a href="fightercard.html">See full record, stats & more...</a></th></tr>
+                </table> -->
+                <div class="last5gridB" id="Last5gridB">
+                    <div class="last5gridheader1">
+                        <span><i>Date</i></span>
+                    </div>
+                    <div class="last5gridheader2">
+                        <span><i>Opponent</i></span>                        
+                    </div>
+                    <div class="last5gridheader3">
+                        <span><i>Result</i></span>                        
+                    </div>         
+                </div>
+                <a onclick="navigateToFighterCard(fighterBName)" class="toFighterLink">See full record, stats & more...</a>
+            </div>
+            <div class="six">
+                <!-- <table class="last5table">
+                    <tr><th colspan="4">Last 5 fights</th></tr>
+                    <tr><td><i>Date</i></td><td><i>Opponent</i></td><td><i>Result</i></td></tr>
+                    <tr><td>2019/11/23</td><td><a>Luis Ortiz</a></td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><td>2019/05/18</td><td><a>Dominic Breazeale</a></td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><td>2018/12/01</td><td><a>Tyson Fury</a></td><td style="background-color:cornflowerblue">Draw</td></tr>
+                    <tr><td>2018/03/03</td><td><a>Luis Ortiz</a></td><td style="background-color:green">Win (TKO)</td></tr>
+                    <tr><td>2017/11/04</td><td><a>Bermane Stiverne</a></td><td style="background-color:green">Win (KO)</td></tr>
+                    <tr><th colspan="4"><a href="fightercard.html">See full record, stats & more...</a></th></tr>
+                </table> -->
+                <div class="last5gridA" id="Last5gridA">
+                    <div class="last5gridheader1">
+                        <span><i>Date</i></span>
+                    </div>
+                    <div class="last5gridheader2">
+                        <span><i>Opponent</i></span>                        
+                    </div>
+                    <div class="last5gridheader3">
+                        <span><i>Result</i></span>                        
+                    </div>         
+                </div>
+                <a onclick="navigateToFighterCard(fighterAName)" class="toFighterLink">See full record, stats & more...</a>
+            </div>
+            <div class="footer" id="footer">
+                 <p>The Fight Encycolpedia &trade; - 2020</p> 
+            </div> 
+        </div>		
+</body>	
+</html>
+	

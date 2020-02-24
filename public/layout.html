@@ -6,15 +6,15 @@
             <div class="header">
                 <div class="persistenttitlegrid">
                     <div class="cell1">
-                        <a asp-page="/Index"><img src="img/logo.png" class="logo" alt="123" /></a>
+                        <a asp-page="/Index"><img src="/img/logo.png" class="logo" alt="123" /></a>
                     </div>
                     <div class="cell2">
                         <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
                         <div class="widescreenmenulinks" id="menuOptions">
                             <ul>
-                                <li><a href="index.html" id="homeLink">Home</a></li>
+                                <li><a href="/" id="homeLink">Home</a></li>
                                 <li><a href="" id="fightCatalogueLink">Fight Catalogue</a></li>
-                                <li><a href="fightercatalogue.html" id="fighterCatalogueLink">Fighter Catalogue</a></li>
+                                <li><a href="/fighterCatalogue" id="fighterCatalogueLink">Fighter Catalogue</a></li>
                             </ul>
                         </div>
                     </div>
@@ -34,16 +34,16 @@
                 </div>
                 <div class="popupmenu" id="popupMenu">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeMenu()">&times;</a>
-                    <img src="img/logo.png" class="logo" alt="123" />
+                    <img src="/img/logo.png" class="logo" alt="123" />
                     <div class="popupmenulinks">
                         <div class="popupmenulink1">
-                            <a href="index.html">Home</a>
+                            <a href="/">Home</a>
                         </div>
                         <div class="popupmenulink2">
                             <a asp-area="" asp-page="/FightCatalogue">Fight Catalogue</a>
                         </div>
                         <div class="popupmenulink3">
-                            <a href="fightercatalogue.html">Fighter Catalogue</a>
+                            <a href="/fighterCatalogue">Fighter Catalogue</a>
                         </div>
                         <div class="popupmenulink4">
                             <input type="text" id="searchField" placeholder="Search..." />
