@@ -12,6 +12,60 @@ body {
     font-family: 'Times New Roman';
     margin: 0 auto;
 }
+.errordiv{
+    width: 60%;
+    font-size:18px;
+    background-color: var(--content-background-color);
+    color:red;
+    height:150px;
+    margin: 0 auto;
+}
+.searchspacegrid{
+    width:100%;
+    background-color: var(--content-background-color); 
+    height:150px;   
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows:45px;
+}
+.searchspacesearchtools input{
+    margin-top:5px;
+    width:65%;
+}
+.searchspacesearchtools button{
+    background: none;
+    border: none;
+    color: var(--links-font-color);
+    font-size:18px;
+}
+.searchspacesearchtools{
+    grid-column: 1/3;
+    grid-row:2;
+}
+.searchspacemessage{
+    grid-column: 1/3;
+    grid-row:3;
+}
+.searchresultsgrid{
+    width:65%;
+    display:grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows:150px;    
+    margin:0 auto;
+    margin-top:15px;
+}
+.searchresultsgridchild{
+    background-color: var(--content-background-color);  
+    margin-top:5%;
+}
+.searchresultsgridchildimg{
+    height:75px;
+    width:75px;
+    margin-top:10px;
+    -webkit-filter: grayscale(90%);
+    filter: grayscale(90%);
+}
 .mobileheader {
     top: 0;
     object-fit: cover;
@@ -1293,6 +1347,10 @@ tr {
 }
 
 @media only screen and (min-width: 1024px) {
+    .errordiv{
+        padding-top:150px;
+        font-size:22px;
+    }
     .mobileheader {
         display: none;
     }

@@ -1,0 +1,40 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Search Results</title> <!--load fighter name here-->
+		<link rel="stylesheet" href="/css/fightencyclopediacss.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="/js/scripts.js"></script> 
+    </head>
+    <body onload="start()">
+        <header id="pageLayout"></header>
+        <div class="searchspacegrid">
+            <div class="searchspacesearchtools">
+                <input type="text" id="searchField" placeholder="Search..." />
+                <button type="submit" id="searchButton" onclick="loadSearchResultsOnPage()"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="searchspacemessage">
+                <p>Search results for: <span id="SearchTerm"><%= searchTerm %></span></p>
+            </div>
+        </div>
+      <div class="searchresultsgrid" id="SearchResultsGrid">
+        <!-- <div class="searchresultsgridchild">
+            <img src="/img/enemynewguy.jpg" class="searchresultsgridchildimg"/>
+            <p>Search result</p>
+        </div>
+        <div class="searchresultsgridchild">
+            <img src="/img/enemynewguy.jpg" class="searchresultsgridchildimg"/>
+            <p>Search result</p>
+        </div>
+        <div class="searchresultsgridchild">
+            <img src="/img/enemynewguy.jpg" class="searchresultsgridchildimg"/>
+            <p>Search result</p>
+        </div>
+        <div class="searchresultsgridchild">
+            <img src="/img/enemynewguy.jpg" class="searchresultsgridchildimg"/>
+            <p>Search result</p>
+        </div> -->
+      </div>
+    </body>
+</html>

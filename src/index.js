@@ -43,13 +43,34 @@ app.get('/fighterCatalogue',function(request,response){
 })
 app.get('/fighterCard/:boxerName',function(request,response){
     var boxerName = request.params.boxerName;
-    var pathToCard = path.resolve(__dirname+'../../public/fightercard.html');
-    console.log(boxerName);
     response.render('../public/fightercard',{boxer: boxerName});
 })
-
+app.get('/searchResults/:searchTerm', function(request,response){
+    var searchTerm = request.params.searchTerm;
+    response.render('../public/searchresults',{searchTerm: searchTerm});
+})
 
 //data
+app.get('/getSearchResults/:searchTerm', async function(request,response){
+    const ps = new sql.PreparedStatement()
+    var searchTerm = request.params.searchTerm;
+    var illegalValue = await checkForIllegals(searchTerm);
+    illegalValue = '%'+illegalValue+'%';
+    ps.input('searchTerm', sql.VarChar);
+    ps.prepare(' select BoxerName'
+                +' from Boxer'
+                +' where BoxerName like @searchTerm',async function(err){
+                    ps.execute({searchTerm: illegalValue}, async function(err, recordset){
+                        ps.unprepare(async function(err){
+                            if(err)
+                            {
+                                console.log(err);
+                            }
+                        });
+                        response.send(recordset);  
+                    });
+                });                   
+})
 app.get('/getUpcomingFights', function(request,response){
     
         request = new sql.Request();
@@ -229,11 +250,18 @@ app.get('/getBoxerStats/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select s.Alias, s.Age, s.Height, s.Reach, s.Division, s.Nationality from BoxerStats s'
+    ps.prepare('select s.Alias, s.Nationality, s.Age, s.Height, s.Reach, s.Division from BoxerStats s'
                 +' inner join Boxer b'
                 +' on b.BoxerId = s.BoxerID'
                 +' where b.BoxerName = @boxerName', async function(err){
+                    if(err){
+                        console.log(err);
+                    }
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
+                        if(err){
+                            console.log(err);
+                            response.send("Something went wrong");
+                        }
                         ps.unprepare(async function(err){
                             if(err)
                             {
@@ -255,7 +283,14 @@ app.get('/getBoxerCountryFlag/:boxerNationality', async function(request,respons
                 +' inner join BoxerStats s'
                 +' on c.CountryId = s.CountryFlagId'
                 +' where Nationality = @boxerNationality', async function(err){
+                    if(err){
+                        console.log(err);
+                    }
                     ps.execute({boxerNationality: illegalValue}, async function(err, recordset){
+                        if(err){
+                            console.log(err);
+                            response.send('something went wrong');
+                        }
                         ps.unprepare(async function(err){
                             if(err)
                             {

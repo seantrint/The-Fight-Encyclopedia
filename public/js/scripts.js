@@ -148,7 +148,83 @@ async function loadPageName() {
     if(docTitle == "Fighter Card"){
         await loadFighterCard();
     }
+    if(docTitle == "Search Results"){
+        await loadSearchResults();
+    }
 }
+async function clearSearchResults(){
+    var z = document.getElementsByClassName('searchresultsgridchild');
+    var elemId='';
+
+    if(typeof z != undefined){
+        for (var j =0; j < z.length; j+1){
+            elemId = document.getElementById(z[j].id);
+            elemId.remove();
+        }
+    }
+}
+async function loadSearchResults(){
+    await clearSearchResults();
+    var searchTerm = document.getElementById('SearchTerm').textContent;
+    const searchResults = await fetch('/getSearchResults/'+searchTerm);
+    var searchResultsData = await searchResults.json();
+    var i=0;
+
+    for (var key in searchResultsData.recordset) {
+        for (var key1 in searchResultsData.recordset[key]) {
+            var testDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+
+            const fighterImageApi = await fetch('/getBoxerImage/'+searchResultsData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            fighterImage.className = 'searchresultsgridchildimg';
+            fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            testDiv.className = 'searchresultsgridchild';
+            nameParagraph.textContent = searchResultsData.recordset[key][key1];
+            testDiv.id = 'searchResultsGridChild'+i;
+            testDiv.appendChild(fighterImage);
+            testDiv.appendChild(nameParagraph);
+            i++;
+            document.getElementById('SearchResultsGrid').appendChild(testDiv);
+        }
+    }    
+}
+async function loadSearchResultsOnPage(){
+    await clearSearchResults();
+    var searchTerm = document.getElementById('searchField').value;
+    document.getElementById('SearchTerm').textContent = searchTerm;
+    const searchResults = await fetch('/getSearchResults/'+searchTerm);
+    var searchResultsData = await searchResults.json();
+    var i=0;
+    
+    for (var key in searchResultsData.recordset) {
+        for (var key1 in searchResultsData.recordset[key]) {
+            var testDiv = document.createElement('div');
+            var fighterImage = document.createElement('img');
+            var nameParagraph = document.createElement('p');
+
+            const fighterImageApi = await fetch('/getBoxerImage/'+searchResultsData.recordset[key][key1]);
+            var fighterImageApiData = await fighterImageApi.json();
+
+            fighterImage.className = 'searchresultsgridchildimg';
+            fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.id = 'fighterimageid'+i;
+
+            testDiv.className = 'searchresultsgridchild';
+            nameParagraph.textContent = searchResultsData.recordset[key][key1];
+            testDiv.id = 'searchResultsGridChild'+i;
+            testDiv.appendChild(fighterImage);
+            testDiv.appendChild(nameParagraph);
+            i++;
+            document.getElementById('SearchResultsGrid').appendChild(testDiv);
+        }
+    }    
+}
+
 async function loadFighterCard(){
     var boxerName = document.getElementById('boxerName').textContent;
 
@@ -160,68 +236,87 @@ async function loadFighterCard(){
     var boxerImageData = await boxerImage.json();
     var boxerRecordData = await boxerRecord.json();
     var boxerFightHistoryData = await boxerFightHistory.json();
+    var cardGrid = document.getElementById('FighterInfoGrid');
 
-    const boxerCountryFlag = await fetch ('/getBoxerCountryFlag/'+boxerStatsData.recordset[0].Nationality);
-    var boxerCountryFlagData = await boxerCountryFlag.json();
-    var countryFlagImg = document.createElement('img');
-    countryFlagImg.className = 'countryflagfightercard';
-    countryFlagImg.src = boxerCountryFlagData.recordset[0].CountryFlagRef;
-    countryFlagImg.style.height = '15px';
-    countryFlagImg.style.verticalAlign = 'middle';
+    try{
+        const boxerCountryFlag = await fetch ('/getBoxerCountryFlag/'+boxerStatsData.recordset[0].Nationality);
+        var boxerCountryFlagData = await boxerCountryFlag.json();
+        var countryFlagImg = document.createElement('img');
+        countryFlagImg.className = 'countryflagfightercard';
+        countryFlagImg.src = boxerCountryFlagData.recordset[0].CountryFlagRef;
+        countryFlagImg.style.height = '15px';
+        countryFlagImg.style.verticalAlign = 'middle';
 
 
-    var imagepath = '/'+boxerImageData.recordset[0].BoxerImageReference;
+        var imagepath = '/'+boxerImageData.recordset[0].BoxerImageReference;
 
-    document.getElementById('fighterInfoImage').src = imagepath;
-    var i = 0;
-    var j = 0;
-    //stats
-    for (var key in boxerStatsData.recordset) {
-        for (var key1 in boxerStatsData.recordset[key]) {
-            console.log(boxerStatsData.recordset[key][key1]);
-            var testDiv = document.createElement('div');
-            testDiv.className = 'fighterinfostatsspaceContent';
-            testDiv.textContent = boxerStatsData.recordset[key][key1];
-            testDiv.id = 'fighterInfoStatsspaceContent'+i;
-            if(countriesArray.includes(testDiv.textContent)){
-                testDiv.appendChild(countryFlagImg);
+        document.getElementById('fighterInfoImage').src = imagepath;
+        var i = 0;
+        var j = 0;
+        //stats
+
+        for (var key in boxerStatsData.recordset) {
+            for (var key1 in boxerStatsData.recordset[key]) {
+                var testDiv = document.createElement('div');
+                testDiv.className = 'fighterinfostatsspaceContent';
+                testDiv.textContent = boxerStatsData.recordset[key][key1];
+                testDiv.id = 'fighterInfoStatsspaceContent'+i;
+                if(countriesArray.includes(testDiv.textContent)){
+                    testDiv.appendChild(countryFlagImg);
+                }
+                testDiv.style.gridRow = i+1;
+                i++;
+                document.getElementById('fighterInfoStatsSpace').appendChild(testDiv);
             }
-            testDiv.style.gridRow = i+1;
-            i++;
-            document.getElementById('fighterInfoStatsSpace').appendChild(testDiv);
         }
+        //overall record
+        document.getElementById('fighterInfoWins').textContent = boxerRecordData.recordset[0].TotalWins+' ('+boxerRecordData.recordset[0].TotalWinsKO+' KOs)';
+        document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].TotalLosses;
+        document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].TotalDraws;
+
+        //fight history
+        for (var key in boxerFightHistoryData.recordset) {
+            for (var key1 in boxerFightHistoryData.recordset[key]) {
+                var testDiv = document.createElement('div');
+                testDiv.className = 'fighterinfohistoryspaceContent';
+                testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
+                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
+                    testDiv.style.backgroundColor = 'green';
+                    //testDiv.style.width = '50%';
+                    testDiv.style.textAlign = 'center';
+                }
+                if(testDiv.textContent === 'Draw'){
+                    testDiv.style.backgroundColor = '#2d545e';
+                    //testDiv.style.width = '50%';
+                    testDiv.style.textAlign = 'center';
+                }
+                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
+                    testDiv.style.backgroundColor = '#CE2029';
+                    //testDiv.style.width = '50%';
+                    testDiv.style.textAlign = 'center';
+                }
+                testDiv.id = 'fighterInfoHistoryspaceContent'+j;
+                document.getElementById('fighterInfoHistorySpace').appendChild(testDiv);
+            }
+        }                
+    }
+    catch(err){
+        console.log(err);
+        //cardGrid.remove();
+        while (cardGrid.firstChild){
+            cardGrid.removeChild(cardGrid.lastChild);
+        }
+        var errorDiv = document.createElement('div');
+        errorDiv.id = 'ErrorDiv';
+        errorDiv.className = 'errordiv';
+        var errorParagraph = document.createElement('p');
+
+        errorParagraph.textContent = 'Boxer '+boxerName+' not found or does not exist';
+        errorDiv.appendChild(errorParagraph);
+        document.getElementById('ErrorSpace').appendChild(errorDiv);
     }
 
-    //overall record
-    document.getElementById('fighterInfoWins').textContent = boxerRecordData.recordset[0].TotalWins+' ('+boxerRecordData.recordset[0].TotalWinsKO+' KOs)';
-    document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].TotalLosses;
-    document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].TotalDraws;
 
-    //fight history
-    for (var key in boxerFightHistoryData.recordset) {
-        for (var key1 in boxerFightHistoryData.recordset[key]) {
-            var testDiv = document.createElement('div');
-            testDiv.className = 'fighterinfohistoryspaceContent';
-            testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
-            if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                testDiv.style.backgroundColor = 'green';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            if(testDiv.textContent === 'Draw'){
-                testDiv.style.backgroundColor = '#2d545e';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                testDiv.style.backgroundColor = '#CE2029';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            testDiv.id = 'fighterInfoHistoryspaceContent'+j;
-            document.getElementById('fighterInfoHistorySpace').appendChild(testDiv);
-        }
-    }
 }
 function showMenuLinks() {
     var x = document.getElementById("menuOptions");
@@ -511,6 +606,17 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             i++; 
         }
     }
+    if(i === 0){
+        console.log("result set is empty");
+        var errorDiv = document.createElement('div');
+        errorDiv.id = 'ErrorDiv';
+        errorDiv.className = 'errordiv';
+        var errorParagraph = document.createElement('p');
+
+        errorParagraph.textContent = 'No results found for filter selection';
+        errorDiv.appendChild(errorParagraph);
+        document.body.appendChild(errorDiv);
+    }
 }
 async function loadFighterCatalogueAsList(fighterCatalogueData){
     await clearCatalogue();
@@ -588,6 +694,17 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             i++; 
             numberList++;
         }
+    }
+    if(i === 0){
+        console.log("result set is empty");
+        var errorDiv = document.createElement('div');
+        errorDiv.className = 'errordiv';
+        errorDiv.id = 'ErrorDiv';
+        var errorParagraph = document.createElement('p');
+
+        errorParagraph.textContent = 'No results found for filter selection';
+        errorDiv.appendChild(errorParagraph);
+        document.body.appendChild(errorDiv);
     }    
 }
 async function loadFighterCatalogue(param){
@@ -697,7 +814,10 @@ function closeWeightFilterMenu() {
 async function clearCatalogue(){
     var z = document.getElementsByClassName('catalogueentry');
     var y = document.getElementsByClassName('cataloguetablerow');
+    var x = document.getElementsByClassName('errordiv');
+
     var elemId='';
+
     if(typeof z != undefined){
         for (var j =0; j < z.length; j+1){
             elemId = document.getElementById(z[j].id);
@@ -710,6 +830,12 @@ async function clearCatalogue(){
             elemId.remove();
         }
     }
+    if(typeof x != undefined){
+        for (var j =0; j < x.length; j+1){
+            elemId = document.getElementById(x[j].id);
+            elemId.remove();
+        }
+    }   
 }
 async function filterWeightClass(id) {
     var currentWeightFilter = document.getElementById("currentWeightFilter");
@@ -770,4 +896,17 @@ async function filterGender(id) {
         await loadFighterCatalogueAsList(filteredGenderData);
     }
     closeGenderFilterMenu();
+}
+async function search(id){
+
+    var searchButton = document.getElementById(id).id;
+    if(searchButton === 'searchButtonMobile'){
+        var searchField = document.getElementById('searchFieldMobile').value;
+        window.location.href = '/searchResults/'+searchField;
+    }
+    if(searchButton === 'searchButtonWideScreen'){
+        var searchField = document.getElementById('searchFieldWideScreen').value;
+        window.location.href = '/searchResults/'+searchField;
+    }
+    
 }
