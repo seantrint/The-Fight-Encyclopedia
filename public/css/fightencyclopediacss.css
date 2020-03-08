@@ -3,6 +3,7 @@
     --content-background-color: #e0dbdb;
     --main-font-color: #0c0c0c;
     --links-font-color: #12343b;
+    --image-shadow-settings: 0 0 6px 3px #141414;
 }
 body {
     color: var(--main-font-color);
@@ -15,19 +16,21 @@ body {
 .errordiv{
     width: 60%;
     font-size:18px;
-    background-color: var(--content-background-color);
-    color:red;
+    background-color: var(--content-background-color); 
     height:150px;
     margin: 0 auto;
+    border-radius:5px;
+    color:#CE2029;
 }
 .searchspacegrid{
-    width:100%;
     background-color: var(--content-background-color); 
+    grid-column: 1/8;
+    grid-row:1;
     height:150px;   
-    margin: 0 auto;
     display:grid;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows:45px;
+
 }
 .searchspacesearchtools input{
     margin-top:5px;
@@ -40,31 +43,35 @@ body {
     font-size:18px;
 }
 .searchspacesearchtools{
-    grid-column: 1/3;
+    grid-column: 1/8;
     grid-row:2;
 }
 .searchspacemessage{
-    grid-column: 1/3;
+    grid-column: 1/8;
     grid-row:3;
+    font-size:14px;
 }
 .searchresultsgrid{
-    width:65%;
+    grid-column: 2/7;
     display:grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows:150px;    
-    margin:0 auto;
-    margin-top:15px;
+    grid-auto-columns: auto;
+    grid-auto-rows: auto;
+    background-color: var(--content-background-color);  
 }
 .searchresultsgridchild{
-    background-color: var(--content-background-color);  
-    margin-top:5%;
+    border-bottom:1px ridge gray;
+    color:var(--links-font-color);
+    font-size:12px;
 }
 .searchresultsgridchildimg{
-    height:75px;
-    width:75px;
+    height:90px;
+    width:90px;
     margin-top:10px;
     -webkit-filter: grayscale(90%);
     filter: grayscale(90%);
+    -webkit-box-shadow: var(--image-shadow-settings);
+    box-shadow: var(--image-shadow-settings);
+    border:1px ridge gray;
 }
 .mobileheader {
     top: 0;
@@ -166,8 +173,8 @@ body {
     -webkit-filter: grayscale(90%);
     filter: grayscale(90%);
     border: 2px ridge gray;
-    -webkit-box-shadow: 0 0 6px 3px #141414;
-    box-shadow: 0 0 6px 3px #141414;
+    -webkit-box-shadow: var(--image-shadow-settings);
+    box-shadow: var(--image-shadow-settings);
     margin-right: 1.5%;
     margin-bottom: 2%;
 }
@@ -352,8 +359,8 @@ tr {
     filter: grayscale(90%);
     border: 2px ridge gray;
     border-radius: 2px;
-    -webkit-box-shadow: 0 0 6px 3px #141414;
-    box-shadow: 0 0 6px 3px #141414;
+    -webkit-box-shadow: var(--image-shadow-settings);
+    box-shadow: var(--image-shadow-settings);
     /* margin-left:-2%; */
     margin-top:2%;
 }
@@ -489,8 +496,8 @@ tr {
         filter: grayscale(90%);
         border: 2px ridge gray;
         border-radius: 2px;
-        -webkit-box-shadow: 0 0 6px 3px #141414;
-        box-shadow: 0 0 6px 3px #141414;
+        -webkit-box-shadow: var(--image-shadow-settings);
+        box-shadow: var(--image-shadow-settings);
     }
 .cataloguefilters {
     border-bottom: 2px ridge gray;
@@ -506,6 +513,10 @@ tr {
     height:25px;
     vertical-align: middle;
     padding-left:5px;
+}
+.countryflagfightercard{
+    height:15px;
+    vertical-align: middle;
 }
 .linktofightercataloguetable{
     cursor:pointer;
@@ -673,8 +684,8 @@ tr {
         -webkit-filter: grayscale(90%);
         filter: grayscale(90%);
         border: 1px ridge gray;
-        -webkit-box-shadow: 0 0 6px 3px #141414;
-        box-shadow: 0 0 6px 3px #141414;
+        -webkit-box-shadow: var(--image-shadow-settings);
+        box-shadow: var(--image-shadow-settings);
         margin-top:15px;
     }
 
@@ -701,13 +712,13 @@ tr {
         text-align: center;
         width: 33.333%;
     }
-#fighterAInfoWins, #fighterBInfoWins, #fighterInfoWins, #fighterInfoWinsCss{
+#fighterAInfoWins, #fighterBInfoWins, #fighterInfoWins, #fighterInfoWinsCss, .totalwins{
     color:green;
 }
-#fighterAInfoLosses, #fighterBInfoLosses, #fighterInfoLosses, #fighterInfoLossesCss{
+#fighterAInfoLosses, #fighterBInfoLosses, #fighterInfoLosses, #fighterInfoLossesCss, .totallosses{
     color:	#CE2029;
 }
-#fighterAInfoDraws, #fighterBInfoDraws, #fighterInfoDraws, #fighterInfoDrawsCss{
+#fighterAInfoDraws, #fighterBInfoDraws, #fighterInfoDraws, #fighterInfoDrawsCss, .totaldraws{
     color:#2d545e;
 }
 .tab1, .tab2, .tab3 {
@@ -1041,6 +1052,17 @@ tr {
         font-size: 44px;
         margin-top: 55%;
     }
+    .searchresultsgrid{
+        grid-row:16;
+
+    }
+    .searchresultsgridchildimg{
+        height:110px;
+        width:110px;
+    }
+    .searchresultsgridchild{
+        font-size:14px;
+    }
 }
 
 @media only screen and (min-width: 640px) {
@@ -1058,6 +1080,13 @@ tr {
     }
     .nextpreviousbutton {
         margin-top: 35%;
+    }
+    .searchspacesearchtools input{
+        width:55%;
+    }
+    .searchresultsgridchildimg{
+        height:130px;
+        width:130px;
     }
 }
 
@@ -1142,6 +1171,9 @@ tr {
     }
     .nextpreviousbutton {
         margin-top: 30%;
+    }
+    .searchspacesearchtools input{
+        width:50%;
     }
 }
 
@@ -1364,6 +1396,8 @@ tr {
     }
 
     .persistenttitlegrid {
+        top:0;
+        object-fit: cover;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 2px;
@@ -1450,10 +1484,10 @@ tr {
         width: 70%;
     }
 
-    .fighterinfostatsspace table {
+    .fighterinfostatsspace{
         font-size: 16px;
     }
-    .fighterinfohistoryspace table{
+    .fighterinfohistoryspace{
         font-size:16px;
     }
     .fighterinfobiospace{
@@ -1670,6 +1704,51 @@ tr {
     .cataloguetable{
         font-size:14px;
     }
+    .cataloguetablename{
+        width:250px;
+    }
+    .searchspacegrid{
+        grid-column:3/10;
+    }
+    .searchresultsgrid{
+        grid-column: 3/10;
+    }
+
+    .searchresultsgridchild{
+        padding:5%;
+        font-size:16px;
+    }
+    .searchresultsgridlink{
+        display:grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 90px;
+        grid-gap:0px;
+    }
+    .searchresultsgridchildimg{
+        height:150px;
+        width:150px;
+        margin-top:0px;
+        grid-column: 1/3;
+        grid-row:1/3;
+    }
+    .searchresultsparagraph{
+        grid-column: 3;
+        grid-row:1;
+    }
+    .countryflagimgsearch{
+        grid-column: 4;
+        grid-row:1;
+        height:35px;
+        margin-top:15px;
+    }
+    .searchresultsparagraphrecord{
+        grid-column: 3/4;
+        grid-row:2;
+    }
+    .searchspacemessage{
+        font-size:16px;
+    }
+
 }
 
 @media only screen and (min-width: 1250px) {
