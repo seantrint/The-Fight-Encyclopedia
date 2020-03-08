@@ -43,7 +43,6 @@ async function loadPageName() {
     if(docTitle == "Search Results"){
         await loadSearchResults();
     }
-    console.log(window.screen.width);
 }
 async function clearSearchResults(){
     var z = document.getElementsByClassName('searchresultsgridchild');
@@ -98,7 +97,29 @@ async function loadSearch(searchResultsData){
                 var nameParagraph3 = document.createElement('p');
                 var boxerRecordData = await fetchData('/getBoxerRecord/',nameParagraph.textContent);
 
-                nameParagraph3.textContent = boxerRecordData.recordset[0].TotalWins+'/'+boxerRecordData.recordset[0].TotalLosses+'/'+boxerRecordData.recordset[0].TotalDraws;
+                var wins = document.createElement('span');
+                wins.textContent=boxerRecordData.recordset[0].TotalWins;
+                wins.className='totalwins';
+    
+                var slash1 =document.createElement('span');
+                slash1.textContent = '/';
+    
+                var slash2 =document.createElement('span');
+                slash2.textContent = '/';
+    
+                var losses = document.createElement('span');
+                losses.textContent = boxerRecordData.recordset[0].TotalLosses;
+                losses.className='totallosses';
+    
+                var draws = document.createElement('span');
+                draws.textContent=boxerRecordData.recordset[0].TotalDraws;
+                draws.className='totaldraws';
+
+                nameParagraph3.appendChild(wins);
+                nameParagraph3.appendChild(slash1);
+                nameParagraph3.appendChild(losses);
+                nameParagraph3.appendChild(slash2);
+                nameParagraph3.appendChild(draws);
                 nameParagraph3.className = 'searchresultsparagraphrecord';
 
                 searchResultLink.appendChild(countryFlagImg);            
@@ -118,17 +139,26 @@ async function loadSearch(searchResultsData){
         }
     }
     if(i === 0){
+        var testError = document.getElementById('SearchResultsGrid');
         //make generic
-        console.log("result set is empty");
-        var errorDiv = document.createElement('div');
-        errorDiv.id = 'ErrorDiv';
-        errorDiv.className = 'errordiv';
-        var errorParagraph = document.createElement('p');
-
-        errorParagraph.textContent = 'No results found for search';
-        errorDiv.appendChild(errorParagraph);
-        document.body.appendChild(errorDiv);
+        await createErrorDiv(testError);
     } 
+}
+async function createErrorDiv(div = ''){
+    var errorDiv = document.createElement('div');
+    errorDiv.id = 'ErrorDiv';
+    errorDiv.className = 'errordiv';
+    var errorParagraph = document.createElement('p');
+
+    errorParagraph.textContent = 'No results found for search';
+    errorDiv.appendChild(errorParagraph);
+    if(div !== ''){
+        div.appendChild(errorDiv);
+    }
+    else{
+        document.body.appendChild(errorDiv);
+    }
+
 }
 async function loadSearchResultsOnPage(){
     await clearSearchResults();
@@ -210,7 +240,6 @@ async function loadFighterCard(){
     }
     catch(err){
         console.log(err);
-        //cardGrid.remove();
         while (cardGrid.firstChild){
             cardGrid.removeChild(cardGrid.lastChild);
         }
@@ -300,15 +329,7 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
         }
     }
     if(i === 0){
-        console.log("result set is empty");
-        var errorDiv = document.createElement('div');
-        errorDiv.id = 'ErrorDiv';
-        errorDiv.className = 'errordiv';
-        var errorParagraph = document.createElement('p');
-
-        errorParagraph.textContent = 'No results found for filter selection';
-        errorDiv.appendChild(errorParagraph);
-        document.body.appendChild(errorDiv);
+        await createErrorDiv();
     }
 }
 async function loadFighterCatalogueAsList(fighterCatalogueData){
@@ -319,7 +340,21 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     catalogueTable.id = 'CatalogueTable';
     catalogueTable.className = 'cataloguetable'
     document.body.appendChild(catalogueTable);
-
+    var tableHeadingRow = document.createElement('tr');
+    var tableHeadingName = document.createElement('td');
+    var tableHeadingRecord = document.createElement('td');
+    var tableHeadingDivision = document.createElement('td');
+    tableHeadingName.textContent = 'Name';
+    tableHeadingRecord.textContent = 'Record';
+    tableHeadingDivision.textContent = 'Division';
+    tableHeadingName.className = 'cataloguetableheading';
+    tableHeadingRecord.className = 'cataloguetableheading';
+    tableHeadingDivision.className = 'cataloguetableheading';    
+    tableHeadingRow.className = 'cataloguetableheadingrow'
+    tableHeadingRow.appendChild(tableHeadingName);
+    tableHeadingRow.appendChild(tableHeadingRecord);    
+    tableHeadingRow.appendChild(tableHeadingDivision);        
+    catalogueTable.appendChild(tableHeadingRow); 
     //load catalogue as list
     for (var key in fighterCatalogueData.recordset) {
         for (var key1 in fighterCatalogueData.recordset[key]) {
@@ -329,49 +364,59 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             var tableRow = document.createElement('tr');
             var tableData = document.createElement('td');
             var tableData2 = document.createElement('td');
+            var tableData3 = document.createElement('td');
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
             tableRow.id ='CatalogueTableRowId'+i;
             linkToCard.id = fighterCatalogueData.recordset[key][key1];
-            linkToCard.className = 'linktofightercataloguetable'
-            tableData.className='cataloguetablename'
+            linkToCard.className = 'linktofightercataloguetable';
+            tableData.className='cataloguetablename';
             tableData2.className='cataloguetablerecord';
+            
 
-            nameParagraph.textContent = numberList +'.'+' '+fighterCatalogueData.recordset[key][key1]; 
+            nameParagraph.textContent = numberList+'.'+' '+fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
 
             if(countriesArray.includes(fighterStatsData.recordset[0].Nationality)){
                 var countryFlagImg = await getFlag(fighterStatsData.recordset[0].Nationality, 'countryflagimgcatalogue')
                 nameParagraph.appendChild(countryFlagImg);
             }
+            var wins = document.createElement('span');
+            wins.textContent=fighterRecordData.recordset[0].TotalWins;
+            wins.className='totalwins';
 
-            if(window.screen.width >= 1024){
-                var wins = document.createElement('span');
-                wins.textContent=fighterRecordData.recordset[0].TotalWins;
-                wins.className='totalwins';
+            var slash1 =document.createElement('span');
+            slash1.textContent = '/';
 
-                var slash1 =document.createElement('span');
-                slash1.textContent = '/';
+            var slash2 =document.createElement('span');
+            slash2.textContent = '/';
 
-                var slash2 =document.createElement('span');
-                slash2.textContent = '/';
+            var losses = document.createElement('span');
+            losses.textContent = fighterRecordData.recordset[0].TotalLosses;
+            losses.className='totallosses';
 
-                var losses = document.createElement('span');
-                losses.textContent = fighterRecordData.recordset[0].TotalLosses;
-                losses.className='totallosses';
+            var draws = document.createElement('span');
+            draws.textContent=fighterRecordData.recordset[0].TotalDraws;
+            draws.className='totaldraws';
 
-                var draws = document.createElement('span');
-                draws.textContent=fighterRecordData.recordset[0].TotalDraws;
-                draws.className='totaldraws';
+            tableData2.appendChild(wins);
+            tableData2.appendChild(slash1);                
+            tableData2.appendChild(losses); 
+            tableData2.appendChild(slash2);                    
+            tableData2.appendChild(draws); 
 
-                tableData2.appendChild(wins);
-                tableData2.appendChild(slash1);                
-                tableData2.appendChild(losses); 
-                tableData2.appendChild(slash2);                    
-                tableData2.appendChild(draws); 
+            var division = document.createElement('span')
+            division.textContent=fighterStatsData.recordset[0].Division;
+            division.style.color='black';
+            tableData3.appendChild(division);
+
+            if(window.screen.width >= 900){
+                var fightHistory = await fetchData('/getBoxerFightHistory/',fighterCatalogueData.recordset[key][key1]);
+                console.log(fightHistory);
                                
             }
+
             linkToCard.appendChild(nameParagraph);
             
             linkToCard.onclick = async function(divId){
@@ -383,6 +428,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             tableData.appendChild(linkToCard);
             tableRow.appendChild(tableData);
             tableRow.appendChild(tableData2);
+            tableRow.appendChild(tableData3);
             tableRow.className = 'cataloguetablerow';
             catalogueTable.appendChild(tableRow);
 
@@ -391,15 +437,8 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         }
     }
     if(i === 0){
-        console.log("result set is empty");
-        var errorDiv = document.createElement('div');
-        errorDiv.className = 'errordiv';
-        errorDiv.id = 'ErrorDiv';
-        var errorParagraph = document.createElement('p');
-
-        errorParagraph.textContent = 'No results found for filter selection';
-        errorDiv.appendChild(errorParagraph);
-        document.body.appendChild(errorDiv);
+        await clearCatalogue();
+        await createErrorDiv();
     }    
 }
 async function loadFighterCatalogue(param){
@@ -506,7 +545,7 @@ function closeWeightFilterMenu() {
 }
 async function clearCatalogue(){
     var z = document.getElementsByClassName('catalogueentry');
-    var y = document.getElementsByClassName('cataloguetablerow');
+    var y = document.getElementsByClassName('cataloguetable');
 
     var elemId='';
 
