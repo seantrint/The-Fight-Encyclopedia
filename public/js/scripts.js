@@ -2,6 +2,9 @@ var upcomingFightCount = 0;
 var isGrid = true;
 var isList = false;
 var countriesArray = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","UK","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe", "USA"];
+var winsArray = ["Win (UD)", "Win (KO)", "Win (SD)", "Win (MD)", "Win (TKO)", "Win (DQ)", "Win (PTS)"];
+var lossArray = ["Loss (UD)", "Loss (KO)", "Loss (SD)", "Loss (MD)", "Loss (TKO)", "Loss (DQ)", "Loss (PTS)"];
+var drawArray = ["Draw (MD)", "Draw (SD)", "Draw (PTS)", "Draw (UD)", "Draw"];
 
 async function fetchData(route, parameter1 = '', parameter2 = '', parameter3 = '', parameter4 = ''){
     //could this go in server page?
@@ -91,46 +94,44 @@ async function loadSearch(searchResultsData){
             searchResultLink.appendChild(fighterImage);
             searchResultLink.appendChild(nameParagraph);
 
-            if(window.screen.width >= 1024){
-                var boxerStatsData = await fetchData('/getBoxerStats/',nameParagraph.textContent);
-                var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagimgsearch');
-                var nameParagraph3 = document.createElement('p');
-                var boxerRecordData = await fetchData('/getBoxerRecord/',nameParagraph.textContent);
+            var boxerStatsData = await fetchData('/getBoxerStats/',nameParagraph.textContent);
+            var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagimgsearch');
+            var nameParagraph3 = document.createElement('p');
+            var boxerRecordData = await fetchData('/getBoxerRecord/',nameParagraph.textContent);
 
-                var wins = document.createElement('span');
-                wins.textContent=boxerRecordData.recordset[0].TotalWins;
-                wins.className='totalwins';
-    
-                var slash1 =document.createElement('span');
-                slash1.textContent = '/';
-    
-                var slash2 =document.createElement('span');
-                slash2.textContent = '/';
-    
-                var losses = document.createElement('span');
-                losses.textContent = boxerRecordData.recordset[0].TotalLosses;
-                losses.className='totallosses';
-    
-                var draws = document.createElement('span');
-                draws.textContent=boxerRecordData.recordset[0].TotalDraws;
-                draws.className='totaldraws';
+            var wins = document.createElement('span');
+            wins.textContent=boxerRecordData.recordset[0].TotalWins;
+            wins.className='totalwins';
 
-                nameParagraph3.appendChild(wins);
-                nameParagraph3.appendChild(slash1);
-                nameParagraph3.appendChild(losses);
-                nameParagraph3.appendChild(slash2);
-                nameParagraph3.appendChild(draws);
-                nameParagraph3.className = 'searchresultsparagraphrecord';
+            var slash1 =document.createElement('span');
+            slash1.textContent = '/';
 
-                searchResultLink.appendChild(countryFlagImg);            
-                searchResultLink.appendChild(nameParagraph3);      
-            }
+            var slash2 =document.createElement('span');
+            slash2.textContent = '/';
+
+            var losses = document.createElement('span');
+            losses.textContent = boxerRecordData.recordset[0].TotalLosses;
+            losses.className='totallosses';
+
+            var draws = document.createElement('span');
+            draws.textContent=boxerRecordData.recordset[0].TotalDraws;
+            draws.className='totaldraws';
+
+            nameParagraph3.appendChild(wins);
+            nameParagraph3.appendChild(slash1);
+            nameParagraph3.appendChild(losses);
+            nameParagraph3.appendChild(slash2);
+            nameParagraph3.appendChild(draws);
+            nameParagraph3.className = 'searchresultsparagraphrecord';
+
+            searchResultLink.appendChild(countryFlagImg);            
+            searchResultLink.appendChild(nameParagraph3);      
+
             searchResultLink.onclick = async function(divId){
                 divId = this.id;
                 var boxerDiv = document.getElementById(divId);
                 var boxerName = boxerDiv.childNodes[1].textContent;
                 window.location.href = '../fighterCard/'+boxerName;
-
             }
             testDiv.id = 'searchResultsGridChild'+i;
             testDiv.appendChild(searchResultLink);
@@ -218,19 +219,16 @@ async function loadFighterCard(){
                 var testDiv = document.createElement('div');
                 testDiv.className = 'fighterinfohistoryspaceContent';
                 testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
-                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                    testDiv.style.backgroundColor = 'green';
-                    //testDiv.style.width = '50%';
+                if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    testDiv.style.textAlign = 'center';
+                    testDiv.appendChild(winDiv);
+                }
+                else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
                     testDiv.style.textAlign = 'center';
                 }
-                if(testDiv.textContent === 'Draw'){
-                    testDiv.style.backgroundColor = '#2d545e';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                    testDiv.style.backgroundColor = '#CE2029';
-                    //testDiv.style.width = '50%';
+                else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
                     testDiv.style.textAlign = 'center';
                 }
                 testDiv.id = 'fighterInfoHistoryspaceContent'+j;
@@ -277,6 +275,16 @@ function closeMenu() {
     var y = document.getElementById("openMenuButton");
     x.style.display = ("none");
     y.style.display = ("block");
+}
+async function closeDivFromOutside(){
+    document.onclick=function(div){
+        var x = document.getElementById("popupMenu");
+        var y = document.getElementById("openMenuButton");
+        if(div.target.id !== 'popupMenu'){
+            x.style.display = ("none");
+            y.style.display = ("block");
+        }
+    }
 }
 async function addImagesToFighterPreviewBox(){
     var randomFighterImagesData = await fetchData('/getRandomFighterImages');
@@ -340,6 +348,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     catalogueTable.id = 'CatalogueTable';
     catalogueTable.className = 'cataloguetable'
     document.body.appendChild(catalogueTable);
+    //this could be a loop and pull values from array
     var tableHeadingRow = document.createElement('tr');
     var tableHeadingName = document.createElement('td');
     var tableHeadingRecord = document.createElement('td');
@@ -355,7 +364,11 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     tableHeadingRow.appendChild(tableHeadingRecord);    
     tableHeadingRow.appendChild(tableHeadingDivision);        
     catalogueTable.appendChild(tableHeadingRow); 
-    //load catalogue as list
+    var tableHeadingLast5 = document.createElement('td');
+    tableHeadingLast5.textContent = 'Last 5 Fights';          
+    tableHeadingLast5.className = 'cataloguetableheading';    
+    tableHeadingLast5.id = 'CatalogueTableLast5';
+    tableHeadingRow.appendChild(tableHeadingLast5);   
     for (var key in fighterCatalogueData.recordset) {
         for (var key1 in fighterCatalogueData.recordset[key]) {
             var fighterStatsData = await fetchData('/getBoxerStats/',fighterCatalogueData.recordset[key][key1]);
@@ -365,6 +378,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             var tableData = document.createElement('td');
             var tableData2 = document.createElement('td');
             var tableData3 = document.createElement('td');
+            var tableData4 = document.createElement('td');
             var nameParagraph = document.createElement('p');
             var linkToCard = document.createElement('a');
 
@@ -373,7 +387,8 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             linkToCard.className = 'linktofightercataloguetable';
             tableData.className='cataloguetablename';
             tableData2.className='cataloguetablerecord';
-            
+            tableData3.className='cataloguetabledivision';
+            tableData4.className='cataloguetablelast5';
 
             nameParagraph.textContent = numberList+'.'+' '+fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
@@ -411,11 +426,25 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             division.style.color='black';
             tableData3.appendChild(division);
 
-            if(window.screen.width >= 900){
-                var fightHistory = await fetchData('/getBoxerFightHistory/',fighterCatalogueData.recordset[key][key1]);
-                console.log(fightHistory);
-                               
-            }
+            var fightHistory = await fetchData('/getBoxerFightHistoryLast5/',fighterCatalogueData.recordset[key][key1]);
+            for (var key in fightHistory.recordset) {
+                var fightResult = document.createElement('div');
+                fightResult.className = 'last5box';
+                if(winsArray.includes(fightHistory.recordset[key].FightResult))
+                {
+                    fightResult.style.backgroundColor = 'green';
+
+                }
+                else if(lossArray.includes(fightHistory.recordset[key].FightResult))
+                {
+                    fightResult.style.backgroundColor = '#CE2029';
+                }
+                else if(drawArray.includes(fightHistory.recordset[key].FightResult))
+                {
+                    fightResult.style.backgroundColor = '#2d545e';
+                }
+                tableData4.appendChild(fightResult);
+            }                               
 
             linkToCard.appendChild(nameParagraph);
             
@@ -429,6 +458,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             tableRow.appendChild(tableData);
             tableRow.appendChild(tableData2);
             tableRow.appendChild(tableData3);
+            tableRow.appendChild(tableData4);
             tableRow.className = 'cataloguetablerow';
             catalogueTable.appendChild(tableRow);
 
@@ -517,7 +547,7 @@ window.onscroll = function ()
 };
 
 function TriggerJumpToTopButton() {
-    var x = document.getElementById("jumpToTopButton");
+    var x = document.getElementById("jumpToTopButtonSpace");
     if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
         x.style.display = "block";
     } else {

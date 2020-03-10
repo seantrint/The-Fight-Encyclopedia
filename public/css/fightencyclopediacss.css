@@ -65,11 +65,11 @@ body {
 .searchresultsgridchild{
     border-bottom:1px ridge gray;
     color:var(--links-font-color);
-    font-size:12px;
+    font-size:16px;
 }
 .searchresultsgridchildimg{
-    height:90px;
-    width:90px;
+    height:110px;
+    width:110px;
     margin-top:10px;
     -webkit-filter: grayscale(90%);
     filter: grayscale(90%);
@@ -545,6 +545,11 @@ tr {
 .cataloguetableheading{
     text-align:left;
 }
+.cataloguetableheadingrow{
+    border-bottom:1px ridge gray;
+    border-width:100% !important;
+
+}
 .filterlink {
     color: var(--links-font-color);
 }
@@ -654,14 +659,23 @@ tr {
     width: 50px;
     padding:5px;
     position: fixed;
+    right: 5px;
+    bottom: 30px;
+    background-color: var(--content-background-color);
+    z-index: 999999999;
+    display: none;
+    opacity: 0.8;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 25px;
 }
 .jumptopbutton {
     background: none;
     font-size: 38px;
     color: black;
     border: none;
-    z-index: 2;
-    display: none;
+    margin: 0 auto;
 }
     .jumptopbutton p {
         font-size: 12px;
@@ -775,37 +789,10 @@ tr {
     .fighterinfohistoryspaceContent{
         border:1px dashed gray;
     }
-    /* .fighterinfohistoryspace table {
-        width: 100%;
-    }
-    .fighterinfohistoryspace td {
-        border: 1px ridge #12343b;
-    }
-
-    .fighterinfohistoryspace th {
-        border: 1px ridge #12343b;
-    }
-
-    .fighterinfohistoryspace tr {
-        border: 1px ridge #12343b;
-    } */
 .fighterinfobiospace{
     display:none;
 }
-    /* .fighterinfostatsspace table {
-        font-size: 13px;
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .fighterinfostatsspace td {
-        border: 1px ridge #12343b;
-    }
-    .fighterinfostatsspace th {
-        border: 1px ridge #12343b;
-    }
-    .fighterinfostatsspace tr {
-        border: 1px ridge #12343b;
-    } */
+
 .fighterinfostatsspace{
     display:grid;
     grid-template-columns: repeat(5, 1fr);
@@ -942,6 +929,24 @@ tr {
     color: var(--links-font-color);
     cursor:pointer;
 }
+.countryflagimgsearch{
+    height:30px;
+    width:30px;
+}
+.last5box{
+    width:5px;
+    height:5px;
+    float:left;
+    margin-left:1px;
+    display:none;
+}
+#CatalogueTableLast5{
+    display:none;
+}
+.fightercardresultbox{
+    width:15px;
+    height:15px;
+}
 @media only screen and (min-width: 430px) {
     .popupmenu img{
         height:100px;
@@ -1066,14 +1071,13 @@ tr {
         height:110px;
         width:110px;
     }
-    .searchresultsgridchild{
-        font-size:14px;
+    .last5box{
+        width:10px;
+        height:10px;
+        display:block;
     }
-    .cataloguetablename{
-        width:175px;
-    }
-    .cataloguetableheadingrow{
-        border-bottom:1px ridge gray;
+    #CatalogueTableLast5{
+        display:block;
     }
 }
 
@@ -1096,12 +1100,42 @@ tr {
     .searchspacesearchtools input{
         width:55%;
     }
+    .cataloguetablerecord{
+        width:100px !important;
+    }
+    .cataloguetabledivision{
+        width:130px !important;
+    }
+    .cataloguetablelast5{
+        width:150px !important;
+    }
+
+    .searchresultsgridlink{
+        display:grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 90px;
+        grid-gap:0px;
+    }
     .searchresultsgridchildimg{
         height:130px;
         width:130px;
+        margin-top:0px;
+        grid-column: 1/3;
+        grid-row:1/3;
     }
-    .cataloguetablerecord{
-        width:100px;
+    .searchresultsparagraph{
+        grid-column: 3;
+        grid-row:1;
+    }
+    .countryflagimgsearch{
+        grid-column: 4;
+        grid-row:1;
+        height:35px;
+        margin-top:15px;
+    }
+    .searchresultsparagraphrecord{
+        grid-column: 3/4;
+        grid-row:2;
     }
 }
 
@@ -1189,6 +1223,15 @@ tr {
     }
     .searchspacesearchtools input{
         width:50%;
+    }
+    .searchresultsgridlink{
+        display:grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-auto-rows: 90px;
+        grid-gap:0px;
+    }
+    .cataloguetablename{
+        width:175px !important;
     }
 }
 
@@ -1725,37 +1768,9 @@ tr {
     .searchresultsgrid{
         grid-column: 3/10;
     }
-
     .searchresultsgridchild{
         padding:5%;
         font-size:16px;
-    }
-    .searchresultsgridlink{
-        display:grid;
-        grid-template-columns: repeat(6, 1fr);
-        grid-auto-rows: 90px;
-        grid-gap:0px;
-    }
-    .searchresultsgridchildimg{
-        height:150px;
-        width:150px;
-        margin-top:0px;
-        grid-column: 1/3;
-        grid-row:1/3;
-    }
-    .searchresultsparagraph{
-        grid-column: 3;
-        grid-row:1;
-    }
-    .countryflagimgsearch{
-        grid-column: 4;
-        grid-row:1;
-        height:35px;
-        margin-top:15px;
-    }
-    .searchresultsparagraphrecord{
-        grid-column: 3/4;
-        grid-row:2;
     }
     .searchspacemessage{
         font-size:16px;
