@@ -263,6 +263,45 @@ function showMenuLinks() {
 async function start() {
     await fetchLayoutPage();
 }
+async function closemenus(){
+    var popupmenu = document.getElementById('popupMenu');
+    var openpopupmenu = document.getElementById("openMenuButton");
+    var weightfilter = document.getElementById("filterWeightMenu");
+    var filter = document.getElementById("filterMenu");
+    var genderfilter = document.getElementById("filterGenderMenu");   
+    var searchInput = document.getElementById("searchFieldMobile");
+    var searchButton = document.getElementById("searchButtonMobile");
+    var wideScreenMenu = document.getElementById("menuOptions");
+    // change to array of ids
+
+    document.onclick = function(e){
+        if(e.target.id !== 'popupMenu' && e.target.id !== 'openMenuButton' && e.target.id !== 'searchFieldMobile' && e.target.id !== 'searchButtonMobile'){
+            popupmenu.style.display = 'none';
+            openpopupmenu.style.display = 'block';            
+          }
+        if(e.target.id !== 'filterWeightMenu' && e.target.id !== 'currentWeightFilter'){
+            if(weightfilter != null){
+                weightfilter.style.display = 'none';   
+            }
+        }
+        if(e.target.id !== 'filterMenu' && e.target.id !== 'currentFilter'){
+            if(filter != null){
+                filter.style.display = 'none';   
+            }
+        }
+        if(e.target.id !== 'filterGenderMenu' && e.target.id !== 'currentGenderFilter'){
+            if(genderfilter != null){
+                genderfilter.style.display = 'none';   
+            }
+        }
+        if(e.target.id !== 'menuOptions' && e.target.id !== 'pageName'){
+            if(wideScreenMenu != null){
+                wideScreenMenu.style.display = 'none';   
+            }
+        }                
+      };
+
+}
 function openMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
@@ -548,7 +587,7 @@ window.onscroll = function ()
 
 function TriggerJumpToTopButton() {
     var x = document.getElementById("jumpToTopButtonSpace");
-    if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+    if (document.body.scrollTop > 1500 || document.documentElement.scrollTop > 1500) {
         x.style.display = "block";
     } else {
         x.style.display = "none";
@@ -666,6 +705,10 @@ async function search(id){
         var searchField = document.getElementById('searchFieldWideScreen').value;
         window.location.href = '/searchResults/'+searchField;
     }
+    if(searchButton === 'searchButton'){
+        var searchField = document.getElementById('searchField').value;
+        window.location.href = '/searchResults/'+searchField;
+    }   
     
 }
 async function loadUpcomingFightsData(){

@@ -15,5 +15,7 @@ app.get('/searchResults/:searchTerm', function(request,response){
     var searchTerm = request.params.searchTerm;
     response.render('../public/searchresults',{searchTerm: searchTerm});
 });
-
+app.use(function(request,response){
+    response.status(404).render('../public/errorpages/error404');
+});
 module.exports = app;

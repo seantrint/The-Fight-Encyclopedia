@@ -2,17 +2,35 @@ const express = require('express');
 const app = express();
 const sql = require("mssql");
 const config = require("../config");
+const routes = require("../routes/index");
 
-async function connectToDb(){
+function connectToDb(){
     try{
         sql.connect(config);
         console.log("connected to db...");
     }
     catch(error){
         console.log(error);
+        //load error page
+        response.render('../public/errorpages/dbdown');
+    }
+}
+function closeDbConnection(){
+    try{
+        sql.close();
+        console.log("disconnected from db...");
+    }
+    catch(error){
+        console.log(error);
     }
 }
 connectToDb();
+
+async function loadDbDownPage(){
+    app.use(function(request,response){
+        response.render('../public/errorpages/dbdown');
+    });
+}
 
 async function checkForIllegals(queryParam){
     var illegalCharacterArray = [';','--','"',"'",'drop','table','database'];
@@ -29,7 +47,6 @@ async function keepConnectionAlive(){
 
 }
 app.get('/getSearchResults/:searchTerm', async function(request,response){
-
     const ps = new sql.PreparedStatement()
     var searchTerm = request.params.searchTerm;
     var illegalValue = await checkForIllegals(searchTerm);
@@ -38,33 +55,41 @@ app.get('/getSearchResults/:searchTerm', async function(request,response){
     ps.prepare(' select BoxerName'
                 +' from Boxer'
                 +' where BoxerName like @searchTerm',async function(err){
+                    if(err)
+                    {
+                        response.send(await loadDbDownPage());
+                        console.log(err);
+                    }
                     ps.execute({searchTerm: illegalValue}, async function(err, recordset){
+                        if(err)
+                        {
+                            response.send(await loadDbDownPage());
+                            console.log(err);
+                        }
                         ps.unprepare(async function(err){
                             if(err)
                             {
+                                response.send(await loadDbDownPage());
                                 console.log(err);
                             }
                         });
                         response.send(recordset);  
                     });
-                });   
-        
-                        
+                });                    
 })
-app.get('/getUpcomingFights', function(request,response){
-    
-        request = new sql.Request();
-        request.query('select FightLocation,FightDate,FightDivision from UpcomingFights', function (err, recordset){
-            if(err)
-            {
-                console.log(err);
-            }
-            response.send(recordset);
-        })
+app.get('/getUpcomingFights', async function(request,response){
+    request = new sql.Request();
+    request.query('select FightLocation,FightDate,FightDivision from UpcomingFights', async function (err, recordset){
+        if(err)
+        {
+            response.send(await loadDbDownPage());
+            console.log(err);
+        }
+        response.send(recordset);
+    })
 })
 
-app.get('/getUpcomingFighterNames', function(request,response){    
-
+app.get('/getUpcomingFighterNames', async function(request,response){
     request = new sql.Request();
     request.query('select s1.BoxerName, s2.BoxerName from' 
         +'( select b.BoxerName, u.UpcomingFightID'
@@ -74,17 +99,16 @@ app.get('/getUpcomingFighterNames', function(request,response){
         +'(  select b.BoxerName, u.UpcomingFightID'
         +' from Boxer b'
         +' inner join UpcomingFights u on u.BoxerBID = b.BoxerId) s2'
-        +' on s1.UpcomingFightID = s2.UpcomingFightID', function (err, recordset){
+        +' on s1.UpcomingFightID = s2.UpcomingFightID', async function (err, recordset){
             if(err)
             {
                 console.log(err);
             }
             response.send(recordset);
-        })    
+        })  
 })
 
-app.get('/getUpcomingFighterRecords',function(request,response){
-
+app.get('/getUpcomingFighterRecords',async function(request,response){
     request = new sql.Request();
     request.query('select s1.TotalWins, s1.TotalWinsKO, s1.TotalLosses, s1.TotalDraws, s2.TotalWins, s2.TotalWinsKO, s2.TotalLosses, s2.TotalDraws from'
         +'( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
@@ -94,17 +118,16 @@ app.get('/getUpcomingFighterRecords',function(request,response){
         +' ( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
         +' from BoxerRecord b'
         +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
-        +' on s1.UpcomingFightID = s2.UpComingFightID', function (err, recordset){
+        +' on s1.UpcomingFightID = s2.UpComingFightID', async function (err, recordset){
             if(err)
             {
                 console.log(err);
             }
             response.send(recordset);  
-        })
+        })        
 })
 
-app.get('/getUpcomingFighterStats',function(request,response){
-
+app.get('/getUpcomingFighterStats',async function(request,response){
     request = new sql.Request();
     request.query('select s1.Age, s1.Height, s1.Reach, s1.Nationality, s2.Age, s2.Height, s2.Reach, s2.Nationality from'
         +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
@@ -114,17 +137,16 @@ app.get('/getUpcomingFighterStats',function(request,response){
         +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
         +'  from BoxerStats b'
         +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
-        +'  on s1.UpcomingFightID = s2.UpComingFightID', function(err,recordset){
+        +'  on s1.UpcomingFightID = s2.UpComingFightID', async function(err,recordset){
             if(err)
             {
                 console.log(err);
             }
             response.send(recordset);  
-        })
+        })      
 })
 
-app.get('/getUpcomingFighterImages',function(request,response){
-
+app.get('/getUpcomingFighterImages',async function(request,response){
     request = new sql.Request();
     request.query('select s1.BoxerImageReference, s2.BoxerImageReference from'
         +'( select b.BoxerImageReference, u.UpcomingFightID'
@@ -134,13 +156,13 @@ app.get('/getUpcomingFighterImages',function(request,response){
         +'( select b.BoxerImageReference, u.UpcomingFightID'
         +'  from BoxerImage b' 
         +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
-        +'  on s1.UpcomingFightID = s2.UpComingFightID', function(err,recordset){
+        +'  on s1.UpcomingFightID = s2.UpComingFightID', async function(err,recordset){
             if(err)
             {
                 console.log(err);
             }
             response.send(recordset);  
-        })
+        })              
 })
 
 app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',async function(request,response){
@@ -185,16 +207,15 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',async function(request,r
                         });
                         response.send(recordset);  
                     });
-                });
+                });               
 })
-app.get('/getRandomFighterImages',function(request,response){
-
+app.get('/getRandomFighterImages',async function(request,response){
     request = new sql.Request();
     request.query('SELECT * FROM BoxerImage' 
     +' WHERE (ABS(CAST'
     +' ((BINARY_CHECKSUM(*) *' 
     +' RAND()) as int)) % 100) < 80'
-        ,function(err,recordset){
+        ,async function(err,recordset){
             if(err)
             {
                 console.log(err);

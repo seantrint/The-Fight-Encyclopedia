@@ -22,6 +22,37 @@ body {
     border-radius:5px;
     color:#CE2029;
 }
+.errorpagemessage{
+    grid-column: 1/8;
+    grid-row:4/7;
+    font-size:22px;
+    color:#CE2029;
+    background-color: var(--content-background-color); 
+}
+.errorpagesearch{
+    color:black;
+    font-size:16px;
+}
+.errorpagesearchtools{
+    margin-top:-5%;
+}
+    .errorpagesearchtools button{
+        background:none;
+        border:none;
+        color: var(--links-font-color);
+        font-size:18px;
+    }
+.errorpagelinks{
+    font-size:16px;
+    text-align: center;
+}    
+    .errorpagelinks a{
+        color: var(--links-font-color);
+        padding:5%;
+    }    
+    .errorpagelinks a:visited{
+        color: var(--links-font-color);
+    }    
 .searchspacegrid{
     background-color: var(--content-background-color); 
     grid-column: 1/8;
@@ -696,11 +727,12 @@ tr {
     grid-column: 1 / 8;
     grid-row: 1/8;
     margin-top:5%;
-
+    background-color: var(--content-background-color);
+    margin-bottom: -1%;
 }
     .fighterinfoimagespace img {
-        height: 220px;
-        max-width: 70%;
+        height: 240px;
+        width: 120px;
         -webkit-filter: grayscale(90%);
         filter: grayscale(90%);
         border: 1px ridge gray;
@@ -780,14 +812,15 @@ tr {
     .fighterinfohistoryspaceHeader{
         font-weight:bold;
         height:35px;
-        border-bottom:1px dashed gray;
-        border-right:1px dashed gray;
+        border-bottom:1px ridge gray;
+        border-right:1px ridge gray;
     }
     #fighterinfohistoryspaceHeaderLast{
         border-right:none;
     }
     .fighterinfohistoryspaceContent{
-        border:1px dashed gray;
+        border-bottom:1px ridge gray;
+        border-right:1px ridge gray;
     }
 .fighterinfobiospace{
     display:none;
@@ -802,7 +835,7 @@ tr {
 }
     .fighterinfostatsspaceHeader{
         grid-column: 1;
-        border-right:1px dashed gray;
+        font-weight: bold;
     }
     .fighterinfostatsspaceContent{
         grid-column:2/5;
@@ -867,10 +900,6 @@ tr {
     }
 .fighterinfobiospace {
     background-color: var(--content-background-color);
-}
-.fighterinfoimagespace {
-    background-color: var(--content-background-color);
-    margin-bottom: -1%;
 }
 .fighterinfonamespace {
     background-color: var(--content-background-color);
@@ -1079,6 +1108,10 @@ tr {
     #CatalogueTableLast5{
         display:block;
     }
+    .errorpagemessage{
+        grid-column: 2/7;
+        grid-row:4/8;
+    }
 }
 
 @media only screen and (min-width: 640px) {
@@ -1136,6 +1169,15 @@ tr {
     .searchresultsparagraphrecord{
         grid-column: 3/4;
         grid-row:2;
+    }
+    .errorpagemessage{
+        grid-column: 2/7;
+        grid-row:10/25;
+        text-align: center;
+        font-size:24px;
+    }
+    .errorpagesearchtools{
+        margin-top:auto;
     }
 }
 
@@ -1331,24 +1373,48 @@ tr {
         height: 70%;
         width: 85%;
     }
-
+    .fighterinfogrid {
+        grid-template-columns: repeat(10, 1fr);
+    }
+    .fighterinfoimagespace{
+        grid-column: 2/10;
+    }
+    .fighterinforecordspace{
+        grid-column: 2/10;
+    }
+    .fighterinfonamespace{
+        grid-column: 2/10;
+    }
+    .fighterinfotextspace{
+        grid-column: 2/10;
+    }
+    .tab1 {
+        grid-column: 2/4;
+    }
+    .tab2 {
+        grid-column: 4/6;
+    }
+    .tab3{
+        grid-column: 6/9;
+    }
     .fighterinfoimagespace img {
         height: 300px;
+        width:150px;
     }
-
     .fighterinfonamespace p {
         font-size: 26px;
     }
-
     .fighterinforecordtable {
         font-size: 24px;
     }
-
+    .fighterinfohistoryspace{
+        font-size: 16px;
+    }
     .wld {
         font-size: 16px;
     }
 
-    .fighterinfostatsspace table {
+    .fighterinfostatsspace{
         font-size: 16px;
     }
 
@@ -1359,11 +1425,13 @@ tr {
     .previousfighterbuttonspace {
         font-size: 64px;
         margin-top: 6%;
+        grid-column:2/4;
     }
 
     .nextfighterbuttonspace {
         font-size: 64px;
         margin-top: 6%;
+        grid-column:8/10;
     }
 
     .one .polaroid {
@@ -1775,6 +1843,18 @@ tr {
     .searchspacemessage{
         font-size:16px;
     }
+    .errorpagemessage{
+        grid-column: 4/9;
+        grid-row:10/35;
+        text-align: center;
+        font-size:32px;
+    }
+    .errorpagesearch{
+        margin-top:75px;    
+    }
+    .errorpagesearchtools{
+        margin-top:-15px;
+    }
 }
 
 @media only screen and (min-width: 1250px) {
@@ -2148,7 +2228,10 @@ tr {
     .frontfaceimg {
         height: 250px;
     }
-
+    .errorpagesearchtools input{
+        width:50%;
+        align-self: center;
+    }
 }
 
 @media only screen and (min-width: 1900px) {

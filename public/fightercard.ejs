@@ -57,7 +57,7 @@
             }
         </script>
 	</head>
-<body onload="start()">
+<body onload="start()" onclick="closemenus()">
     <header id="pageLayout"></header>
     <div class="fighterinfogrid" id="FighterInfoGrid">
         <div class="fighterinfoimagespace">
@@ -96,29 +96,6 @@
                 <div class="fighterinfohistoryspaceHeader">W/L/D</div>
                 <div class="fighterinfohistoryspaceHeader">Location</div>
                 <div class="fighterinfohistoryspaceHeader" id="fighterinfohistoryspaceHeaderLast">Result</div>
-                <!-- <table>
-                    <tr><td><i>Date</i></td><td style="text-align:center"><i>Weight (lbs)</i></td><td><i>Opponent</i></td><td><i>w-l-d</i></td><td><i>Location</i></td><td><i>Result</i></td></tr>
-                    <tr><td>2019/11/23</td><td style="text-align:center">218</td><td><a asp-area="" asp-page="/FighterCatalogue">Luis Ortiz</a></td><td>31/1/0</td><td>MGM Grand, Grand Garden Arena, Las Vegas</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/05/18</td><td style="text-align:center">220</td><td>Dominic Breazeale</td><td>20/1/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2018/12/01</td><td style="text-align:center">212</td><td>Tyson Fury</td><td>27/0/0</td><td>Staples Center, Los Angeles</td><td style="background-color:cornflowerblue">Draw</td></tr>
-                    <tr><td>2018/03/03</td><td style="text-align:center">217</td><td>Luis Ortiz</td><td>28/0/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (TKO)</td></tr>
-                    <tr><td>2017/11/04</td><td style="text-align:center">223</td><td>Bermane Stiverne</td><td>25/2/1</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/11/23</td><td style="text-align:center">218</td><td>Luis Ortiz</td><td>31/1/0</td><td>MGM Grand, Grand Garden Arena, Las Vegas</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/05/18</td><td style="text-align:center">220</td><td>Dominic Breazeale</td><td>20/1/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2018/12/01</td><td style="text-align:center">212</td><td>Tyson Fury</td><td>27/0/0</td><td>Staples Center, Los Angeles</td><td style="background-color:cornflowerblue">Draw</td></tr>
-                    <tr><td>2018/03/03</td><td style="text-align:center">217</td><td>Luis Ortiz</td><td>28/0/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (TKO)</td></tr>
-                    <tr><td>2017/11/04</td><td style="text-align:center">223</td><td>Bermane Stiverne</td><td>25/2/1</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/11/23</td><td style="text-align:center">218</td><td>Luis Ortiz</td><td>31/1/0</td><td>MGM Grand, Grand Garden Arena, Las Vegas</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/05/18</td><td style="text-align:center">220</td><td>Dominic Breazeale</td><td>20/1/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2018/12/01</td><td style="text-align:center">212</td><td>Tyson Fury</td><td>27/0/0</td><td>Staples Center, Los Angeles</td><td style="background-color:cornflowerblue">Draw</td></tr>
-                    <tr><td>2018/03/03</td><td style="text-align:center">217</td><td>Luis Ortiz</td><td>28/0/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (TKO)</td></tr>
-                    <tr><td>2017/11/04</td><td style="text-align:center">223</td><td>Bermane Stiverne</td><td>25/2/1</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/11/23</td><td style="text-align:center">218</td><td>Luis Ortiz</td><td>31/1/0</td><td>MGM Grand, Grand Garden Arena, Las Vegas</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2019/05/18</td><td style="text-align:center">220</td><td>Dominic Breazeale</td><td>20/1/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                    <tr><td>2018/12/01</td><td style="text-align:center">212</td><td>Tyson Fury</td><td>27/0/0</td><td>Staples Center, Los Angeles</td><td style="background-color:cornflowerblue">Draw</td></tr>
-                    <tr><td>2018/03/03</td><td style="text-align:center">217</td><td>Luis Ortiz</td><td>28/0/0</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (TKO)</td></tr>
-                    <tr><td>2017/11/04</td><td style="text-align:center">223</td><td>Bermane Stiverne</td><td>25/2/1</td><td>Barclays Center, Brooklyn</td><td style="background-color:green">Win (KO)</td></tr>
-                </table> -->
             </div>
             <div class="fighterinfobiospace" id="fighterInfoBioSpace">
                 <p>Deontay Leshun Wilder (/ˈwaɪldɜːr/; born October 22, 1985) is an American professional boxer. He has held the WBC heavyweight title since 2015, and in doing so became the first American world heavyweight champion in nine years, which was the longest period of time in boxing history without an American heavyweight champion. </p>
