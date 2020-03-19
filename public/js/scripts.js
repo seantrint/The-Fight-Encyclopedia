@@ -213,26 +213,73 @@ async function loadFighterCard(){
         document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].TotalLosses;
         document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].TotalDraws;
 
+        var fhcount = 1;
+        var every6Array = [3,9,15,21,27,33,39,45,51,57,63,69,75,81,87,93,99,105,111,117,123,129,135,141,147,153,159,165,171,177,183,189,195,201,207,213,219,225,231,237,243,249,255,261,267,273,279,285,291,297,303,309,315,321,327,333,339,345,351,357,363,369,375,381,387,393,399,405,411,417,423,429,435]
+
         //fight history
         for (var key in boxerFightHistoryData.recordset) {
+            var testRow = document.createElement('tr');
             for (var key1 in boxerFightHistoryData.recordset[key]) {
-                var testDiv = document.createElement('div');
-                testDiv.className = 'fighterinfohistoryspaceContent';
-                testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
-                if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                    var winDiv = document.createElement('div');
-                    winDiv.className = 'fightercardresultbox'
-                    testDiv.style.textAlign = 'center';
-                    testDiv.appendChild(winDiv);
+                // var testDiv = document.createElement('div');
+                // testDiv.className = 'fighterinfohistoryspaceContent';
+                // testDiv.textContent = boxerFightHistoryData.recordset[key][key1];
+                var testData = document.createElement('td');
+                testData.textContent = boxerFightHistoryData.recordset[key][key1];
+                testData.className = 'fighthistorytablecell';
+                if(screen.width > 350){
+                    //make generic
+                    if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                        var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                        testData.textContent = ' '+newtext+' ';
+                        var winDiv = document.createElement('div');
+                        winDiv.className = 'fightercardresultbox'
+                        winDiv.style.backgroundColor = 'green';
+                        winDiv.textContent = 'W';
+                        
+                        testData.appendChild(winDiv);
+                    }
+                    else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                        var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                        testData.textContent = ' '+newtext+' ';
+                        var lossDiv = document.createElement('div');
+                        lossDiv.className = 'fightercardresultbox'
+                        lossDiv.style.backgroundColor = '#CE2029';
+                        lossDiv.textContent = 'L';
+
+                        testData.appendChild(lossDiv);
+                    }       
+                    else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                        var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                        testData.textContent = ' '+newtext+' ';
+                        var drawDiv = document.createElement('div');
+                        drawDiv.className = 'fightercardresultbox'
+                        drawDiv.style.backgroundColor = '#2d545e';
+                        drawDiv.textContent = 'D';
+
+                        testData.appendChild(drawDiv);
+                    } 
                 }
-                else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                    testDiv.style.textAlign = 'center';
+                if(every6Array.includes(fhcount)){
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = boxerFightHistoryData.recordset[key][key1];
+                    fighterLink.textContent = boxerFightHistoryData.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
                 }
-                else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                    testDiv.style.textAlign = 'center';
-                }
-                testDiv.id = 'fighterInfoHistoryspaceContent'+j;
-                document.getElementById('fighterInfoHistorySpace').appendChild(testDiv);
+                testRow.className = 'fighthistorytablerow';
+                testRow.appendChild(testData);
+                fhcount++;
+                document.getElementById('fighterInfoHistorySpaceTable').appendChild(testRow);
+                
+                // else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                //     testDiv.style.textAlign = 'center';
+                // }
+                // else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                //     testDiv.style.textAlign = 'center';
+                // }
+                // testDiv.id = 'fighterInfoHistoryspaceContent'+j;
+                // document.getElementById('fighterInfoHistorySpace').appendChild(testDiv);
             }
         }                
     }
@@ -338,8 +385,16 @@ async function addImagesToFighterPreviewBox(){
     }
 
 }
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 async function loadFighterCatalogueAsGrid(fighterCatalogueData){
     await clearCatalogue();
+    var loadingParagraph = document.createElement('p');
+    loadingParagraph.textContent = 'Loading...';
+    document.body.appendChild(loadingParagraph);
+    await sleep(1000);
+    document.body.removeChild(loadingParagraph);
     var i =0;
     //load catalogue as grid
     for (var key in fighterCatalogueData.recordset) {
@@ -381,6 +436,11 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
 }
 async function loadFighterCatalogueAsList(fighterCatalogueData){
     await clearCatalogue();
+    var loadingParagraph = document.createElement('p');
+    loadingParagraph.textContent = 'Loading...';
+    document.body.appendChild(loadingParagraph);
+    await sleep(1000);
+    document.body.removeChild(loadingParagraph);
     var i =0;
     var numberList = 1;
     var catalogueTable = document.createElement('table');
@@ -612,6 +672,7 @@ function closeWeightFilterMenu() {
     var x = document.getElementById("filterWeightMenu");
     x.style.display = "none";
 }
+//clearing could be generic
 async function clearCatalogue(){
     var z = document.getElementsByClassName('catalogueentry');
     var y = document.getElementsByClassName('cataloguetable');
@@ -640,6 +701,17 @@ async function clearErrors(){
             elemId.remove();
         }
     }  
+}
+async function clearlast5(){
+    var x = document.getElementsByClassName('last5contentrow');
+    console.log('before loop');
+    if(typeof x != undefined){
+        for (var j =0; j < x.length; j+1){
+            elemId = document.getElementById(x[j].id);
+            elemId.remove();
+            console.log('in loop');
+        }
+    }     
 }
 async function filterWeightClass(id) {
     var currentWeightFilter = document.getElementById("currentWeightFilter");
@@ -695,7 +767,6 @@ async function filterGender(id) {
     closeGenderFilterMenu();
 }
 async function search(id){
-
     var searchButton = document.getElementById(id).id;
     if(searchButton === 'searchButtonMobile'){
         var searchField = document.getElementById('searchFieldMobile').value;
@@ -709,7 +780,6 @@ async function search(id){
         var searchField = document.getElementById('searchField').value;
         window.location.href = '/searchResults/'+searchField;
     }   
-    
 }
 async function loadUpcomingFightsData(){
     var upcomingFightsData = await fetchData('/getUpcomingFights');
@@ -761,57 +831,116 @@ async function loadUpcomingFightsData(){
     var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
     var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
 
+    var twoupthree = [2,5,8,11,14];
     var i = 0;
     var j = 0;
+    var fhcountA = 1;
+    var fhcountB = 1;
     for (var key in upcomingFightsLastFiveDataA.recordset) {
+        var testRow = document.createElement('tr');
+        testRow.className = 'last5contentrow';
+        testRow.id ='last5contentrow'+i;
         for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
-            var testDiv = document.createElement('div');
-            testDiv.className = 'last5gridChild';
-            testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-            testDiv.id = "Last5GridAChild"+i;
-            if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                testDiv.style.backgroundColor = 'green';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
+            var testData = document.createElement('td');
+            testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+            testData.className = 'last5contentcell';
+            //make generic
+            if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var winDiv = document.createElement('div');
+                winDiv.className = 'fightercardresultbox'
+                winDiv.style.backgroundColor = 'green';
+                winDiv.textContent = 'W';
+                
+                testData.appendChild(winDiv);
             }
-            if(testDiv.textContent === 'Draw'){
-                testDiv.style.backgroundColor = '#2d545e';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
+            else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var lossDiv = document.createElement('div');
+                lossDiv.className = 'fightercardresultbox'
+                lossDiv.style.backgroundColor = '#CE2029';
+                lossDiv.textContent = 'L';
+
+                testData.appendChild(lossDiv);
+            }       
+            else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var drawDiv = document.createElement('div');
+                drawDiv.className = 'fightercardresultbox'
+                drawDiv.style.backgroundColor = '#2d545e';
+                drawDiv.textContent = 'D';
+
+                testData.appendChild(drawDiv);
             }
-            if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                testDiv.style.backgroundColor = '#CE2029';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            document.getElementById('Last5gridA').appendChild(testDiv);
-            i++;
+            if(twoupthree.includes(fhcountA)){
+                testData.textContent = '';
+                var fighterLink = document.createElement('a');
+                fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                fighterLink.className = 'fighthistorytablecelllink'
+                testData.appendChild(fighterLink);
+            } 
+            testRow.appendChild(testData);
+            document.getElementById('Last5TableA').appendChild(testRow);
+            fhcountA++;
         }
+        i++;
     }
     for (var key in upcomingFightsLastFiveDataB.recordset) {
+        var testRow = document.createElement('tr');
+        testRow.className = 'last5contentrow';
+        testRow.id ='last5contentrow'+j;
         for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
-            var testDiv = document.createElement('div');
-            testDiv.className = 'last5gridChild';
-            testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-            testDiv.id = 'Last5GridBChild'+j;
-            if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                testDiv.style.backgroundColor = 'green';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
+            var testData = document.createElement('td');
+            testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+            testData.className = 'last5contentcell';
+            //make generic
+            if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var winDiv = document.createElement('div');
+                winDiv.className = 'fightercardresultbox'
+                winDiv.style.backgroundColor = 'green';
+                winDiv.textContent = 'W';
+                
+                testData.appendChild(winDiv);
             }
-            if(testDiv.textContent === 'Draw'){
-                testDiv.style.backgroundColor = '#2d545e';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                testDiv.style.backgroundColor = '#CE2029';
-                //testDiv.style.width = '50%';
-                testDiv.style.textAlign = 'center';
-            }
-            document.getElementById('Last5gridB').appendChild(testDiv);
-            j++;
+            else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var lossDiv = document.createElement('div');
+                lossDiv.className = 'fightercardresultbox'
+                lossDiv.style.backgroundColor = '#CE2029';
+                lossDiv.textContent = 'L';
+
+                testData.appendChild(lossDiv);
+            }       
+            else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                testData.textContent = '';
+                var drawDiv = document.createElement('div');
+                drawDiv.className = 'fightercardresultbox'
+                drawDiv.style.backgroundColor = '#2d545e';
+                drawDiv.textContent = 'D';
+
+                testData.appendChild(drawDiv);
+            } 
+            if(twoupthree.includes(fhcountB)){
+                testData.textContent = '';
+                var fighterLink = document.createElement('a');
+                fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                fighterLink.className = 'fighthistorytablecelllink'
+                testData.appendChild(fighterLink);
+            } 
+            testRow.appendChild(testData);
+            document.getElementById('Last5TableB').appendChild(testRow);
+            fhcountB++;
         }
+        j++;
     }
 }
 async function nextFight(){
@@ -862,54 +991,120 @@ async function nextFight(){
         //last 5 fights
         var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
         var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
-        var i=0;
-        var j=0;
 
+        var twoupthree = [2,5,8,11,14];
+        var i = 0;
+        var j = 0;
+        var fhcountA = 1;
+        var fhcountB = 1;
+
+        await clearlast5();
         for (var key in upcomingFightsLastFiveDataA.recordset) {
+            var testRow = document.createElement('tr');
+            testRow.className = 'last5contentrow';
+            testRow.id ='last5contentrow'+i;
             for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
-                var testDiv = document.getElementById('Last5GridAChild'+i);
-                testDiv.className = 'last5gridChild';
-                testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                    testDiv.style.backgroundColor = 'green';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
+                var testData = document.createElement('td');
+                testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                testData.className = 'last5contentcell';
+                //make generic
+                if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    winDiv.style.backgroundColor = 'green';
+                    winDiv.textContent = 'W';
+                    
+                    testData.appendChild(winDiv);
                 }
-                if(testDiv.textContent === 'Draw'){
-                    testDiv.style.backgroundColor = '#2d545e';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                    testDiv.style.backgroundColor = '#CE2029';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                i++;
+                else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var lossDiv = document.createElement('div');
+                    lossDiv.className = 'fightercardresultbox'
+                    lossDiv.style.backgroundColor = '#CE2029';
+                    lossDiv.textContent = 'L';
+    
+                    testData.appendChild(lossDiv);
+                }       
+                else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var drawDiv = document.createElement('div');
+                    drawDiv.className = 'fightercardresultbox'
+                    drawDiv.style.backgroundColor = '#2d545e';
+                    drawDiv.textContent = 'D';
+    
+                    testData.appendChild(drawDiv);
+                } 
+                if(twoupthree.includes(fhcountA)){
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                } 
+                testRow.appendChild(testData);
+                document.getElementById('Last5TableA').appendChild(testRow);
+                fhcountA++;
             }
+            i++;
         }
+
         for (var key in upcomingFightsLastFiveDataB.recordset) {
+            var testRow = document.createElement('tr');
+            testRow.className = 'last5contentrow';
+            testRow.id ='last5contentrow'+j;
             for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
-                var testDiv = document.getElementById('Last5GridBChild'+j);
-                testDiv.className = 'last5gridChild';
-                testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                    testDiv.style.backgroundColor = 'green';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
+                var testData = document.createElement('td');
+                testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                testData.className = 'last5contentcell';
+                //make generic
+                if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    winDiv.style.backgroundColor = 'green';
+                    winDiv.textContent = 'W';
+                    
+                    testData.appendChild(winDiv);
                 }
-                if(testDiv.textContent === 'Draw'){
-                    testDiv.style.backgroundColor = '#2d545e';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                    testDiv.style.backgroundColor = '#CE2029';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                j++;
+                else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var lossDiv = document.createElement('div');
+                    lossDiv.className = 'fightercardresultbox'
+                    lossDiv.style.backgroundColor = '#CE2029';
+                    lossDiv.textContent = 'L';
+    
+                    testData.appendChild(lossDiv);
+                }       
+                else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var drawDiv = document.createElement('div');
+                    drawDiv.className = 'fightercardresultbox'
+                    drawDiv.style.backgroundColor = '#2d545e';
+                    drawDiv.textContent = 'D';
+    
+                    testData.appendChild(drawDiv);
+                } 
+                if(twoupthree.includes(fhcountB)){
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                } 
+                testRow.appendChild(testData);
+                document.getElementById('Last5TableB').appendChild(testRow);
+                fhcountB++;
             }
+            j++;
         }
     }
 }
@@ -960,54 +1155,120 @@ async function previousFight(){
         //last 5 fights
         var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
         var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
-        var i=0;
-        var j=0;
 
+        var twoupthree = [2,5,8,11,14];
+        var i = 0;
+        var j = 0;
+        var fhcountA = 1;
+        var fhcountB = 1;
+
+        await clearlast5();
         for (var key in upcomingFightsLastFiveDataA.recordset) {
+            var testRow = document.createElement('tr');
+            testRow.className = 'last5contentrow';
+            testRow.id ='last5contentrow'+i;
             for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
-                var testDiv = document.getElementById('Last5GridAChild'+i);
-                testDiv.className = 'last5gridChild';
-                testDiv.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                    testDiv.style.backgroundColor = 'green';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
+                var testData = document.createElement('td');
+                testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                testData.className = 'last5contentcell';
+                //make generic
+                if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    winDiv.style.backgroundColor = 'green';
+                    winDiv.textContent = 'W';
+                    
+                    testData.appendChild(winDiv);
                 }
-                if(testDiv.textContent === 'Draw'){
-                    testDiv.style.backgroundColor = '#2d545e';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                    testDiv.style.backgroundColor = '#CE2029';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                i++;
+                else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var lossDiv = document.createElement('div');
+                    lossDiv.className = 'fightercardresultbox'
+                    lossDiv.style.backgroundColor = '#CE2029';
+                    lossDiv.textContent = 'L';
+    
+                    testData.appendChild(lossDiv);
+                }       
+                else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var drawDiv = document.createElement('div');
+                    drawDiv.className = 'fightercardresultbox'
+                    drawDiv.style.backgroundColor = '#2d545e';
+                    drawDiv.textContent = 'D';
+    
+                    testData.appendChild(drawDiv);
+                } 
+                if(twoupthree.includes(fhcountA)){
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                }                 
+                testRow.appendChild(testData);
+                document.getElementById('Last5TableA').appendChild(testRow);
+                fhcountA++;
             }
+            i++;
         }
+
         for (var key in upcomingFightsLastFiveDataB.recordset) {
+            var testRow = document.createElement('tr');
+            testRow.className = 'last5contentrow';
+            testRow.id ='last5contentrow'+j;
             for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
-                var testDiv = document.getElementById('Last5GridBChild'+j);
-                testDiv.className = 'last5gridChild';
-                testDiv.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                if(testDiv.textContent === 'Win (TKO)' || testDiv.textContent === 'Win (KO)' || testDiv.textContent === 'Win (UD)' || testDiv.textContent === 'Win (MD)' || testDiv.textContent === 'Win (SD)'){
-                    testDiv.style.backgroundColor = 'green';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
+                var testData = document.createElement('td');
+                testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                testData.className = 'last5contentcell';
+                //make generic
+                if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    winDiv.style.backgroundColor = 'green';
+                    winDiv.textContent = 'W';
+                    
+                    testData.appendChild(winDiv);
                 }
-                if(testDiv.textContent === 'Draw'){
-                    testDiv.style.backgroundColor = '#2d545e';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                if(testDiv.textContent === 'Loss (TKO)' || testDiv.textContent === 'Loss (KO)' || testDiv.textContent === 'Loss (UD)' || testDiv.textContent === 'Loss (MD)' || testDiv.textContent === 'Loss (SD)'){
-                    testDiv.style.backgroundColor = '#CE2029';
-                    //testDiv.style.width = '50%';
-                    testDiv.style.textAlign = 'center';
-                }
-                j++;
+                else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var lossDiv = document.createElement('div');
+                    lossDiv.className = 'fightercardresultbox'
+                    lossDiv.style.backgroundColor = '#CE2029';
+                    lossDiv.textContent = 'L';
+    
+                    testData.appendChild(lossDiv);
+                }       
+                else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                    testData.textContent = '';
+                    var drawDiv = document.createElement('div');
+                    drawDiv.className = 'fightercardresultbox'
+                    drawDiv.style.backgroundColor = '#2d545e';
+                    drawDiv.textContent = 'D';
+    
+                    testData.appendChild(drawDiv);
+                } 
+                if(twoupthree.includes(fhcountB)){
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                }                       
+                testRow.appendChild(testData);
+                document.getElementById('Last5TableB').appendChild(testRow);
+                fhcountB++;
             }
+            j++;
         }        
     }
 }
