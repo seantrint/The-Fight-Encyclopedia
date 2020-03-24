@@ -996,7 +996,31 @@ text-align: center;
 .last5contentcell .fightercardresultbox{
         float:initial;
         margin:0 auto;
-
+}
+.cataloguepagebuttons{
+    width:50%;
+    margin:0 auto;
+    margin-bottom:10px;
+}
+    .cataloguepagebuttons a{
+        color: var(--links-font-color);
+        cursor:pointer;
+        font-size:24px;
+        padding:1%;
+        text-decoration: underline;
+    }
+    .cataloguepagebuttons a:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    
+    .cataloguepagebuttons a:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    }
+#dotsahead, #dotsbehind{
+    text-decoration: none;
+    font-size:20px;
 }
 @media only screen and (min-width: 430px) {
     .popupmenu img{
@@ -1888,6 +1912,9 @@ text-align: center;
     }
     .last5gridLabel{
         font-size: 14px;
+    }
+    .cataloguepagebuttons a{
+        font-size:28px;
     }
 }
 

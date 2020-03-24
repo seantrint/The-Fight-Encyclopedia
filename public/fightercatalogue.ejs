@@ -13,6 +13,13 @@
     <div class="pagedescription">
         <p>Browse the current catalogue of boxers!</p>
         <p><button class="cataloguebutton" id="GridViewButton" onclick="loadFighterCatalogue(this.id)">&#9744;</button><button class="cataloguebutton" id="ListViewButton" onclick="loadFighterCatalogue(this.id)">&#8801;</button></p>
+        <div class="cataloguepagebuttons" id="catalogueButtonsLink">
+            <!-- <a onclick="loadGridData(this.id)" id="cataloguePrevious">&laquo;</a>
+            <a onclick="loadGridData(this.id)" id="catalogueNext">&raquo;</a> -->
+                    <!--<a  id="pageLink1" onclick="loadGridData(this.id)">1</a>-->
+            <!-- <a href="#" id="pageLink2" onclick="loadGridData(this.id)">2</a>
+            <a href="#" id="pageLink3" onclick="loadGridData(this.id)">3</a>        -->
+        </div>
     </div>
     <div class="cataloguefilters">
         <div class="currentfilterselection">
@@ -79,10 +86,12 @@
             </ul>
         </div>
     </div>
+    
+
 
     <div class="cataloguegrid" id="CatalogueGrid">
-        
     </div>
+
     <div class="errorspace" id="ErrorSpace"></div>
 </body>
 </html>

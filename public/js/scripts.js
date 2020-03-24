@@ -5,7 +5,18 @@ var countriesArray = ["Afghanistan","Albania","Algeria","Andorra","Angola","Angu
 var winsArray = ["Win (UD)", "Win (KO)", "Win (SD)", "Win (MD)", "Win (TKO)", "Win (DQ)", "Win (PTS)"];
 var lossArray = ["Loss (UD)", "Loss (KO)", "Loss (SD)", "Loss (MD)", "Loss (TKO)", "Loss (DQ)", "Loss (PTS)"];
 var drawArray = ["Draw (MD)", "Draw (SD)", "Draw (PTS)", "Draw (UD)", "Draw"];
-
+var itemsPerCatalogue = 10;
+async function numberOfElementsPerPage(){
+    if(screen.width >= 640){
+        itemsPerCatalogue = 12;
+    }
+    if(screen.width >= 1250){
+        itemsPerCatalogue = 15;
+    }  
+    if(screen.width >= 1850){
+        itemsPerCatalogue = 18;
+    }     
+}
 async function fetchData(route, parameter1 = '', parameter2 = '', parameter3 = '', parameter4 = ''){
     //could this go in server page?
     const request = await fetch(route+parameter1+parameter2+parameter3+parameter4);
@@ -38,6 +49,7 @@ async function loadPageName() {
     }
     if (docTitle == "Fighter Catalogue") {
         fighterCatalogueLink.style.display = 'none';
+        await numberOfElementsPerPage();
         await loadFighterCatalogue();
     }
     if(docTitle == "Fighter Card"){
@@ -385,16 +397,24 @@ async function addImagesToFighterPreviewBox(){
     }
 
 }
-async function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-async function loadFighterCatalogueAsGrid(fighterCatalogueData){
-    await clearCatalogue();
+async function loadingText(){
     var loadingParagraph = document.createElement('p');
     loadingParagraph.textContent = 'Loading...';
     document.body.appendChild(loadingParagraph);
     await sleep(1000);
     document.body.removeChild(loadingParagraph);
+}
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+var dataArray = [];
+var grid = true;
+var table = false;
+async function loadFighterCatalogueAsGrid(fighterCatalogueData){
+    grid = true;
+    table = false;
+    await clearCatalogue();
+    dataArray = [];
     var i =0;
     //load catalogue as grid
     for (var key in fighterCatalogueData.recordset) {
@@ -426,32 +446,295 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             catalogueEntryDiv.id = 'catalogueentry'+i;
             catalogueEntryDiv.appendChild(linkToCard);
             
-            document.getElementById('CatalogueGrid').appendChild(catalogueEntryDiv);       
+            dataArray.push(catalogueEntryDiv);  
             i++; 
         }
     }
+    //load stuff to build and test pagination
+    // var testDataCount = 0;
+    // for(testDataCount;testDataCount<100;testDataCount++){
+    //     var testDiv = document.createElement('div');
+    //     var testImage = document.createElement('img');
+    //     var testParagraph = document.createElement('p');
+    //     var testLink = document.createElement('a');
+
+    //     testDiv.className = 'catalogueentry';
+    //     testImage.className = 'catalogueimage';
+    //     testImage.src ='img/logo.png';
+    //     testParagraph.textContent = 'test'+testDataCount;
+    //     testLink.appendChild(testImage);
+    //     testLink.appendChild(testParagraph);
+    //     testDiv.appendChild(testLink);
+    //     testDiv.id = 'catalogueentry '+testDataCount+5;
+    //     dataArray.push(testDiv);
+    // }
+    //create buttons
+    await loadGridData(currentPage);
     if(i === 0){
         await createErrorDiv();
     }
 }
-async function loadFighterCatalogueAsList(fighterCatalogueData){
-    await clearCatalogue();
-    var loadingParagraph = document.createElement('p');
-    loadingParagraph.textContent = 'Loading...';
-    document.body.appendChild(loadingParagraph);
-    await sleep(1000);
-    document.body.removeChild(loadingParagraph);
-    var i =0;
-    var numberList = 1;
+var currentPage = 1;
+var numPages = 0;
+var pageLinksArray = [];
+
+async function displayPageLinks(){
+    var nextPageLimit;
+    var previousPageLimit;
+    var endLimit = pageLinksArray.length-1;
+    var nextPagesToHideArray = [];
+    var prevPagesToHideArray = [];
+
+    var stylecurrentpage = currentPage-1;
+    if(pageLinksArray.length != 0){
+        document.getElementById('pagelink'+stylecurrentpage).style.textDecoration = 'none';
+        document.getElementById('pagelink'+stylecurrentpage).style.color = '#2b7a8a';
+    }
+
+    if(currentPage == 1 && pageLinksArray.length > 1){
+        nextPageLimit = currentPage+3;
+        var dots = document.createElement('a');
+        dots.textContent = '...';
+        dots.className = 'spacebetweenpages';
+        dots.id = 'dotsahead';
+        document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
+ 
+    }
+    else if(currentPage == 2){
+        nextPageLimit = currentPage+2;
+        var dots = document.createElement('a');
+        dots.textContent = '...';
+        dots.className = 'spacebetweenpages';
+        dots.id = 'dotsahead';
+        document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
+    }
+    else{
+        nextPageLimit = currentPage+1;
+        var dots = document.createElement('a');
+        dots.textContent = '...';
+        dots.className = 'spacebetweenpages';
+        dots.id = 'dotsbehind';
+        var dots2 = document.createElement('a');
+        dots2.textContent = '...';
+        dots2.className = 'spacebetweenpages';
+        dots2.id = 'dotsahead';
+        var spacefordotsbehind = currentPage-2;
+        var spacefordotsahead = currentPage+2;
+        if(spacefordotsbehind >= 2){
+            document.getElementById('pagelink'+spacefordotsbehind).parentNode.insertBefore(dots, document.getElementById('pagelink'+spacefordotsbehind));
+        }
+        if(spacefordotsahead < pageLinksArray.length){
+            document.getElementById('pagelink'+spacefordotsahead).parentNode.insertBefore(dots2, document.getElementById('pagelink'+spacefordotsahead));
+        }
+    }
+    if(currentPage >1){
+        previousPageLimit = currentPage-2;
+        for(var i = previousPageLimit; i>0;i--){
+            prevPagesToHideArray.push(pageLinksArray[i]);
+        }
+        for(var i = prevPagesToHideArray.length-1; i>0;i--){
+            document.getElementById(prevPagesToHideArray[i].id).style.display = 'none';
+        }
+    }
+
+    nextPagesToHideArray = pageLinksArray.slice(nextPageLimit, endLimit);
+    
+    for(var data in nextPagesToHideArray){
+        document.getElementById(nextPagesToHideArray[data].id).style.display = 'none';
+    }
+}
+async function createPageLinks(length){ 
+    pageLinksArray=[];
+    var previousButton = document.createElement('a');
+    previousButton.textContent = '«';
+    previousButton.id = 'cataloguePrevious';
+    previousButton.className = 'cataloguepagelink';
+    previousButton.onclick = async function(divId){
+        divId = this.id;
+        await loadGridData(divId);
+    }    
+    document.getElementById('catalogueButtonsLink').appendChild(previousButton);
+
+    numPages = Math.ceil(length/itemsPerCatalogue);
+    for(var i =0;i<numPages;i++){
+        var pageLink = document.createElement('a');
+        var pagenum=i+1;
+        pageLink.textContent = pagenum;
+        pageLink.id = 'pagelink'+i;
+        pageLink.className = 'cataloguepagelink';
+        document.getElementById('catalogueButtonsLink').appendChild(pageLink); //change to await function - display page links
+        pageLink.onclick = async function(divId){
+                        divId = this.id;
+                        await goToPage(divId);
+                    }
+        pageLinksArray.push(pageLink);
+    }
+    await displayPageLinks();
+    var nextButton = document.createElement('a');
+    nextButton.textContent = '»';
+    nextButton.id = 'catalogueNext';
+    nextButton.className = 'cataloguepagelink';
+    nextButton.onclick = async function(divId){
+        divId = this.id;
+        await loadGridData(divId);
+    }    
+    document.getElementById('catalogueButtonsLink').appendChild(nextButton);
+}
+async function goToPage(page){ //parameter for grid/table id
+    var pagetext;
+    var pageint;
+if(Number.isInteger(page)){
+    pageint = page;
+}
+else{
+    pagetext = document.getElementById(page);
+    pageint = parseInt(pagetext.textContent);
+}
+
+
+
+currentPage = pageint;
+var newArray = [];
+    if(pageint == 1){
+        begin = 0;
+        end = itemsPerCatalogue;
+        newArray.push(dataArray.slice(begin,end));
+        await clearCatalogue();
+        await loadingText();
+        if((document.getElementById('CatalogueTable') == undefined) && table){
+            await createCatalogueTable();
+        }
+        for(var data in newArray[0]){
+            if(grid){
+                document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+            }
+            else if (table){
+                
+                document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
+            }
+        } 
+        await createPageLinks(dataArray.length);
+    }
+    else{
+        end = (pageint*itemsPerCatalogue);
+        begin = end-itemsPerCatalogue;
+        newArray.push(dataArray.slice(begin,end));
+        await clearCatalogue();
+        await loadingText();
+        if((document.getElementById('CatalogueTable') == undefined) && table){
+            await createCatalogueTable();
+        }
+        for(var data in newArray[0]){
+            if(grid){
+                document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+            }
+            else if (table){
+                document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
+            }
+        } 
+        await createPageLinks(dataArray.length);
+    }
+}
+var begin = 0;
+var end = itemsPerCatalogue;
+var change = 10;
+
+async function loadGridData(page){ //parameter for grid/table id
+    var newArray = [];
+    if(page === undefined){
+        await createPageLinks(dataArray.length);
+        for(var data in dataArray.slice(0,itemsPerCatalogue)){
+            if(grid){
+                document.getElementById('CatalogueGrid').appendChild(dataArray[data]);
+            }
+            else if(table){
+                document.getElementById('CatalogueTable').appendChild(dataArray[data]);                
+            }
+        }
+    }
+    else if(Number.isInteger(page)){
+        await goToPage(page);
+    }
+    else{
+        var pageNumber = document.getElementById(page);
+        if(pageNumber.id==='catalogueNext'){
+            end=end+itemsPerCatalogue;
+            begin=end-itemsPerCatalogue;
+            newArray.push(dataArray.slice(begin,end));
+            if(newArray[0].length > 0){
+                await clearCatalogue();
+                await loadingText();
+                for(var data in newArray[0]){
+                    if(grid){
+                        document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+                    }
+                    else if(table){
+                        await createCatalogueTable();
+                        document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+                    }                    
+                } 
+                currentPage++;
+                await createPageLinks(dataArray.length);
+            }
+            else{
+                begin=begin-itemsPerCatalogue;
+                end=end-itemsPerCatalogue;
+            }
+        }
+        if(pageNumber.id==='cataloguePrevious'){
+            if(begin>0){
+                await clearCatalogue();
+                end=end-itemsPerCatalogue;
+                begin=end-itemsPerCatalogue;
+                if(begin<1 && end<itemsPerCatalogue){
+                    begin=0;
+                    end=itemsPerCatalogue;
+                    newArray.push(dataArray.slice(begin,end));
+                    await loadingText();
+                    if((document.getElementById('CatalogueTable') == undefined) && table){
+                        await createCatalogueTable();
+                    }
+                    for(var data in newArray[0]){
+                        if(grid){
+                            document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+                        }
+                        else if(table){
+                            document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+                        }  
+                    } 
+                    currentPage--;
+                    await createPageLinks(dataArray.length);
+                }
+                else{
+                    newArray.push(dataArray.slice(begin,end));
+                    await loadingText();
+                    if((document.getElementById('CatalogueTable') == undefined) && table){
+                        await createCatalogueTable();
+                    }
+                    for(var data in newArray[0]){
+                        if(grid){
+                            document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+                        }
+                        else if(table){
+                            document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+                        }  
+                    } 
+                    currentPage--;
+                    await createPageLinks(dataArray.length);
+                }
+            }
+        }              
+    }
+}
+async function createCatalogueTable(){
     var catalogueTable = document.createElement('table');
     catalogueTable.id = 'CatalogueTable';
     catalogueTable.className = 'cataloguetable'
     document.body.appendChild(catalogueTable);
-    //this could be a loop and pull values from array
     var tableHeadingRow = document.createElement('tr');
-    var tableHeadingName = document.createElement('td');
-    var tableHeadingRecord = document.createElement('td');
-    var tableHeadingDivision = document.createElement('td');
+    var tableHeadingName = document.createElement('th');
+    var tableHeadingRecord = document.createElement('th');
+    var tableHeadingDivision = document.createElement('th');
     tableHeadingName.textContent = 'Name';
     tableHeadingRecord.textContent = 'Record';
     tableHeadingDivision.textContent = 'Division';
@@ -459,15 +742,25 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     tableHeadingRecord.className = 'cataloguetableheading';
     tableHeadingDivision.className = 'cataloguetableheading';    
     tableHeadingRow.className = 'cataloguetableheadingrow'
+    tableHeadingRow.id = 'catalogueTableHeadingRow'
     tableHeadingRow.appendChild(tableHeadingName);
     tableHeadingRow.appendChild(tableHeadingRecord);    
     tableHeadingRow.appendChild(tableHeadingDivision);        
-    catalogueTable.appendChild(tableHeadingRow); 
-    var tableHeadingLast5 = document.createElement('td');
+    //catalogueTable.appendChild(tableHeadingRow); 
+    var tableHeadingLast5 = document.createElement('th');
     tableHeadingLast5.textContent = 'Last 5 Fights';          
     tableHeadingLast5.className = 'cataloguetableheading';    
     tableHeadingLast5.id = 'CatalogueTableLast5';
-    tableHeadingRow.appendChild(tableHeadingLast5);   
+    tableHeadingRow.appendChild(tableHeadingLast5);  
+    catalogueTable.appendChild(tableHeadingRow);
+}
+async function loadFighterCatalogueAsList(fighterCatalogueData){
+    grid = false;
+    table = true;
+    await clearCatalogue();
+    dataArray = [];
+    var i =0;
+    var numberList = 1;
     for (var key in fighterCatalogueData.recordset) {
         for (var key1 in fighterCatalogueData.recordset[key]) {
             var fighterStatsData = await fetchData('/getBoxerStats/',fighterCatalogueData.recordset[key][key1]);
@@ -559,12 +852,35 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             tableRow.appendChild(tableData3);
             tableRow.appendChild(tableData4);
             tableRow.className = 'cataloguetablerow';
-            catalogueTable.appendChild(tableRow);
-
+            //catalogueTable.appendChild(tableRow); //change to dataarray
+            dataArray.push(tableRow);
             i++; 
             numberList++;
         }
     }
+    // var testDataCount = 0;
+    // //create test stuff for table
+    // for(testDataCount;testDataCount<100;testDataCount++){
+    //     var tableRow = document.createElement('tr');
+    //     var testData1 = document.createElement('td');
+    //     var testData2 = document.createElement('td');
+    //     var testData3 = document.createElement('td');
+    //     var testData4 = document.createElement('td');
+
+    //     testData1.textContent = 'A'+testDataCount;
+    //     testData2.textContent = 'B'+testDataCount;
+    //     testData3.textContent = 'C'+testDataCount;
+    //     testData4.textContent = 'D'+testDataCount;
+    //     tableRow.appendChild(testData1);
+    //     tableRow.appendChild(testData2);
+    //     tableRow.appendChild(testData3);
+    //     tableRow.appendChild(testData4);
+    //     tableRow.className = 'cataloguetablerow';
+    //     tableRow.id = 'catalogueentry '+testDataCount+5;
+    //     dataArray.push(tableRow);
+    // }
+    await loadGridData(currentPage);
+
     if(i === 0){
         await clearCatalogue();
         await createErrorDiv();
@@ -674,23 +990,50 @@ function closeWeightFilterMenu() {
 }
 //clearing could be generic
 async function clearCatalogue(){
-    var z = document.getElementsByClassName('catalogueentry');
-    var y = document.getElementsByClassName('cataloguetable');
-
+    var catalogueentry = document.getElementsByClassName('catalogueentry');
+    var cataloguetablerow = document.getElementsByClassName('cataloguetablerow');
+    var cataloguepagelink = document.getElementsByClassName('cataloguepagelink');
+    var spacebetweenpages = document.getElementsByClassName('spacebetweenpages');
+    var cataloguetableheadingrow = document.getElementsByClassName('cataloguetableheadingrow');
+    var cataloguetable = document.getElementsByClassName('cataloguetable');
     var elemId='';
 
-    if(typeof z != undefined){
-        for (var j =0; j < z.length; j+1){
-            elemId = document.getElementById(z[j].id);
+    if(typeof catalogueentry != undefined){
+        for (var j =0; j < catalogueentry.length; j+1){
+            elemId = document.getElementById(catalogueentry[j].id);
             elemId.remove();
         }
     }
-    if(typeof y != undefined){
-        for (var j =0; j < y.length; j+1){
-            elemId = document.getElementById(y[j].id);
+    if(typeof cataloguetablerow != undefined){
+        for (var j =0; j < cataloguetablerow.length; j+1){
+            elemId = document.getElementById(cataloguetablerow[j].id);
             elemId.remove();
         }
     }
+    if(typeof cataloguepagelink != undefined){
+        for (var j =0; j < cataloguepagelink.length; j+1){
+            elemId = document.getElementById(cataloguepagelink[j].id);
+            elemId.remove();
+        }
+    }
+    if(typeof spacebetweenpages != undefined){
+        for (var j =0; j < spacebetweenpages.length; j+1){
+            elemId = document.getElementById(spacebetweenpages[j].id);
+            elemId.remove();
+        }
+    }
+    if(typeof cataloguetableheadingrow != undefined){
+        for (var j =0; j < cataloguetableheadingrow.length; j+1){
+            elemId = document.getElementById(cataloguetableheadingrow[j].id);
+            elemId.remove();
+        }
+    }
+    if(typeof cataloguetable != undefined){
+        for (var j =0; j < cataloguetable.length; j+1){
+            elemId = document.getElementById(cataloguetable[j].id);
+            elemId.remove();
+        }
+    }    
     await clearErrors();
 }
 async function clearErrors(){
@@ -704,12 +1047,10 @@ async function clearErrors(){
 }
 async function clearlast5(){
     var x = document.getElementsByClassName('last5contentrow');
-    console.log('before loop');
     if(typeof x != undefined){
         for (var j =0; j < x.length; j+1){
             elemId = document.getElementById(x[j].id);
             elemId.remove();
-            console.log('in loop');
         }
     }     
 }
