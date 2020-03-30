@@ -41,7 +41,12 @@ async function loadPageName() {
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
 
     pageName.innerHTML = docTitle + "&ensp;&#8595;";
-
+    if(screen.width >=430){
+        await searchOnEnterPress("searchFieldMobileWide", "searchButtonMobileWide");
+    }
+    if(screen.width >=1024){
+        await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
+    }
     if (docTitle == "Home") {
         homeLink.style.display = 'none';
         await loadUpcomingFightsData();
@@ -72,11 +77,16 @@ async function clearSearchResults(){
     await clearErrors();
 }
 async function loadSearchResults(){
+    document.getElementById("searchFieldWideScreen").style.display = 'none';
+    document.getElementById("searchButtonWideScreen").style.display = 'none';
+    document.getElementById("searchFieldMobileWide").style.display = 'none';
+    document.getElementById("searchButtonMobileWide").style.display = 'none';
     await clearSearchResults();
     var searchTerm = document.getElementById('SearchTerm').textContent;
     var searchResultsData = await fetchData('/getSearchResults/',searchTerm);
 
     await loadSearch(searchResultsData);
+    await searchOnEnterPress("searchField","searchButton");
 }
 async function loadSearch(searchResultsData){
     var i=0;
@@ -238,7 +248,6 @@ async function loadFighterCard(){
                 var testData = document.createElement('td');
                 testData.textContent = boxerFightHistoryData.recordset[key][key1];
                 testData.className = 'fighthistorytablecell';
-                if(screen.width > 350){
                     //make generic
                     if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
                         var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
@@ -270,7 +279,6 @@ async function loadFighterCard(){
 
                         testData.appendChild(drawDiv);
                     } 
-                }
                 if(every6Array.includes(fhcount)){
                     testData.textContent = '';
                     var fighterLink = document.createElement('a');
@@ -361,14 +369,24 @@ async function closemenus(){
       };
 
 }
-function openMenu() {
+async function searchOnEnterPress(inputId, buttonId){
+    document.getElementById(inputId).addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById(buttonId).click();
+        }
+        });
+}
+async function openMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
     var z = document.getElementById("searchField");
     x.style.display = ("block");
     y.style.display = ("none");
+
+    await searchOnEnterPress("searchFieldMobile", "searchButtonMobile");
 }
-function closeMenu() {
+async function closeMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
     x.style.display = ("none");
@@ -1109,18 +1127,20 @@ async function filterGender(id) {
 }
 async function search(id){
     var searchButton = document.getElementById(id).id;
+    var searchField;
     if(searchButton === 'searchButtonMobile'){
-        var searchField = document.getElementById('searchFieldMobile').value;
-        window.location.href = '/searchResults/'+searchField;
+        searchField = document.getElementById('searchFieldMobile').value;
     }
     if(searchButton === 'searchButtonWideScreen'){
-        var searchField = document.getElementById('searchFieldWideScreen').value;
-        window.location.href = '/searchResults/'+searchField;
+        searchField = document.getElementById('searchFieldWideScreen').value;
     }
     if(searchButton === 'searchButton'){
-        var searchField = document.getElementById('searchField').value;
-        window.location.href = '/searchResults/'+searchField;
-    }   
+        searchField = document.getElementById('searchField').value;
+    }
+    if(searchButton === 'searchButtonMobileWide'){
+        searchField = document.getElementById('searchFieldMobileWide').value;
+    }
+    window.location.href = '/searchResults/'+searchField;
 }
 async function loadUpcomingFightsData(){
     var upcomingFightsData = await fetchData('/getUpcomingFights');
@@ -1161,8 +1181,16 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[0].Height[1];
     document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[0].Reach[0];
     document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[0].Reach[1];
-    document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[0].Nationality[0];
-    document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[0].Nationality[1];
+    if(countriesArray.includes(upcomingFightsStatsData.recordset[0].Nationality[0])){
+        var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[0].Nationality[0], 'countryflagfightercard');
+        document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[0].Nationality[0];
+        document.getElementById('fighterANationality').appendChild(countryFlagImg);
+    }
+    if(countriesArray.includes(upcomingFightsStatsData.recordset[0].Nationality[1])){
+        var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[0].Nationality[1], 'countryflagfightercard');
+        document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[0].Nationality[1];
+        document.getElementById('fighterBNationality').appendChild(countryFlagImg);
+    }
 
     //images
     document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
@@ -1322,8 +1350,16 @@ async function nextFight(){
         document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
         document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
         document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
-        document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
-        document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
+            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
+            document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
+            document.getElementById('fighterANationality').appendChild(countryFlagImg);
+        }
+        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
+            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
+            document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+            document.getElementById('fighterBNationality').appendChild(countryFlagImg);
+        }
     
         //images
         document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
@@ -1486,8 +1522,16 @@ async function previousFight(){
         document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
         document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
         document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
-        document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
-        document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
+            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
+            document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
+            document.getElementById('fighterANationality').appendChild(countryFlagImg);
+        }
+        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
+            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
+            document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+            document.getElementById('fighterBNationality').appendChild(countryFlagImg);
+        }
 
         //images
         document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
