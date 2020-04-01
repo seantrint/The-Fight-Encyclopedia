@@ -917,6 +917,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         await createErrorDiv();
     }    
 }
+var gridClicked = true;
 async function loadFighterCatalogue(param){
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
@@ -930,15 +931,19 @@ async function loadFighterCatalogue(param){
     else{
         if(document.getElementById(param).id === 'GridViewButton'){
             //load catalogue as grid
-            isGrid = true;
             isList = false;
-            await loadFighterCatalogueAsGrid(fighterCatalogueData);
+            if(isGrid === false){
+                isGrid = true;
+                await loadFighterCatalogueAsGrid(fighterCatalogueData);
+            }
         }
         if(document.getElementById(param).id === 'ListViewButton'){
             //load catalogue as list
             isGrid = false;
-            isList = true;
-            await loadFighterCatalogueAsList(fighterCatalogueData);
+            if(isList === false){
+                isList = true;
+                await loadFighterCatalogueAsList(fighterCatalogueData);
+            }
         }
     }
    
@@ -1153,7 +1158,9 @@ async function search(id){
     if(searchButton === 'searchButtonMobileWide'){
         searchField = document.getElementById('searchFieldMobileWide').value;
     }
-    window.location.href = '/searchResults/'+searchField;
+    if(searchField != ''){
+        window.location.href = '/searchResults/'+searchField;
+    }
 }
 async function loadUpcomingFightsData(){
     var upcomingFightsData = await fetchData('/getUpcomingFights');

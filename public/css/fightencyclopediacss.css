@@ -461,7 +461,7 @@ text-align: center;
         font-size: 16px;
     }
     .popupmenu img{
-        height:15%;
+        height:25%;
         width:100%;
         border-bottom:2px ridge gray;
     }
@@ -1668,8 +1668,8 @@ text-align: center;
     }
 
     .logo {
-        height: 100%;
-        width: 60%;
+        height: 40%;
+        width: 43%;
     }
 
     .cataloguegrid {
@@ -2333,6 +2333,10 @@ text-align: center;
         width:50%;
         align-self: center;
     }
+    /* .logo {
+        height: 150px;
+        width: 170px;
+    } */
 }
 
 @media only screen and (min-width: 1900px) {
