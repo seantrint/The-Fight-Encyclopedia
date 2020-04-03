@@ -116,7 +116,9 @@ async function loadSearch(searchResultsData){
 
             var boxerStatsData = await fetchData('/getBoxerStats/',nameParagraph.textContent);
             var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagimgsearch');
+            countryFlagImg.id = 'flagid'+i;
             var nameParagraph3 = document.createElement('p');
+            nameParagraph3.id = 'recordid'+i;
             var boxerRecordData = await fetchData('/getBoxerRecord/',nameParagraph.textContent);
 
             var wins = document.createElement('span');
@@ -147,16 +149,47 @@ async function loadSearch(searchResultsData){
             searchResultLink.appendChild(countryFlagImg);            
             searchResultLink.appendChild(nameParagraph3);      
 
-            searchResultLink.onclick = async function(divId){
+      
+            // searchResultLink.onclick = async function(divId){
+            //     divId = this.id;
+            //     var boxerDiv = document.getElementById(divId);
+            //     var boxerName = boxerDiv.childNodes[1].textContent;
+            //     window.location.href = '../fighterCard/'+boxerName;
+            // }
+            testDiv.id = 'searchResultsGridChild'+i;
+            testDiv.appendChild(searchResultLink);
+            
+            i++;
+            document.getElementById('SearchResultsGrid').appendChild(testDiv);
+
+            nameParagraph.onclick = async function(divId){
                 divId = this.id;
-                var boxerDiv = document.getElementById(divId);
+                var parentId = document.getElementById(divId).parentNode.id; 
+                var boxerDiv = document.getElementById(parentId);
                 var boxerName = boxerDiv.childNodes[1].textContent;
                 window.location.href = '../fighterCard/'+boxerName;
             }
-            testDiv.id = 'searchResultsGridChild'+i;
-            testDiv.appendChild(searchResultLink);
-            i++;
-            document.getElementById('SearchResultsGrid').appendChild(testDiv);
+            countryFlagImg.onclick = async function(divId){
+                divId = this.id;
+                var parentId = document.getElementById(divId).parentNode.id; 
+                var boxerDiv = document.getElementById(parentId);
+                var boxerName = boxerDiv.childNodes[1].textContent;
+                window.location.href = '../fighterCard/'+boxerName;
+            }
+            fighterImage.onclick = async function(divId){
+                divId = this.id;
+                var parentId = document.getElementById(divId).parentNode.id; 
+                var boxerDiv = document.getElementById(parentId);
+                var boxerName = boxerDiv.childNodes[1].textContent;
+                window.location.href = '../fighterCard/'+boxerName;
+            }
+            nameParagraph3.onclick = async function(divId){
+                divId = this.id;
+                var parentId = document.getElementById(divId).parentNode.id; 
+                var boxerDiv = document.getElementById(parentId);
+                var boxerName = boxerDiv.childNodes[1].textContent;
+                window.location.href = '../fighterCard/'+boxerName;
+            }
         }
     }
     if(i === 0){
