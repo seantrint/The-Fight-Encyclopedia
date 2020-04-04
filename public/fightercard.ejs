@@ -23,36 +23,45 @@
                 if (selectedId.innerHTML === "Stats") {
                     fighterInfoStatsSpace.style.display = "grid";
                     tab1.style.backgroundColor = "#e0dbdb";
+                    tab1.style.borderBottom = "1px ridge gray";
 
                     fighterInfoRecordSpace.style.display = "none";
-                    tab2.style.backgroundColor = "#908d8d";
+                    tab2.style.backgroundColor = "#969696";
+                    tab2.style.borderBottom = "none";
 
                     fighterInfoBioSpace.style.display = "none";
-                    tab3.style.backgroundColor = "#908d8d";
+                    tab3.style.backgroundColor = "#969696";
+                    tab3.style.borderBottom = "none";
                 }
 
                 //fighterInfoRecordSpace is clicked
                 else if (selectedId.innerHTML === "Fight History") {
                     fighterInfoStatsSpace.style.display = "none";
-                    tab1.style.backgroundColor = "#908d8d";
+                    tab1.style.backgroundColor = "#969696";
+                    tab1.style.borderBottom = "none";
 
                     fighterInfoRecordSpace.style.display = "block";
                     tab2.style.backgroundColor = "#e0dbdb";
+                    tab2.style.borderBottom = "1px ridge gray";
 
                     fighterInfoBioSpace.style.display = "none";
-                    tab3.style.backgroundColor = "#908d8d";
+                    tab3.style.backgroundColor = "#969696";
+                    tab3.style.borderBottom = "none";
                 }
 
                 //fighterInfoBioSpace is clicked
                 else if (selectedId.innerHTML === "Bio") {
                     fighterInfoStatsSpace.style.display = "none";
-                    tab1.style.backgroundColor = "#908d8d";
+                    tab1.style.backgroundColor = "#969696";
+                    tab1.style.borderBottom = "none";
 
                     fighterInfoRecordSpace.style.display = "none";
-                    tab2.style.backgroundColor = "#908d8d";
+                    tab2.style.backgroundColor = "#969696";
+                    tab2.style.borderBottom = "none";
 
                     fighterInfoBioSpace.style.display = "grid";
                     tab3.style.backgroundColor = "#e0dbdb";
+                    tab3.style.borderBottom = "1px ridge gray";
                 }
             }
         </script>

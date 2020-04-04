@@ -41,12 +41,8 @@ async function loadPageName() {
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
 
     pageName.innerHTML = docTitle + "&ensp;&#8595;";
-    if(screen.width >=430){
-        await searchOnEnterPress("searchFieldMobileWide", "searchButtonMobileWide");
-    }
-    if(screen.width >=1024){
-        await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
-    }
+    await searchOnEnterPress("searchFieldMobileWide", "searchButtonMobileWide");
+    await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {
         homeLink.style.display = 'none';
         await loadUpcomingFightsData();
@@ -195,16 +191,21 @@ async function loadSearch(searchResultsData){
     if(i === 0){
         var testError = document.getElementById('SearchResultsGrid');
         //make generic
-        await createErrorDiv(testError);
+        await createErrorDiv(testError, 'No results found for search');
     } 
 }
-async function createErrorDiv(div = ''){
+async function createErrorDiv(div = '', errorText = ''){
     var errorDiv = document.createElement('div');
     errorDiv.id = 'ErrorDiv';
     errorDiv.className = 'errordiv';
     var errorParagraph = document.createElement('p');
 
-    errorParagraph.textContent = 'No results found for search';
+    if(errorText !== ''){
+        errorParagraph.textContent = errorText;
+    }
+    else{
+        errorParagraph.textContent = 'No results found for search';
+    }
     errorDiv.appendChild(errorParagraph);
     if(div !== ''){
         div.appendChild(errorDiv);
@@ -277,43 +278,48 @@ async function loadFighterCard(){
                 testData.textContent = boxerFightHistoryData.recordset[key][key1];
                 testData.className = 'fighthistorytablecell';
                     //make generic
-                    if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                        var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
-                        testData.textContent = ' '+newtext+' ';
-                        var winDiv = document.createElement('div');
-                        winDiv.className = 'fightercardresultbox'
-                        winDiv.style.backgroundColor = 'green';
-                        winDiv.textContent = 'W';
-                        
-                        testData.appendChild(winDiv);
+                if(winsArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                    var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                    testData.textContent = ' '+newtext+' ';
+                    var winDiv = document.createElement('div');
+                    winDiv.className = 'fightercardresultbox'
+                    winDiv.style.backgroundColor = 'green';
+                    winDiv.textContent = 'W';
+                    
+                    testData.appendChild(winDiv);
+                }
+                else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                    var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                    testData.textContent = ' '+newtext+' ';
+                    var lossDiv = document.createElement('div');
+                    lossDiv.className = 'fightercardresultbox'
+                    lossDiv.style.backgroundColor = '#CE2029';
+                    lossDiv.textContent = 'L';
+
+                    testData.appendChild(lossDiv);
+                }       
+                else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
+                    var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                    testData.textContent = ' '+newtext+' ';
+                    var drawDiv = document.createElement('div');
+                    drawDiv.className = 'fightercardresultbox'
+                    drawDiv.style.backgroundColor = '#2d545e';
+                    drawDiv.textContent = 'D';
+
+                    testData.appendChild(drawDiv);
+                } 
+                if ( fhcount && (fhcount % 6 === 2)) { 
+                    if(screen.width < 360){
+                        testData.style.textAlign = 'center';
                     }
-                    else if(lossArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                        var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
-                        testData.textContent = ' '+newtext+' ';
-                        var lossDiv = document.createElement('div');
-                        lossDiv.className = 'fightercardresultbox'
-                        lossDiv.style.backgroundColor = '#CE2029';
-                        lossDiv.textContent = 'L';
-
-                        testData.appendChild(lossDiv);
-                    }       
-                    else if(drawArray.includes(boxerFightHistoryData.recordset[key][key1])){
-                        var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
-                        testData.textContent = ' '+newtext+' ';
-                        var drawDiv = document.createElement('div');
-                        drawDiv.className = 'fightercardresultbox'
-                        drawDiv.style.backgroundColor = '#2d545e';
-                        drawDiv.textContent = 'D';
-
-                        testData.appendChild(drawDiv);
-                    } 
+                }   
                 if ( fhcount && (fhcount % 6 === 3)) {
                     testData.textContent = '';
                     var fighterLink = document.createElement('a');
                     fighterLink.href = boxerFightHistoryData.recordset[key][key1];
                     fighterLink.textContent = boxerFightHistoryData.recordset[key][key1];
                     opponentName = fighterLink.textContent;
-                    //save opponents name to variable
+                    //we can check for opponent credentials with a fetch request using his name
                     fighterLink.className = 'fighthistorytablecelllink'
                     testData.appendChild(fighterLink);
                 }
@@ -345,6 +351,10 @@ async function loadFighterCard(){
                     testData.appendChild(slash2);
                     testData.appendChild(draws);
                 }
+                //testData.style.borderRight = '1px ridge gray';
+                // if ( fhcount && (fhcount % 6 === 0)) {
+                //     testData.style.borderRight = 'none';
+                // }
                 testRow.className = 'fighthistorytablerow';
                 testRow.appendChild(testData);
                 fhcount++;
@@ -538,7 +548,7 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
     //create buttons
     await loadGridData(currentPage);
     if(i === 0){
-        await createErrorDiv();
+        await createErrorDiv('','No results found for filter selection');
     }
 }
 var currentPage = 1;
@@ -947,7 +957,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
 
     if(i === 0){
         await clearCatalogue();
-        await createErrorDiv();
+        await createErrorDiv('','No results found for filter selection');
     }    
 }
 var gridClicked = true;
@@ -1214,7 +1224,15 @@ async function loadUpcomingFightsData(){
     //names
     document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[0];
     document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[1];
-    
+    //images
+    document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
+    document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+    //links
+    document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[0];
+    document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1];
+    document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[0];
+    document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1];    
+
     var fighterAName = document.getElementById('fighterAName').textContent;
     var fighterBName = document.getElementById('fighterBName').textContent;
 
@@ -1245,9 +1263,7 @@ async function loadUpcomingFightsData(){
         document.getElementById('fighterBNationality').appendChild(countryFlagImg);
     }
 
-    //images
-    document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
-    document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+
 
     //last 5 fights
     var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
@@ -1380,12 +1396,20 @@ async function nextFight(){
         document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDate;
         document.getElementById('upComingFightName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0] + ' vs ' +upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
     
-    
+
         //names
         document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
         var fighterAName = document.getElementById('fighterAName').textContent;
         var fighterBName = document.getElementById('fighterBName').textContent;
+        //images
+        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
+        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        //links
+        document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+        document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
 
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
@@ -1412,10 +1436,6 @@ async function nextFight(){
             document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
             document.getElementById('fighterBNationality').appendChild(countryFlagImg);
         }
-    
-        //images
-        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
     
         //last 5 fights
         var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
@@ -1557,6 +1577,14 @@ async function previousFight(){
         document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];    
         var fighterAName = document.getElementById('fighterAName').textContent;
         var fighterBName = document.getElementById('fighterBName').textContent;
+        //images
+        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
+        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        //links
+        document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+        document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
 
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
@@ -1583,10 +1611,6 @@ async function previousFight(){
             document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
             document.getElementById('fighterBNationality').appendChild(countryFlagImg);
         }
-
-        //images
-        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
         
         //last 5 fights
         var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
