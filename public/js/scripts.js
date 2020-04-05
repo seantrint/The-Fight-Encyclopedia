@@ -46,6 +46,7 @@ async function loadPageName() {
     if (docTitle == "Home") {
         homeLink.style.display = 'none';
         await loadUpcomingFightsData();
+        await loadDailyQuotes();
         await addImagesToFighterPreviewBox();
     }
     if (docTitle == "Fighter Catalogue") {
@@ -58,6 +59,22 @@ async function loadPageName() {
     }
     if(docTitle == "Search Results"){
         await loadSearchResults();
+    }
+}
+async function loadErrorPage(){
+    var docTitle = document.title;
+    if(docTitle == "Page Not Found"){
+        await searchOnEnterPress("searchField", "searchButton");
+    }
+}
+async function loadDailyQuotes(){
+    var dailyQuotes = await fetchData('/getQuotesOfTheDay');
+    var quotesspace = document.getElementById('quotesSpace');
+    console.log(dailyQuotes);
+    for(var quote in dailyQuotes.recordset){
+        quoteParagraph = document.createElement('p');
+        quoteParagraph.textContent = dailyQuotes.recordset[quote].quote;
+        quotesspace.appendChild(quoteParagraph);
     }
 }
 async function clearSearchResults(){
@@ -309,7 +326,7 @@ async function loadFighterCard(){
                     testData.appendChild(drawDiv);
                 } 
                 if ( fhcount && (fhcount % 6 === 2)) { 
-                    if(screen.width < 360){
+                    if(screen.width <= 360){
                         testData.style.textAlign = 'center';
                     }
                 }   
@@ -377,14 +394,23 @@ async function loadFighterCard(){
         document.getElementById('ErrorSpace').appendChild(errorDiv);
     }
 }
-function showMenuLinks() {
+async function showMenuLinks() {
     var x = document.getElementById("menuOptions");
-
-    if (window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
+    var y = document.getElementById("wideScreenLinks");
+    if(x.style.opacity === '0'){
+        x.style.opacity = '1';
     }
+    x.classList.toggle('open');
+    if(y.style.display === 'none'){
+        y.style.display = 'block';
+    }
+    y.classList.toggle('open');
+    // if (window.getComputedStyle(x, null).getPropertyValue("display") === 'none') {
+    //     x.classList.toggle('open')
+        
+    // } else {
+    //     x.style.display = 'none';
+    // }
 }
 async function start() {
     await fetchLayoutPage();
@@ -398,9 +424,10 @@ async function closemenus(){
     var searchInput = document.getElementById("searchFieldMobile");
     var searchButton = document.getElementById("searchButtonMobile");
     var wideScreenMenu = document.getElementById("menuOptions");
+    var wideScreenLinks = document.getElementById("wideScreenLinks");
     // change to array of ids
 
-    document.onclick = function(e){
+    document.onclick = async function(e){
         if(e.target.id !== 'popupMenu' && e.target.id !== 'openMenuButton' && e.target.id !== 'searchFieldMobile' && e.target.id !== 'searchButtonMobile'){
             popupmenu.style.display = 'none';
             openpopupmenu.style.display = 'block';            
@@ -422,7 +449,9 @@ async function closemenus(){
         }
         if(e.target.id !== 'menuOptions' && e.target.id !== 'pageName'){
             if(wideScreenMenu != null){
-                wideScreenMenu.style.display = 'none';   
+                wideScreenMenu.style.opacity = '0'; 
+                await sleep(600);  
+                wideScreenLinks.style.display = 'none';
             }
         }                
       };
@@ -1273,6 +1302,10 @@ async function loadUpcomingFightsData(){
     var j = 0;
     var fhcountA = 1;
     var fhcountB = 1;
+    if(screen.width <= 360){
+        document.getElementById("last5DateColumnA").style.display = 'none';
+        document.getElementById("last5DateColumnB").style.display = 'none';
+    }
     for (var key in upcomingFightsLastFiveDataA.recordset) {
         var testRow = document.createElement('tr');
         testRow.className = 'last5contentrow';
@@ -1312,6 +1345,7 @@ async function loadUpcomingFightsData(){
 
                 testData.appendChild(drawDiv);
             }
+
             if ( fhcountA && (fhcountA % 3 === 2)) {
                 testData.textContent = '';
                 var fighterLink = document.createElement('a');
@@ -1320,7 +1354,17 @@ async function loadUpcomingFightsData(){
                 fighterLink.className = 'fighthistorytablecelllink'
                 testData.appendChild(fighterLink);
             } 
-            testRow.appendChild(testData);
+            if ( fhcountA && (fhcountA % 3 === 1)) { 
+                if(screen.width<=360){
+                    testData.textContent ='';
+                }
+                else{
+                    testRow.appendChild(testData);
+                }
+            } 
+            else{
+                testRow.appendChild(testData);
+            }  
             document.getElementById('Last5TableA').appendChild(testRow);
             fhcountA++;
         }
@@ -1373,7 +1417,17 @@ async function loadUpcomingFightsData(){
                 fighterLink.className = 'fighthistorytablecelllink'
                 testData.appendChild(fighterLink);
             } 
-            testRow.appendChild(testData);
+            if ( fhcountB && (fhcountB % 3 === 1)) { 
+                if(screen.width<=360){
+                    testData.textContent ='';
+                }
+                else{
+                    testRow.appendChild(testData);
+                }
+            } 
+            else{
+                testRow.appendChild(testData);
+            }  
             document.getElementById('Last5TableB').appendChild(testRow);
             fhcountB++;
         }
@@ -1447,6 +1501,10 @@ async function nextFight(){
         var fhcountB = 1;
 
         await clearlast5();
+        if(screen.width <= 360){
+            document.getElementById("last5DateColumnA").style.display = 'none';
+            document.getElementById("last5DateColumnB").style.display = 'none';
+        }
         for (var key in upcomingFightsLastFiveDataA.recordset) {
             var testRow = document.createElement('tr');
             testRow.className = 'last5contentrow';
@@ -1494,7 +1552,17 @@ async function nextFight(){
                     fighterLink.className = 'fighthistorytablecelllink'
                     testData.appendChild(fighterLink);
                 } 
-                testRow.appendChild(testData);
+                if ( fhcountA && (fhcountA % 3 === 1)) { 
+                    if(screen.width<=360){
+                        testData.textContent ='';
+                    }
+                    else{
+                        testRow.appendChild(testData);
+                    }
+                } 
+                else{
+                    testRow.appendChild(testData);
+                }  
                 document.getElementById('Last5TableA').appendChild(testRow);
                 fhcountA++;
             }
@@ -1548,7 +1616,17 @@ async function nextFight(){
                     fighterLink.className = 'fighthistorytablecelllink'
                     testData.appendChild(fighterLink);
                 } 
-                testRow.appendChild(testData);
+                if ( fhcountB && (fhcountB % 3 === 1)) { 
+                    if(screen.width<=360){
+                        testData.textContent ='';
+                    }
+                    else{
+                        testRow.appendChild(testData);
+                    }
+                } 
+                else{
+                    testRow.appendChild(testData);
+                }  
                 document.getElementById('Last5TableB').appendChild(testRow);
                 fhcountB++;
             }
@@ -1622,6 +1700,10 @@ async function previousFight(){
         var fhcountB = 1;
 
         await clearlast5();
+        if(screen.width <= 360){
+            document.getElementById("last5DateColumnA").style.display = 'none';
+            document.getElementById("last5DateColumnB").style.display = 'none';
+        }
         for (var key in upcomingFightsLastFiveDataA.recordset) {
             var testRow = document.createElement('tr');
             testRow.className = 'last5contentrow';
@@ -1661,14 +1743,17 @@ async function previousFight(){
     
                     testData.appendChild(drawDiv);
                 } 
-                if ( fhcountA && (fhcountA % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                }        
+                if ( fhcountA && (fhcountA % 3 === 1)) { 
+                    if(screen.width<=360){
+                        testData.textContent ='';
+                    }
+                    else{
+                        testRow.appendChild(testData);
+                    }
+                } 
+                else{
+                    testRow.appendChild(testData);
+                }   
                 testRow.appendChild(testData);
                 document.getElementById('Last5TableA').appendChild(testRow);
                 fhcountA++;
@@ -1715,14 +1800,17 @@ async function previousFight(){
     
                     testData.appendChild(drawDiv);
                 } 
-                if ( fhcountB && (fhcountB % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                }                    
+                if ( fhcountB && (fhcountB % 3 === 1)) { 
+                    if(screen.width<=360){
+                        testData.textContent ='';
+                    }
+                    else{
+                        testRow.appendChild(testData);
+                    }
+                } 
+                else{
+                    testRow.appendChild(testData);
+                }               
                 testRow.appendChild(testData);
                 document.getElementById('Last5TableB').appendChild(testRow);
                 fhcountB++;

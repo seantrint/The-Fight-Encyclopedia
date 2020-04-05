@@ -3,24 +3,25 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Page Not Found</title>
     <link rel="stylesheet" href="/css/fightencyclopediacss.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
     <script src="/js/scripts.js"></script> 
 </head>
-<body>
+<body onload="loadErrorPage()">
     <div id="backgroundwrapper">
         <header id="pageLayout">
         </header>
     </div>
     <div id="content">
         <div class="errorpagemessage">
+            <img src="/img/logo.png" class="logo" alt="123" />
             <p>Page not found or does not exist</p>
             <p class="errorpagelinks"><a href="/">Home</a><a href="/fighterCatalogue">Fighter Catalogue</a></p>
             <p class="errorpagesearch">Were you trying to find something?</p>
             <div class="errorpagesearchtools">
-                <input type="text" id="searchField" placeholder="Search..." />
-                <button type="submit" id="searchButton" onclick="search(this.id)"><i class="fa fa-search"></i></button>
+                <input type="text" id="searchField" placeholder="&#128269;Search" />
+                <button type="submit" id="searchButton" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
             </div>
         </div>
     </div>

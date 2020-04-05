@@ -22,46 +22,46 @@
                 //fighterInfoStatsSpace is clicked
                 if (selectedId.innerHTML === "Stats") {
                     fighterInfoStatsSpace.style.display = "grid";
-                    tab1.style.backgroundColor = "#e0dbdb";
-                    tab1.style.borderBottom = "1px ridge gray";
+                    tab1.style.backgroundColor = "#eeeeee";
+                    tab1.style.borderBottom = "1px inset rgb(185, 184, 184)";
 
                     fighterInfoRecordSpace.style.display = "none";
-                    tab2.style.backgroundColor = "#969696";
+                    tab2.style.backgroundColor = "#c0c0c0";
                     tab2.style.borderBottom = "none";
 
                     fighterInfoBioSpace.style.display = "none";
-                    tab3.style.backgroundColor = "#969696";
+                    tab3.style.backgroundColor = "#c0c0c0";
                     tab3.style.borderBottom = "none";
                 }
 
                 //fighterInfoRecordSpace is clicked
                 else if (selectedId.innerHTML === "Fight History") {
                     fighterInfoStatsSpace.style.display = "none";
-                    tab1.style.backgroundColor = "#969696";
+                    tab1.style.backgroundColor = "#c0c0c0";
                     tab1.style.borderBottom = "none";
 
                     fighterInfoRecordSpace.style.display = "block";
-                    tab2.style.backgroundColor = "#e0dbdb";
-                    tab2.style.borderBottom = "1px ridge gray";
+                    tab2.style.backgroundColor = "#eeeeee";
+                    tab2.style.borderBottom = "1px inset rgb(185, 184, 184)";
 
                     fighterInfoBioSpace.style.display = "none";
-                    tab3.style.backgroundColor = "#969696";
+                    tab3.style.backgroundColor = "#c0c0c0";
                     tab3.style.borderBottom = "none";
                 }
 
                 //fighterInfoBioSpace is clicked
                 else if (selectedId.innerHTML === "Bio") {
                     fighterInfoStatsSpace.style.display = "none";
-                    tab1.style.backgroundColor = "#969696";
+                    tab1.style.backgroundColor = "#c0c0c0";
                     tab1.style.borderBottom = "none";
 
                     fighterInfoRecordSpace.style.display = "none";
-                    tab2.style.backgroundColor = "#969696";
+                    tab2.style.backgroundColor = "#c0c0c0";
                     tab2.style.borderBottom = "none";
 
                     fighterInfoBioSpace.style.display = "grid";
-                    tab3.style.backgroundColor = "#e0dbdb";
-                    tab3.style.borderBottom = "1px ridge gray";
+                    tab3.style.backgroundColor = "#eeeeee";
+                    tab3.style.borderBottom = "1px inset rgb(185, 184, 184)";
                 }
             }
         </script>
@@ -73,7 +73,7 @@
             <img src="" class="fighterinfoimage" id="fighterInfoImage" />
         </div>
         <div class="fighterinfonamespace" id="fighterInfoNameSpace">
-            <h2 id="boxerName"><%= boxer %></h2>
+            <h3 id="boxerName"><%= boxer %></h3>
         </div>
         <div class="fighterinforecordspace">
             <table class="fighterinforecordtable"><tr><td><span id="fighterInfoWins"></span><br/><span class="wld" id="fighterInfoWinsCss">Wins</span></td><td><span id="fighterInfoLosses"></span><br/><span class="wld" id="fighterInfoLossesCss">Loss</span></td><td><span id="fighterInfoDraws"></span><br/><span class="wld" id="fighterInfoDrawsCss">Draw</span></td></tr></table>
@@ -82,15 +82,7 @@
         <div class="tab2" id="tab2"><a onclick="changeFighterInfoTab(this.id)" id="fighterInfoTabFightHistory">Fight History</a></div>
         <div class="tab3" id="tab3"><a onclick="changeFighterInfoTab(this.id)" id="fighterInfoTabBio">Bio</a></div>
         <div class="fighterinfotextspace">
-            <div class="fighterinfostatsspace" id="fighterInfoStatsSpace"><!--make this a grid-->
-                <!-- <table class="statstable">
-                    <tr><td class="statslabelcell">Alias </td><td><span id="fighterInfoAlias">The Bronze Bomber</span></td></tr>
-                    <tr><td class="statslabelcell">Age </td><td><span id="fighterInfoAge"> 34</span></td></tr>
-                    <tr><td class="statslabelcell">Height </td><td><span id="fighterInfoGeight"> 6'7"</span></td></tr>
-                    <tr><td class="statslabelcell">Reach </td><td><span id="fighterInfoReach"> 83"</span></td></tr>
-                    <tr><td class="statslabelcell">Division </td><td><span id="fighterInfoDivision">Heavyweight</span></td></tr>
-                    <tr><td class="statslabelcell">Nationality </td><td><span id="fighterInfoNationality">USA</span></td></tr>
-                </table> -->
+            <div class="fighterinfostatsspace" id="fighterInfoStatsSpace">
                 <div class="fighterinfostatsspaceHeader">Alias </div>
                 <div class="fighterinfostatsspaceHeader">Nationality </div>
                 <div class="fighterinfostatsspaceHeader">Age </div>
@@ -98,13 +90,7 @@
                 <div class="fighterinfostatsspaceHeader">Reach </div>
                 <div class="fighterinfostatsspaceHeader">Division </div>
             </div>
-            <div class="fighterinfohistoryspace" id="fighterInfoHistorySpace"><!--make this a grid-->
-                <!-- <div class="fighterinfohistoryspaceHeader">Date</div>
-                <div class="fighterinfohistoryspaceHeader">Weight (lbs)</div>
-                <div class="fighterinfohistoryspaceHeader">Opponent</div>
-                <div class="fighterinfohistoryspaceHeader">W/L/D</div>
-                <div class="fighterinfohistoryspaceHeader">Location</div>
-                <div class="fighterinfohistoryspaceHeader" id="fighterinfohistoryspaceHeaderLast">Result</div> -->
+            <div class="fighterinfohistoryspace" id="fighterInfoHistorySpace">
                 <table class="fighterinfohistoryspacetable" id="fighterInfoHistorySpaceTable">
                     <tr class="fighterinfohistoryspacetableheaderrow">
                         <td>Date</td><td>Weight (lbs)</td><td>Opponent</td><td>W/L/D</td><td>Location</td><td>Result</td>
@@ -118,12 +104,12 @@
                 <p>As of December 2019, Wilder is ranked as the world's second best active heavyweight by BoxRec, The Ring magazine and the Transnational Boxing Rankings Board. </p>
             </div>
         </div>
-        <div class="previousfighterbuttonspace">
+        <!-- <div class="previousfighterbuttonspace">
             <button class="previousfighterbutton">&#8656;</button><p>Previous card</p>
         </div>
         <div class="nextfighterbuttonspace">
             <button class="nextfighterbutton">&#8658;</button><p>Next card</p>
-        </div>
+        </div> -->
         <!-- <div class="footer">
             <p>The Fight Encycolpedia &trade; - 2020</p>
         </div> -->

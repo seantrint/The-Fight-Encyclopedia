@@ -4,35 +4,36 @@
         <header>
             <link href="https://fonts.googleapis.com/css?family=Inria+Serif&display=swap" rel="stylesheet">
             <div class="header">
-                <div class="persistenttitlegrid">
-                    <div class="cell1">
-                        <a href="/"><img src="/img/logo.png" class="logo" alt="123" /></a>
-                    </div>
-                    <div class="cell2">
-                        <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
-                        <div class="widescreenmenulinks" id="menuOptions">
-                            <ul>
-                                <li><a href="/" id="homeLink">Home</a></li>
-                                <li><a href="" id="fightCatalogueLink">Fight Catalogue</a></li>
-                                <li><a href="/fighterCatalogue" id="fighterCatalogueLink">Fighter Catalogue</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="cell3">
-                        <input type="text" id="searchFieldWideScreen" placeholder="Search..." />
-                        <button type="submit" id="searchButtonWideScreen" onclick="search(this.id)"><i class="fa fa-search"></i></button>
-                    </div>
-                    <div class="cell4">
-                        <span>Automated boxing record collection</span>
-                    </div>
+                <div class="widescreenmenubar">
+                    <a href="/"><img src="/img/logo.png" class="logo" alt="123" /></a>
+                    <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
+                    <!-- <div class="widescreenmenulinks" id="menuOptions">
+                        <ul>
+                            <li><a href="/" id="homeLink">Home</a></li>
+                            <li><a href="" id="fightCatalogueLink">Fight Catalogue</a></li>
+                            <li><a href="/fighterCatalogue" id="fighterCatalogueLink">Fighter Catalogue</a></li>
+                        </ul>
+                    </div> -->
+                    <p class="widescreenmenuinputs">
+                        <input type="text" id="searchFieldWideScreen" placeholder="&#128269;Search" />
+                        <button type="submit" id="searchButtonWideScreen" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
+                    </p>
+                    <p class="aboutpagelink"><a>About</a></p>
+                </div>
+                <div class="linkstopages" id="menuOptions">
+                    <p class="widescreenmenupagelinks" id="wideScreenLinks"><a href="/" id="homeLink">Home</a>
+                        <a href="" id="fightCatalogueLink">Fight Catalogue</a>
+                        <a href="/fighterCatalogue" id="fighterCatalogueLink">Fighter Catalogue</a>
+                        <span class="widescreenslogan">Automated Boxing Record Collection</span>
+                    </p>
                 </div>
                 <div class="mobileheader">
                     <div class="mobileheaderone"><a class="menubutton" onclick="openMenu()" id="openMenuButton">&#9776;</a></div>
-                    <div class="mobileheadertwo"><p class="mobiletitle">The Fight Encyclopedia</p></div>
+                    <div class="mobileheadertwo"><p class="mobiletitle">Autoboxing</p></div>
                     <div class="mobileheaderthree"><p class="mobileslogan">Automated boxing record collection</p></div>
                     <div class="mobileheaderfour">
-                        <input type="text" id="searchFieldMobileWide" placeholder="Search..." />
-                        <button type="submit" id="searchButtonMobileWide" onclick="search(this.id)"><i class="fa fa-search"></i></button>
+                        <input type="text" id="searchFieldMobileWide" placeholder="&#128269; Search" />
+                        <button type="submit" id="searchButtonMobileWide" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
                 <div class="popupmenu" id="popupMenu">
@@ -49,8 +50,8 @@
                             <a href="/fighterCatalogue">Fighter Catalogue</a>
                         </div>
                         <div class="popupmenulink4">
-                            <input type="text" id="searchFieldMobile" placeholder="Search..." />
-                            <button type="submit" id="searchButtonMobile" onclick="search(this.id)"><i class="fa fa-search"></i></button>
+                            <input type="text" id="searchFieldMobile" placeholder="&#128269; Search" />
+                            <button type="submit" id="searchButtonMobile" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
 	</div>
         <footer>
                 <div class="footer">
-                    2019 - The Fight Encyclopedia - <a>This is a footer</a>
+                    2020 - Autoboxing - <a>This is a footer</a>
                 </div>
         </footer>
 </html>
