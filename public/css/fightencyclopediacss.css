@@ -747,7 +747,7 @@ text-align: center;
 }
     .fighterinfoimagespace img {
         height: 200px;
-        width: 40%;
+        width: 200px;
         -webkit-filter: var(--image-filter-settings);
         filter: var(--image-filter-settings);
         -webkit-box-shadow: var(--image-shadow-settings);
@@ -1401,8 +1401,8 @@ text-align: center;
         grid-column: 6/9;
     }
     .fighterinfoimagespace img {
-        height: 300px;
-        width:40%;
+        height: 250px;
+        width:250px;
     }
     .previousfighterbuttonspace {
         margin-top: 6%;
@@ -1961,7 +1961,7 @@ text-align: center;
         font-size:16px;
     }
     .toFighterLink{
-        font: size 16;px; 
+        font-size: 16px; 
     }
     .widescreenmenubar input{
         margin-left:270px;

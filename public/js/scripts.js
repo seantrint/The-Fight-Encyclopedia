@@ -1043,10 +1043,15 @@ function closeFilterMenu() {
     var x = document.getElementById("filterMenu");
     x.style.display = "none";
 }
-
+var mainFilterToHide ='';
 async function filterAlphabeticalRankingRandom(id) {
+    if(mainFilterToHide !== ''){
+        document.getElementById(mainFilterToHide.id).style.display = 'block';
+    }
     var currentSortingFilter = document.getElementById("currentFilter");
     var selectedSortingFilter = document.getElementById(id);
+    mainFilterToHide = document.getElementById(id);
+    document.getElementById(id).style.display = 'none';
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     currentSortingFilter.textContent = selectedSortingFilter.textContent;
     var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
@@ -1162,9 +1167,15 @@ async function clearlast5(){
         }
     }     
 }
+var weightFilterToHide ='';
 async function filterWeightClass(id) {
+    if(weightFilterToHide !== ''){
+        document.getElementById(weightFilterToHide.id).style.display = 'block';
+    }
     var currentWeightFilter = document.getElementById("currentWeightFilter");
     var selectedWeightFilter = document.getElementById(id);
+    weightFilterToHide = document.getElementById(id);
+    document.getElementById(id).style.display = 'none';
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
     currentWeightFilter.innerHTML = selectedWeightFilter.textContent;
     var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
@@ -1197,9 +1208,15 @@ function closeGenderFilterMenu() {
     var x = document.getElementById("filterGenderMenu");
     x.style.display = "none";
 }
+var genderFilterToHide ='';
 async function filterGender(id) {
+    if(genderFilterToHide !== ''){
+        document.getElementById(genderFilterToHide.id).style.display = 'block';
+    }
     var currentGenderFilter = document.getElementById("currentGenderFilter");
     var selectedGenderFilter = document.getElementById(id);
+    genderFilterToHide = document.getElementById(id);
+    document.getElementById(id).style.display = 'none';
     currentGenderFilter.textContent = selectedGenderFilter.textContent;
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
