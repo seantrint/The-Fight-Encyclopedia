@@ -70,7 +70,6 @@ async function loadErrorPage(){
 async function loadDailyQuotes(){
     var dailyQuotes = await fetchData('/getQuotesOfTheDay');
     var quotesspace = document.getElementById('quotesSpace');
-    console.log(dailyQuotes);
     for(var quote in dailyQuotes.recordset){
         quoteParagraph = document.createElement('p');
         quoteParagraph.textContent = dailyQuotes.recordset[quote].quote;
@@ -526,7 +525,6 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
     for (var key in fighterCatalogueData.recordset) {
         for (var key1 in fighterCatalogueData.recordset[key]) {
             var fighterImageApiData = await fetchData('/getBoxerImage/',fighterCatalogueData.recordset[key][key1]);
-
             var catalogueEntryDiv = document.createElement('div');
             var fighterImage = document.createElement('img');
             var nameParagraph = document.createElement('p');
@@ -546,7 +544,7 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             linkToCard.onclick = async function(divId){
                 divId = this.id;
                 var boxerName = document.getElementById(divId).textContent;
-                window.location.href = 'fighterCard/'+boxerName;
+                window.location.href = '/fighterCard/'+boxerName;
             }
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
@@ -703,7 +701,6 @@ var newArray = [];
         end = itemsPerCatalogue;
         newArray.push(dataArray.slice(begin,end));
         await clearCatalogue();
-        await loadingText();
         if((document.getElementById('CatalogueTable') == undefined) && table){
             await createCatalogueTable();
         }
@@ -723,7 +720,6 @@ var newArray = [];
         begin = end-itemsPerCatalogue;
         newArray.push(dataArray.slice(begin,end));
         await clearCatalogue();
-        await loadingText();
         if((document.getElementById('CatalogueTable') == undefined) && table){
             await createCatalogueTable();
         }
@@ -766,7 +762,6 @@ async function loadGridData(page){ //parameter for grid/table id
             newArray.push(dataArray.slice(begin,end));
             if(newArray[0].length > 0){
                 await clearCatalogue();
-                await loadingText();
                 for(var data in newArray[0]){
                     if(grid){
                         document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
@@ -793,7 +788,6 @@ async function loadGridData(page){ //parameter for grid/table id
                     begin=0;
                     end=itemsPerCatalogue;
                     newArray.push(dataArray.slice(begin,end));
-                    await loadingText();
                     if((document.getElementById('CatalogueTable') == undefined) && table){
                         await createCatalogueTable();
                     }
@@ -810,7 +804,6 @@ async function loadGridData(page){ //parameter for grid/table id
                 }
                 else{
                     newArray.push(dataArray.slice(begin,end));
-                    await loadingText();
                     if((document.getElementById('CatalogueTable') == undefined) && table){
                         await createCatalogueTable();
                     }
@@ -990,35 +983,69 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     }    
 }
 var gridClicked = true;
-async function loadFighterCatalogue(param){
+async function changeCatalogueView(param){
+    var selectedGenderFilter = document.getElementById("currentGenderFilter").textContent;
+    var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
+    var viewParam = '';
+    if(document.getElementById(param).id === 'GridViewButton'){
+        //load catalogue as grid
+        isList = false;
+        if(isGrid === false){
+            isGrid = true;
+            viewParam = 'Grid';
+        }
+    }
+    if(document.getElementById(param).id === 'ListViewButton'){
+        //load catalogue as list
+        isGrid = false;
+        if(isList === false){
+            isList = true;
+            viewParam = 'List';
+        }
+    }
+    window.location.href = '/fighterCatalogue/'+currentSortingFilter +'/'+currentWeightFilter+'/'+selectedGenderFilter+'/'+viewParam;
+}
+async function loadFighterCatalogue(){
+    var currentSortingFilter = document.getElementById("currentFilter").textContent; 
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
     var fighterCatalogueData = await fetchData('/sortBoxerCatalogue/',currentSortingFilter+'/',currentWeightFilter+'/',currentGenderFilter);
-
-    if(param === undefined ){
-        //load catalogue as grid
-        await loadFighterCatalogueAsGrid(fighterCatalogueData);
+    var viewParam = document.getElementById("viewParam").textContent;;
+    if(viewParam === undefined ){
+        if(isGrid === true){
+            await loadFighterCatalogueAsGrid(fighterCatalogueData);
+        }
+        if(isList === true){
+            await loadFighterCatalogueAsList(fighterCatalogueData);
+        }
     }
     else{
-        if(document.getElementById(param).id === 'GridViewButton'){
-            //load catalogue as grid
-            isList = false;
-            if(isGrid === false){
-                isGrid = true;
-                await loadFighterCatalogueAsGrid(fighterCatalogueData);
-            }
+        if(viewParam === 'Grid'){
+            await loadFighterCatalogueAsGrid(fighterCatalogueData);
         }
-        if(document.getElementById(param).id === 'ListViewButton'){
-            //load catalogue as list
-            isGrid = false;
-            if(isList === false){
-                isList = true;
-                await loadFighterCatalogueAsList(fighterCatalogueData);
-            }
+        else if(viewParam ==='List'){
+            await loadFighterCatalogueAsList(fighterCatalogueData);
         }
     }
-   
+    // else{
+    //     if(document.getElementById(param).id === 'GridViewButton'){
+    //         //load catalogue as grid
+    //         isList = false;
+    //         if(isGrid === false){
+    //             isGrid = true;
+    //             await loadFighterCatalogueAsGrid(fighterCatalogueData);
+    //         }
+    //     }
+    //     if(document.getElementById(param).id === 'ListViewButton'){
+    //         //load catalogue as list
+    //         isGrid = false;
+    //         if(isList === false){
+    //             isList = true;
+    //             await loadFighterCatalogueAsList(fighterCatalogueData);
+    //         }
+    //     }
+    // }
 }
 async function navigateToFighterCard(divId){
     var boxerName = divId.textContent;
@@ -1045,29 +1072,12 @@ function closeFilterMenu() {
 }
 var mainFilterToHide ='';
 async function filterAlphabeticalRankingRandom(id) {
-    if(mainFilterToHide !== ''){
-        document.getElementById(mainFilterToHide.id).style.display = 'block';
-    }
-    var currentSortingFilter = document.getElementById("currentFilter");
-    var selectedSortingFilter = document.getElementById(id);
-    mainFilterToHide = document.getElementById(id);
-    document.getElementById(id).style.display = 'none';
+    var selectedGenderFilter = document.getElementById("currentGenderFilter").textContent;
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
-    currentSortingFilter.textContent = selectedSortingFilter.textContent;
-    var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
+    var currentSortingFilter = document.getElementById(id).textContent;
+    var viewType = document.getElementById('viewParam').textContent;
 
-    var sortSelectionData = await fetchData('/sortBoxerCatalogue/',selectedSortingFilter.textContent+'/',currentWeightFilter+'/',currentGenderFilter);
-    var i =0;
-
-    await clearCatalogue();
-    
-    if(isGrid){
-        await loadFighterCatalogueAsGrid(sortSelectionData);
-    }
-    if(isList){
-        await loadFighterCatalogueAsList(sortSelectionData);
-    }
-    closeFilterMenu();
+    window.location.href = '/fighterCatalogue/'+currentSortingFilter +'/'+currentWeightFilter+'/'+selectedGenderFilter+'/'+viewType;    
 }
 window.onscroll = function ()
 {
@@ -1169,28 +1179,12 @@ async function clearlast5(){
 }
 var weightFilterToHide ='';
 async function filterWeightClass(id) {
-    if(weightFilterToHide !== ''){
-        document.getElementById(weightFilterToHide.id).style.display = 'block';
-    }
-    var currentWeightFilter = document.getElementById("currentWeightFilter");
-    var selectedWeightFilter = document.getElementById(id);
-    weightFilterToHide = document.getElementById(id);
-    document.getElementById(id).style.display = 'none';
+    var selectedGenderFilter = document.getElementById("currentGenderFilter").textContent;
+    var currentWeightFilter = document.getElementById(id).textContent;
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
-    currentWeightFilter.innerHTML = selectedWeightFilter.textContent;
-    var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
-    var filteredWeightData = await fetchData('/sortBoxerCatalogue/',currentSortingFilter+'/',selectedWeightFilter.textContent+'/',currentGenderFilter);
-    var i=0;
+    var viewType = document.getElementById('viewParam').textContent;
 
-    await clearCatalogue();
-
-    if(isGrid){
-        await loadFighterCatalogueAsGrid(filteredWeightData);
-    }
-    if(isList){
-        await loadFighterCatalogueAsList(filteredWeightData);
-    }
-    closeWeightFilterMenu();
+    window.location.href = '/fighterCatalogue/'+currentSortingFilter +'/'+currentWeightFilter+'/'+selectedGenderFilter+'/'+viewType;
 }
 function showGenderFilterMenu() {
     var x = document.getElementById("filterGenderMenu");
@@ -1210,27 +1204,12 @@ function closeGenderFilterMenu() {
 }
 var genderFilterToHide ='';
 async function filterGender(id) {
-    if(genderFilterToHide !== ''){
-        document.getElementById(genderFilterToHide.id).style.display = 'block';
-    }
-    var currentGenderFilter = document.getElementById("currentGenderFilter");
-    var selectedGenderFilter = document.getElementById(id);
-    genderFilterToHide = document.getElementById(id);
-    document.getElementById(id).style.display = 'none';
-    currentGenderFilter.textContent = selectedGenderFilter.textContent;
+    var selectedGenderFilter = document.getElementById(id).textContent;
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
-    var filteredGenderData = await fetchData('/sortBoxerCatalogue/',currentSortingFilter+'/',currentWeightFilter+'/',selectedGenderFilter.textContent);
+    var viewType = document.getElementById('viewParam').textContent;
 
-    //delete existing elements
-    await clearCatalogue();
-    if(isGrid){
-        await loadFighterCatalogueAsGrid(filteredGenderData);
-    }
-    if(isList){
-        await loadFighterCatalogueAsList(filteredGenderData);
-    }
-    closeGenderFilterMenu();
+    window.location.href = '/fighterCatalogue/'+currentSortingFilter +'/'+currentWeightFilter+'/'+selectedGenderFilter+'/'+viewType;
 }
 async function search(id){
     var searchButton = document.getElementById(id).id;

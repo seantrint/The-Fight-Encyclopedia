@@ -11,7 +11,8 @@
     <header id="pageLayout">
     </header>
     <div class="pagedescription">
-        <p><button class="cataloguebutton" id="GridViewButton" onclick="loadFighterCatalogue(this.id)">&#9744;</button><button class="cataloguebutton" id="ListViewButton" onclick="loadFighterCatalogue(this.id)">&#8801;</button></p>
+        <p id="viewParam"><%= viewType %></p>
+        <p><button class="cataloguebutton" id="GridViewButton" onclick="changeCatalogueView(this.id)">&#9744;</button><button class="cataloguebutton" id="ListViewButton" onclick="changeCatalogueView(this.id)">&#8801;</button></p>
         <div class="cataloguepagebuttons" id="catalogueButtonsLink">
             <!-- <a onclick="loadGridData(this.id)" id="cataloguePrevious">&laquo;</a>
             <a onclick="loadGridData(this.id)" id="catalogueNext">&raquo;</a> -->
@@ -22,7 +23,7 @@
     </div>
     <div class="cataloguefilters">
         <div class="currentfilterselection">
-            <p>Sort by: <a href="javascript:void(0)" class="filterlink" onclick="showFilterMenu()" id="currentFilter">Alphabetical</a>&#8595;</p>
+            <p>Sort by: <a href="javascript:void(0)" class="filterlink" onclick="showFilterMenu()" id="currentFilter"><%= mainFilter %></a>&#8595;</p>
         </div>
         <div class="filtermenu" id="filterMenu">
             <a href="javascript:void(0)" class="closebtn" onclick="closeFilterMenu()">&times;</a>
@@ -39,7 +40,7 @@
             </ul>
         </div>
         <div class="currentweightselection">
-            <p>Weight Class: <a href="javascript:void(0)" class="filterlink" onclick="showWeightFilterMenu()" id="currentWeightFilter">All weights</a>&#8595;</p>
+            <p>Weight Class: <a href="javascript:void(0)" class="filterlink" onclick="showWeightFilterMenu()" id="currentWeightFilter"><%= weightFilter %></a>&#8595;</p>
         </div>
         <div class="filterweightmenu" id="filterWeightMenu">
             <a href="javascript:void(0)" class="closebtn" onclick="closeWeightFilterMenu()">&times;</a>
@@ -71,7 +72,7 @@
             </ul>
         </div>
         <div class="currentgenederselection">
-            <p>Gender: <a href="javascript:void(0)" class="filterlink" onclick="showGenderFilterMenu()" id="currentGenderFilter">Men</a>&#8595;</p>
+            <p>Gender: <a href="javascript:void(0)" class="filterlink" onclick="showGenderFilterMenu()" id="currentGenderFilter"><%= genderFilter %></a>&#8595;</p>
         </div>
         <div class="filtergendermenu" id="filterGenderMenu">
             <a href="javascript:void(0)" class="closebtn" onclick="closeGenderFilterMenu()">&times;</a>

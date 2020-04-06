@@ -4,8 +4,24 @@ const app = express.Router();
 app.get('/',function(request,response){
     response.render('../public/index');
 });
-app.get('/fighterCatalogue',function(request,response){
-    response.render('../public/fightercatalogue');
+app.get('/fighterCatalogue/:mainFilter?/:weightFilter?/:genderFilter?/:viewType?',function(request,response){
+    var mainFilter = request.params.mainFilter;
+    var weightFilter = request.params.weightFilter;
+    var genderFilter = request.params.genderFilter;
+    var viewType = request.params.viewType;
+    if(mainFilter == undefined){
+        mainFilter = 'Alphabetical';
+    }
+    if(weightFilter == undefined){
+        weightFilter = 'All weights';
+    }
+    if(genderFilter == undefined){
+        genderFilter = 'Men';
+    }
+    if(viewType == undefined){
+        viewType = 'Grid';
+    }
+    response.render('../public/fightercatalogue',{mainFilter: mainFilter, weightFilter: weightFilter, genderFilter:genderFilter, viewType: viewType});
 });
 app.get('/fighterCard/:boxerName',function(request,response){
     var boxerName = request.params.boxerName;
