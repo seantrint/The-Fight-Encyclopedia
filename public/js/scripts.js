@@ -534,7 +534,7 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             nameParagraph.textContent = fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
             fighterImage.className = 'catalogueimage';
-            fighterImage.src = fighterImageApiData.recordset[0].BoxerImageReference;
+            fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
             fighterImage.id = 'fighterimageid'+i;
             
             linkToCard.appendChild(fighterImage);
