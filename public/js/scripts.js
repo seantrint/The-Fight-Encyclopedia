@@ -1760,6 +1760,14 @@ async function previousFight(){
     
                     testData.appendChild(drawDiv);
                 } 
+                if ( fhcountA && (fhcountA % 3 === 2)) {
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                } 
                 if ( fhcountA && (fhcountA % 3 === 1)) { 
                     if(screen.width<=360){
                         testData.textContent ='';
@@ -1771,7 +1779,6 @@ async function previousFight(){
                 else{
                     testRow.appendChild(testData);
                 }   
-                testRow.appendChild(testData);
                 document.getElementById('Last5TableA').appendChild(testRow);
                 fhcountA++;
             }
@@ -1817,6 +1824,14 @@ async function previousFight(){
     
                     testData.appendChild(drawDiv);
                 } 
+                if ( fhcountB && (fhcountB % 3 === 2)) {
+                    testData.textContent = '';
+                    var fighterLink = document.createElement('a');
+                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                    fighterLink.className = 'fighthistorytablecelllink'
+                    testData.appendChild(fighterLink);
+                } 
                 if ( fhcountB && (fhcountB % 3 === 1)) { 
                     if(screen.width<=360){
                         testData.textContent ='';
@@ -1828,7 +1843,6 @@ async function previousFight(){
                 else{
                     testRow.appendChild(testData);
                 }               
-                testRow.appendChild(testData);
                 document.getElementById('Last5TableB').appendChild(testRow);
                 fhcountB++;
             }
