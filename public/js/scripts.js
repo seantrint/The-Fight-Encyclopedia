@@ -44,7 +44,7 @@ async function loadPageName() {
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
 
     pageName.innerHTML = docTitle + "&ensp;&#8595;";
-    await searchOnEnterPress("searchFieldMobileWide", "searchButtonMobileWide");
+    await searchOnEnterPress("searchFieldMobileDefault", "searchButtonMobileDefault");
     await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {
         homeLink.style.display = 'none';
@@ -427,7 +427,7 @@ async function closemenus(){
     var filter = document.getElementById("filterMenu");
     var genderfilter = document.getElementById("filterGenderMenu");   
     var searchInput = document.getElementById("searchFieldMobile");
-    var searchButton = document.getElementById("searchButtonMobile");
+    var searchButton = document.getElementById("searchButtonMobileDefault");
     var wideScreenMenu = document.getElementById("menuOptions");
     var wideScreenLinks = document.getElementById("wideScreenLinks");
     // change to array of ids
@@ -435,7 +435,8 @@ async function closemenus(){
     document.onclick = async function(e){
         if(e.target.id !== 'popupMenu' && e.target.id !== 'openMenuButton' && e.target.id !== 'searchFieldMobile' && e.target.id !== 'searchButtonMobile'){
             popupmenu.style.display = 'none';
-            openpopupmenu.style.display = 'block';            
+            openpopupmenu.style.display = 'block';   
+            searchButton.style.display = 'block';         
           }
         if(e.target.id !== 'filterWeightMenu' && e.target.id !== 'currentWeightFilter'){
             if(weightfilter != null){
@@ -473,17 +474,21 @@ async function searchOnEnterPress(inputId, buttonId){
 async function openMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
-    var z = document.getElementById("searchField");
+    var z = document.getElementById("searchButtonMobileDefault");
     x.style.display = ("block");
     y.style.display = ("none");
-
+    z.style.display = ("none");
     await searchOnEnterPress("searchFieldMobile", "searchButtonMobile");
 }
 async function closeMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
+    var q = document.getElementById("openMenuLogo");
+    var z = document.getElementById("searchButtonMobileDefault");
     x.style.display = ("none");
     y.style.display = ("block");
+    q.style.display = ("block");
+    z.style.display = ("block");
 }
 // async function closeDivFromOutside(){
 //     document.onclick=function(div){
