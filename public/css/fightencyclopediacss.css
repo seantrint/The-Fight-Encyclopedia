@@ -11,6 +11,7 @@
     --bottom-border-color:rgb(185, 184, 184);
     --bottom-border-type:inset;
     --bottom-border-size:1px;
+    --menu-color:#fdfdfd;
 }
 body {
     color: var(--main-font-color);
@@ -117,7 +118,11 @@ body {
     grid-template-rows: repeat(3, minmax(5px, auto));
     grid-gap: 2px;
     border-bottom: var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
-    background-color: var(--content-background-color);
+    background-color: var(--menu-color);
+    width:100%;
+    height:80px;
+    position:fixed;
+    z-index:6;
 }
 .mobileheaderone {
     grid-column: 1 / 2;
@@ -168,6 +173,7 @@ body {
     object-fit:cover;
 }
 #content {
+    margin-top:100px;
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr 10px 1fr;
@@ -359,10 +365,7 @@ body {
     background-color: var(--content-background-color);
     color: var(--links-font-color);
     margin-top: 105px;
-}
-.persistenttitlegrid {
-    display: none;
-    width: 100%;
+    font-size:20px;
 }
 .widescreenmenubar{
     display: none;
@@ -461,25 +464,52 @@ text-align: center;
 }
 .popupmenu {
     height: 100%;
-    width: 55%;
+    width: 150px;
     position: fixed;
-    z-index: 3;
+    z-index: 7;
     top: 0;
     left: 0;
-    background-color: var(--content-background-color);
+    background-color: var(--menu-color);
     padding-top: 60px;
     display: none;
 }
+.mobilemenulinks{
+    margin-top:15px;
+}
+.mobilelogo{
+    height:100px;
+    width:150px;
+    margin-top:-20px;
+    border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
+}
+    .mobilemenulink{
+        width:100%;
+        height:25px;
+        padding-top:8px;
+        padding-bottom:2px;
+    }
+    .mobilemenulink p{
+        margin:0 auto;
+        float:left;
+        margin-left:15px;
+    }
+    #mobilemenulinkLast{
+        margin-top:10px;
+        border-top:var(--bottom-border-size) outset var(--bottom-border-color);
+        padding-bottom:10px;
+        border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
+    }
+    #mobileAboutLink{
+        margin-top:15px;
+    }
     .popupmenu a {
         /*padding: 2% 14% 14% 0%;*/
         text-decoration: none;
         display: block;
         color: var(--links-font-color);
-        text-decoration: underline;
     }
         .popupmenu a:visited {
             color: var(--links-font-color);
-            text-decoration: underline;
         }
     .popupmenu input {
         border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
@@ -493,12 +523,13 @@ text-align: center;
         border: none;
         color: var(--links-font-color);
     }
-    .popupmenu img{
+    /* .popupmenu img{
         height:25%;
         width:100%;
+        margin-top:-20px;
         border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
-    }
-    .popupmenu .closebtn {
+    } */
+    /* .popupmenu .closebtn {
         position: absolute;
         top: 0;
         right: 5px;
@@ -525,7 +556,7 @@ text-align: center;
 }
 .popupmenulink4{
     grid-row:4;
-}
+} */
 .mobileslogan {
     font-style: italic;
 }
@@ -541,7 +572,7 @@ text-align: center;
 .cataloguegrid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-gap: 20px;
+    grid-gap: 1px;
     grid-auto-rows: 230px;
     width:80%;
     margin: 0 auto;
@@ -553,8 +584,8 @@ text-align: center;
     border-bottom-right-radius: 5px;
 }
     .catalogueentry img {
-        height: 80%;
-        width: 80%;
+        height: 70%;
+        width: 70%;
         -webkit-filter: var(--image-filter-settings);
         filter: var(--image-filter-settings);
         border-radius: 2px;
@@ -916,6 +947,7 @@ text-align: center;
     margin-bottom: -1%;
 }
 .pagedescription {
+    margin-top:80px;
     background-color: var(--content-background-color);
     padding-bottom: 1px;
     padding-top: 1px;
@@ -997,15 +1029,21 @@ text-align: center;
     }
 }
 @media only screen and (min-width: 430px) {
+    .pagedescription {
+        margin-top:100px;
+    }
     .fighterinfohistoryspacetable{
         font-size:14px;
+    }
+    .mobileheader{
+        height:100px;
     }
     .mobileheaderfour{
         display:block;
     }
     .mobileheaderfour input{
         width:40%;
-        background-color: #f1f1f1;
+        background-color: #ffffff;
         border: var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
         border-radius: 2px;
     }
@@ -1014,56 +1052,21 @@ text-align: center;
         border:none;
         color: var(--links-font-color);
     }
-    .popupmenu img{
-        height:100px;
-        width:25%;
-        float:left;
-        margin-top:-7%;
+    #mobilemenulinkLast{
         border-bottom:none;
-        border-right:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
     }
-    .popupmenu {
-        width: 100%;
-        height:35%;
-        border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
+    #mobileAboutLink{
+        margin-top:-30px;
     }
-    .popupmenulinks{
-        display:grid;
-        grid-template-columns: repeat(12, 1fr);
-        grid-auto-rows:25px;
-        /* padding-top:15px;
-        padding-left:2px;
-        text-align: left; */
-        text-align:initial;
-        margin-top: -25px;
-        grid-gap:20px;
-    }
-    .popupmenulink1{
-        grid-column:1/2;
-        grid-row:1;
-    }
-    .popupmenulink2{
-        grid-column:2/6;
-        grid-row:1;
-    }
-    .popupmenulink3{
-        grid-column:5/9;
-        grid-row:1;
-    }
-    .popupmenulink4{
-        grid-column:8/13;
-        grid-row:1;
-    }
-        .popupmenulink4 button{
-            padding-left:10px;
-            display:none;
-        }
     .popupmenu input {
-        margin-left:-265px;
-        width:250px;
         display:none;
     }
-
+    .popupmenu {
+        width: 250px;
+    }
+    .mobilelogo{
+        border-bottom: none;
+    }
     #content {
         display: grid;
         grid-template-columns: auto, 1fr;
@@ -1257,10 +1260,6 @@ text-align: center;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
     }
-    /*.cataloguefilters {
-        border-bottom: 2px ridge gray;
-        margin-bottom: 5%;
-    }*/
     .filtermenu {
         margin-left: 11%;
         margin-top: 40px;
@@ -1506,7 +1505,7 @@ text-align: center;
     }
     .widescreenmenubar{
         display:block;  
-        background-color: #fdfdfd;
+        background-color: var(--menu-color);
         top:0;
         position:fixed;
         width:100%;
@@ -1552,12 +1551,12 @@ text-align: center;
     .linkstopages{
         display:block;
         opacity: 0;
-        background-color: #fdfdfd;
+        background-color: var(--menu-color);
         top:52px;
         position:fixed;
         width:100%;
         z-index:4;
-        border-bottom: 1px solid rgb(221, 221, 221);
+        /*border-bottom: 1px solid rgb(221, 221, 221);*/
         transition: opacity 0.5s ease-in-out;
         transition:all 0.5s ease-in-out;
     }    
@@ -1578,6 +1577,7 @@ text-align: center;
     }
     #content {
         padding-top: 8%;
+        margin-top:initial;
     }
 
     .cataloguefilters {
@@ -1618,11 +1618,6 @@ text-align: center;
     .fighterinfostatsspace{
         grid-auto-rows: 25px;
         padding-top:10px;
-    }
-
-    .nextpreviousbutton {
-        margin-top: 36%;
-        margin-bottom: 2%;
     }
 
     .seven {
@@ -1674,14 +1669,14 @@ text-align: center;
         font-size:16px;
     }
     .previousbuttonspace {
-        grid-column: 3 / 4;
+        grid-column: 3;
         grid-row: 8;
     }
     .footer{
         grid-column:1/12;
     }
     .nextbuttonspace {
-        grid-column: 8/9;
+        grid-column: 9;
         grid-row: 8;
     }
     .nextpreviousbutton {
@@ -1690,6 +1685,9 @@ text-align: center;
         height: 100%;
         width: 50%;
         background: none;
+        margin-top: 36%;
+        margin-bottom: 2%;
+        font-size:28px;
     }
 
     .one .polaroid {
@@ -1711,6 +1709,7 @@ text-align: center;
         height: 55px;
     }
     .pagedescription{
+        margin-top:initial;
         padding-top:5%;
     }
     .fighterinfogrid {
@@ -1846,13 +1845,6 @@ text-align: center;
         margin-left: 80%;
         margin-top: 35px;
     }
-    .persistenttitlegrid {
-        opacity: 0.8;
-        transition-duration: 0.5s;
-    }
-    .persistenttitlegrid:hover {
-        opacity: 1;
-    }
     .searchresultsgridlink{
         grid-template-columns: repeat(8, 1fr);
     }
@@ -1976,6 +1968,7 @@ text-align: center;
     }
     .nextpreviousbutton {
         margin-top: 24%;
+        font-size:34px;
     }
 
     .widescreenmenulinks {

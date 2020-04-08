@@ -38,6 +38,9 @@ async function loadPageName() {
     var docTitle = document.title;
     var pageName = document.getElementById("pageName");
     var homeLink = document.getElementById("homeLink");
+    var mobileHomeLink = document.getElementById("mobileHomeLink");
+    var mobilefighterCatalogueLink = document.getElementById("mobileFighterCatalogueLink");
+    
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
 
     pageName.innerHTML = docTitle + "&ensp;&#8595;";
@@ -45,12 +48,14 @@ async function loadPageName() {
     await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {
         homeLink.style.display = 'none';
+        mobileHomeLink.style.backgroundColor = 'rgb(204, 204, 204)';
         await loadUpcomingFightsData();
         await loadDailyQuotes();
         await addImagesToFighterPreviewBox();
     }
     if (docTitle == "Fighter Catalogue") {
         fighterCatalogueLink.style.display = 'none';
+        mobilefighterCatalogueLink.style.backgroundColor= 'rgb(204, 204, 204)';
         await numberOfElementsPerPage();
         await loadFighterCatalogue();
     }
@@ -394,6 +399,7 @@ async function loadFighterCard(){
     }
 }
 async function showMenuLinks() {
+ 
     var x = document.getElementById("menuOptions");
     var y = document.getElementById("wideScreenLinks");
     if(x.style.opacity === '0'){
@@ -449,7 +455,7 @@ async function closemenus(){
         if(e.target.id !== 'menuOptions' && e.target.id !== 'pageName'){
             if(wideScreenMenu != null){
                 wideScreenMenu.style.opacity = '0'; 
-                await sleep(600);  
+                //await sleep(600);  
                 wideScreenLinks.style.display = 'none';
             }
         }                
@@ -479,16 +485,16 @@ async function closeMenu() {
     x.style.display = ("none");
     y.style.display = ("block");
 }
-async function closeDivFromOutside(){
-    document.onclick=function(div){
-        var x = document.getElementById("popupMenu");
-        var y = document.getElementById("openMenuButton");
-        if(div.target.id !== 'popupMenu'){
-            x.style.display = ("none");
-            y.style.display = ("block");
-        }
-    }
-}
+// async function closeDivFromOutside(){
+//     document.onclick=function(div){
+//         var x = document.getElementById("popupMenu");
+//         var y = document.getElementById("openMenuButton");
+//         if(div.target.id !== 'popupMenu'){
+//             x.style.display = ("none");
+//             y.style.display = ("block");
+//         }
+//     }
+// }
 async function addImagesToFighterPreviewBox(){
     var randomFighterImagesData = await fetchData('/getRandomFighterImages');
 
@@ -666,7 +672,7 @@ async function createPageLinks(length){
         pageLink.textContent = pagenum;
         pageLink.id = 'pagelink'+i;
         pageLink.className = 'cataloguepagelink';
-        document.getElementById('catalogueButtonsLink').appendChild(pageLink); //change to await function - display page links
+        document.getElementById('catalogueButtonsLink').appendChild(pageLink); 
         pageLink.onclick = async function(divId){
                         divId = this.id;
                         await goToPage(divId);
@@ -684,7 +690,7 @@ async function createPageLinks(length){
     }    
     document.getElementById('catalogueButtonsLink').appendChild(nextButton);
 }
-async function goToPage(page){ //parameter for grid/table id
+async function goToPage(page){ 
     var pagetext;
     var pageint;
 if(Number.isInteger(page)){
@@ -738,7 +744,7 @@ var begin = 0;
 var end = itemsPerCatalogue;
 var change = 10;
 
-async function loadGridData(page){ //parameter for grid/table id
+async function loadGridData(page){
     var newArray = [];
     if(page === undefined){
         await createPageLinks(dataArray.length);
@@ -842,7 +848,6 @@ async function createCatalogueTable(){
     tableHeadingRow.appendChild(tableHeadingName);
     tableHeadingRow.appendChild(tableHeadingRecord);    
     tableHeadingRow.appendChild(tableHeadingDivision);        
-    //catalogueTable.appendChild(tableHeadingRow); 
     var tableHeadingLast5 = document.createElement('th');
     tableHeadingLast5.textContent = 'Last 5 Fights';          
     tableHeadingLast5.className = 'cataloguetableheading';    
@@ -939,7 +944,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             linkToCard.onclick = async function(divId){
                 divId = this.id;
                 var boxerName = document.getElementById(divId).id;
-                window.location.href = 'fighterCard/'+boxerName;
+                window.location.href = '/fighterCard/'+boxerName;
             }
 
             tableData.appendChild(linkToCard);
@@ -948,7 +953,6 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             tableRow.appendChild(tableData3);
             tableRow.appendChild(tableData4);
             tableRow.className = 'cataloguetablerow';
-            //catalogueTable.appendChild(tableRow); //change to dataarray
             dataArray.push(tableRow);
             i++; 
             numberList++;
@@ -982,22 +986,18 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         await createErrorDiv('','No results found for filter selection');
     }    
 }
-var gridClicked = true;
+
 async function changeCatalogueView(param){
     var selectedGenderFilter = document.getElementById("currentGenderFilter").textContent;
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentSortingFilter = document.getElementById("currentFilter").textContent;
     var viewParam = '';
     if(document.getElementById(param).id === 'GridViewButton'){
-        //load catalogue as grid
         isList = false;
-        if(isGrid === false){
-            isGrid = true;
-            viewParam = 'Grid';
-        }
+        isGrid = true;
+        viewParam = 'Grid';
     }
     if(document.getElementById(param).id === 'ListViewButton'){
-        //load catalogue as list
         isGrid = false;
         if(isList === false){
             isList = true;
@@ -1028,24 +1028,6 @@ async function loadFighterCatalogue(){
             await loadFighterCatalogueAsList(fighterCatalogueData);
         }
     }
-    // else{
-    //     if(document.getElementById(param).id === 'GridViewButton'){
-    //         //load catalogue as grid
-    //         isList = false;
-    //         if(isGrid === false){
-    //             isGrid = true;
-    //             await loadFighterCatalogueAsGrid(fighterCatalogueData);
-    //         }
-    //     }
-    //     if(document.getElementById(param).id === 'ListViewButton'){
-    //         //load catalogue as list
-    //         isGrid = false;
-    //         if(isList === false){
-    //             isList = true;
-    //             await loadFighterCatalogueAsList(fighterCatalogueData);
-    //         }
-    //     }
-    // }
 }
 async function navigateToFighterCard(divId){
     var boxerName = divId.textContent;
