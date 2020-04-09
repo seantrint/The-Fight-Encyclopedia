@@ -40,30 +40,41 @@ async function loadPageName() {
     var homeLink = document.getElementById("homeLink");
     var mobileHomeLink = document.getElementById("mobileHomeLink");
     var mobilefighterCatalogueLink = document.getElementById("mobileFighterCatalogueLink");
+    var mobileSearchField = document.getElementById("mobilemenulinkLast");
+    var aboutLink = document.getElementById("mobileAboutLink");
     
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
-
+    var pageNameLogo;
+    // if (docTitle == "Home") {
+    //     pageNameLogo = document.createElement('i');
+    //     pageNameLogo.className = 'fa fa-home';
+    // }
     pageName.innerHTML = docTitle + "&ensp;&#8595;";
-    await searchOnEnterPress("searchFieldMobileDefault", "searchButtonMobileDefault");
+    await searchOnEnterPress("searchFieldMobileDefault", "mobileButtonForSearch");
     await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {
-        homeLink.style.display = 'none';
         mobileHomeLink.style.backgroundColor = 'rgb(204, 204, 204)';
         await loadUpcomingFightsData();
         await loadDailyQuotes();
         await addImagesToFighterPreviewBox();
     }
     if (docTitle == "Fighter Catalogue") {
-        fighterCatalogueLink.style.display = 'none';
         mobilefighterCatalogueLink.style.backgroundColor= 'rgb(204, 204, 204)';
         await numberOfElementsPerPage();
         await loadFighterCatalogue();
     }
-    if(docTitle == "Fighter Card"){
-        await loadFighterCard();
-    }
+    // if(docTitle == "Fighter Card"){
+    //     await loadFighterCard();
+    // }
     if(docTitle == "Search Results"){
+        mobileSearchField.style.backgroundColor = 'rgb(204, 204, 204)';
         await loadSearchResults();
+    }
+    if(docTitle == "About"){
+        aboutLink.style.backgroundColor = 'rgb(204, 204, 204)';
+    }
+    else{
+        await loadFighterCard();
     }
 }
 async function loadErrorPage(){
@@ -81,6 +92,10 @@ async function loadDailyQuotes(){
         quotesspace.appendChild(quoteParagraph);
     }
 }
+async function showSearchBar(){
+    document.getElementById("searchFieldMobileDefault").style.display = 'block';
+    document.getElementById("searchButtonMobileDefault").style.display = 'none';
+}
 async function clearSearchResults(){
     var z = document.getElementsByClassName('searchresultsgridchild');
     var elemId='';
@@ -94,8 +109,8 @@ async function clearSearchResults(){
     await clearErrors();
 }
 async function loadSearchResults(){
-    document.getElementById("searchFieldMobileWide").style.display = 'none';
-    document.getElementById("searchButtonMobileWide").style.display = 'none';
+    //document.getElementById("searchFieldMobileWide").style.display = 'none';
+    //document.getElementById("searchButtonMobileWide").style.display = 'none';
     await clearSearchResults();
     var searchTerm = document.getElementById('SearchTerm').textContent;
     var searchResultsData = await fetchData('/getSearchResults/',searchTerm);
@@ -115,21 +130,28 @@ async function loadSearch(searchResultsData){
 
             var fighterImageApiData = await fetchData('/getBoxerImage/',searchResultsData.recordset[key][key1]);
 
-            fighterImage.className = 'searchresultsgridchildimg';
+
             fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
             fighterImage.id = 'fighterimageid'+i;
+            var fighterImageLink = document.createElement('a');
+            fighterImageLink.href = '/fighterCard/'+searchResultsData.recordset[key][key1];
+            fighterImageLink.className = 'searchresultsgridchildimg';
+            fighterImageLink.appendChild(fighterImage);
 
             searchResultLink.className = 'searchresultsgridlink';
             searchResultLink.id = 'searchResultsGridLink'+i;
 
             testDiv.className = 'searchresultsgridchild';
+            var nameParagraphLink = document.createElement('a');
+            nameParagraphLink.href = '/fighterCard/'+searchResultsData.recordset[key][key1];
+            nameParagraphLink.appendChild(nameParagraph);
             nameParagraph.textContent = searchResultsData.recordset[key][key1];
             nameParagraph.id = 'nameid'+i;
 
-            nameParagraph.className = 'searchresultsparagraph';
+            nameParagraphLink.className = 'searchresultsparagraph';
 
-            searchResultLink.appendChild(fighterImage);
-            searchResultLink.appendChild(nameParagraph);
+            searchResultLink.appendChild(fighterImageLink);
+            searchResultLink.appendChild(nameParagraphLink);
 
             var boxerStatsData = await fetchData('/getBoxerStats/',nameParagraph.textContent);
             var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagimgsearch');
@@ -178,35 +200,6 @@ async function loadSearch(searchResultsData){
             
             i++;
             document.getElementById('SearchResultsGrid').appendChild(testDiv);
-
-            nameParagraph.onclick = async function(divId){
-                divId = this.id;
-                var parentId = document.getElementById(divId).parentNode.id; 
-                var boxerDiv = document.getElementById(parentId);
-                var boxerName = boxerDiv.childNodes[1].textContent;
-                window.location.href = '../fighterCard/'+boxerName;
-            }
-            countryFlagImg.onclick = async function(divId){
-                divId = this.id;
-                var parentId = document.getElementById(divId).parentNode.id; 
-                var boxerDiv = document.getElementById(parentId);
-                var boxerName = boxerDiv.childNodes[1].textContent;
-                window.location.href = '../fighterCard/'+boxerName;
-            }
-            fighterImage.onclick = async function(divId){
-                divId = this.id;
-                var parentId = document.getElementById(divId).parentNode.id; 
-                var boxerDiv = document.getElementById(parentId);
-                var boxerName = boxerDiv.childNodes[1].textContent;
-                window.location.href = '../fighterCard/'+boxerName;
-            }
-            nameParagraph3.onclick = async function(divId){
-                divId = this.id;
-                var parentId = document.getElementById(divId).parentNode.id; 
-                var boxerDiv = document.getElementById(parentId);
-                var boxerName = boxerDiv.childNodes[1].textContent;
-                window.location.href = '../fighterCard/'+boxerName;
-            }
         }
     }
     if(i === 0){
@@ -426,34 +419,39 @@ async function closemenus(){
     var weightfilter = document.getElementById("filterWeightMenu");
     var filter = document.getElementById("filterMenu");
     var genderfilter = document.getElementById("filterGenderMenu");   
-    var searchInput = document.getElementById("searchFieldMobile");
+    var searchInput = document.getElementById("searchFieldMobileDefault");
     var searchButton = document.getElementById("searchButtonMobileDefault");
     var wideScreenMenu = document.getElementById("menuOptions");
     var wideScreenLinks = document.getElementById("wideScreenLinks");
     // change to array of ids
-
+    var firstArrayOfIds = ['popupMenu','openMenuButton','searchFieldMobile', 'searchButtonMobile', 'searchButtonMobileDefault', 'searchFieldMobileDefault'];
+    var secondArrayOfIds = ['filterWeightMenu','currentWeightFilter'];
+    var thirdArrayOfIds = ['filterMenu','currentFilter'];
+    var fourthArrayOfIds = ['filterGenderMenu','currentGenderFilter'];
+    var fifthArrayOfIds = ['menuOptions', 'pageName'];
     document.onclick = async function(e){
-        if(e.target.id !== 'popupMenu' && e.target.id !== 'openMenuButton' && e.target.id !== 'searchFieldMobile' && e.target.id !== 'searchButtonMobile'){
+        if(!firstArrayOfIds.includes(e.target.id)){
             popupmenu.style.display = 'none';
             openpopupmenu.style.display = 'block';   
-            searchButton.style.display = 'block';         
+            searchButton.style.display = 'block';  
+            searchInput.style.display = 'none';
           }
-        if(e.target.id !== 'filterWeightMenu' && e.target.id !== 'currentWeightFilter'){
+        if(!secondArrayOfIds.includes(e.target.id)){
             if(weightfilter != null){
                 weightfilter.style.display = 'none';   
             }
         }
-        if(e.target.id !== 'filterMenu' && e.target.id !== 'currentFilter'){
+        if(!thirdArrayOfIds.includes(e.target.id)){
             if(filter != null){
                 filter.style.display = 'none';   
             }
         }
-        if(e.target.id !== 'filterGenderMenu' && e.target.id !== 'currentGenderFilter'){
+        if(!fourthArrayOfIds.includes(e.target.id)){
             if(genderfilter != null){
                 genderfilter.style.display = 'none';   
             }
         }
-        if(e.target.id !== 'menuOptions' && e.target.id !== 'pageName'){
+        if(!fifthArrayOfIds.includes(e.target.id)){
             if(wideScreenMenu != null){
                 wideScreenMenu.style.opacity = '0'; 
                 //await sleep(600);  
@@ -475,9 +473,11 @@ async function openMenu() {
     var x = document.getElementById("popupMenu");
     var y = document.getElementById("openMenuButton");
     var z = document.getElementById("searchButtonMobileDefault");
+    var q = document.getElementById("searchFieldMobileDefault");
     x.style.display = ("block");
     y.style.display = ("none");
     z.style.display = ("none");
+    q.style.display = ("none");
     await searchOnEnterPress("searchFieldMobile", "searchButtonMobile");
 }
 async function closeMenu() {
@@ -551,12 +551,9 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             linkToCard.appendChild(fighterImage);
             linkToCard.appendChild(nameParagraph);
             linkToCard.style.cursor = 'pointer';
-            
-            linkToCard.onclick = async function(divId){
-                divId = this.id;
-                var boxerName = document.getElementById(divId).textContent;
-                window.location.href = '/fighterCard/'+boxerName;
-            }
+
+            linkToCard.href = '/fighterCard/'+fighterCatalogueData.recordset[key][key1];
+
             catalogueEntryDiv.className = 'catalogueentry';
             catalogueEntryDiv.id = 'catalogueentry'+i;
             catalogueEntryDiv.appendChild(linkToCard);
@@ -890,7 +887,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
 
             nameParagraph.textContent = numberList+'.'+' '+fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
-
+            linkToCard.href = '/fighterCard/'+fighterCatalogueData.recordset[key][key1];
             if(countriesArray.includes(fighterStatsData.recordset[0].Nationality)){
                 var countryFlagImg = await getFlag(fighterStatsData.recordset[0].Nationality, 'countryflagimgcatalogue')
                 nameParagraph.appendChild(countryFlagImg);
@@ -945,12 +942,12 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
             }                               
 
             linkToCard.appendChild(nameParagraph);
-            
-            linkToCard.onclick = async function(divId){
-                divId = this.id;
-                var boxerName = document.getElementById(divId).id;
-                window.location.href = '/fighterCard/'+boxerName;
-            }
+
+            // linkToCard.onclick = async function(divId){
+            //     divId = this.id;
+            //     var boxerName = document.getElementById(divId).id;
+            //     window.location.href = '/fighterCard/'+boxerName;
+            // }
 
             tableData.appendChild(linkToCard);
             tableRow.appendChild(tableData);
@@ -1034,10 +1031,10 @@ async function loadFighterCatalogue(){
         }
     }
 }
-async function navigateToFighterCard(divId){
-    var boxerName = divId.textContent;
-    window.location.href = 'fighterCard/'+boxerName;
-}
+// async function navigateToFighterCard(divId){
+//     var boxerName = divId.textContent;
+//     window.location.href = 'fighterCard/'+boxerName;
+// }
 function showFilterMenu() {
     var x = document.getElementById("filterMenu");
     var y = document.getElementById("filterWeightMenu");
@@ -1213,6 +1210,9 @@ async function search(id){
     if(searchButton === 'searchButtonMobileWide'){
         searchField = document.getElementById('searchFieldMobileWide').value;
     }
+    if(searchButton === 'mobileButtonForSearch'){
+        searchField = document.getElementById('searchFieldMobileDefault').value;
+    }
     if(searchField != ''){
         window.location.href = '/searchResults/'+searchField;
     }
@@ -1244,7 +1244,8 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1];
     document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[0];
     document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1];    
-
+    document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[0];
+    document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1]; 
     var fighterAName = document.getElementById('fighterAName').textContent;
     var fighterBName = document.getElementById('fighterBName').textContent;
 
@@ -1447,6 +1448,8 @@ async function nextFight(){
         document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
         document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
+        document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
 
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
@@ -1646,6 +1649,8 @@ async function previousFight(){
         document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
         document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
+        document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+        document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
 
         //overall records
         document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];

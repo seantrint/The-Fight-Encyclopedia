@@ -22,6 +22,12 @@ body {
     margin: 0 auto;
     font-size:14px;
 }
+.menuoptionlogo{
+    height:20px;
+    width:20px;
+    margin-left:-5px;
+    margin-top:-25px;
+}
 .errordiv{
     width: 63%;
     background-color: var(--content-background-color); 
@@ -66,6 +72,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows:45px;
 }
+
 .searchspacesearchtools input{
     margin-top:5px;
     width:65%;
@@ -95,11 +102,15 @@ body {
     grid-auto-rows: auto;
     background-color: var(--content-background-color);  
 }
+.searchresultsgrid a{
+    color: var(--links-font-color);
+    text-decoration: none;
+}
 .searchresultsgridchild{
     border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
     color:var(--links-font-color);
 }
-.searchresultsgridchildimg{
+.searchresultsgridchildimg img{
     height:110px;
     width:110px;
     margin-top:10px;
@@ -650,6 +661,11 @@ text-align: center;
 .cataloguetable{
     margin:0 auto;
     width:80%;
+    font-size:12px;
+}
+.cataloguetable a{
+    color: var(--links-font-color);
+    text-decoration: none;
 }
 .cataloguetablerow td{
     border-bottom:var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
@@ -1056,6 +1072,9 @@ text-align: center;
     }
 }
 @media only screen and (min-width: 430px) {
+    .cataloguetable{
+        font-size: 14px;
+    }
     .pagedescription {
         margin-top:40px;
     }
@@ -1152,7 +1171,7 @@ text-align: center;
         grid-row:16;
 
     }
-    .searchresultsgridchildimg{
+    .searchresultsgridchildimg img{
         height:110px;
         width:110px;
     }
@@ -1174,12 +1193,15 @@ text-align: center;
         margin-right:5px;
         border-radius:5px;
     }
-.fighterinforecordspace {
-    grid-column: 2 / 7;
-}
+    .fighterinforecordspace {
+        grid-column: 2 / 7;
+    }
 }
 
 @media only screen and (min-width: 640px) {
+    #searchFieldMobileDefault{
+        width:250px;
+    }
     .cataloguegrid {
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 10px;
@@ -1213,29 +1235,30 @@ text-align: center;
         grid-template-columns: repeat(6, 1fr);
         grid-auto-rows: 90px;
         grid-gap:0px;
+        margin-top:25px;
     }
-    .searchresultsgridchildimg, .searchresultsparagraph, .countryflagimgsearch, .searchresultsparagraphrecord{
+    .searchresultsgridchildimg, .searchresultsparagraph{
         cursor: pointer;
     }
-    .searchresultsgridchildimg{
+    .searchresultsgridchildimg img{
         height:130px;
         width:130px;
-        margin-top:0px;
         grid-column: 1/3;
         grid-row:1/3;
     }
     .searchresultsparagraph{
-        grid-column: 3;
+        grid-column: 2/4;
         grid-row:1;
     }
     .countryflagimgsearch{
-        grid-column: 4;
+        grid-column: 2/4;
         grid-row:1;
         height:35px;
-        margin-top:15px;
+        margin-top:45px;
+        margin-left: 40%;
     }
     .searchresultsparagraphrecord{
-        grid-column: 3/4;
+        grid-column: 2/4;
         grid-row:2;
     }
     .errorpagemessage{
@@ -1249,6 +1272,9 @@ text-align: center;
 }
 
 @media only screen and (min-width: 731px) {
+    #searchFieldMobileDefault{
+        width:350px;
+    }
     .toFighterLink{
         font-size:14px; 
     }
@@ -1496,6 +1522,15 @@ text-align: center;
 }
 
 @media only screen and (min-width: 1024px) {
+    .menuoptionlogo{
+        height:20px;
+        width:20px;
+        margin-left:-5px;
+        margin-top:-25px;
+    }
+    .searchresultsgridlink{
+        margin-top:15px;
+    }
     .mobilebar{
         display: none;
     }
@@ -1891,6 +1926,7 @@ text-align: center;
     }
     .searchresultsgridlink{
         grid-template-columns: repeat(8, 1fr);
+
     }
 }
 
@@ -1967,11 +2003,12 @@ text-align: center;
     .featuredfightsspace {
         grid-column: 3/10;
     }
-    .searchresultsgridchildimg{
+    .searchresultsgridchildimg img{
         height:180px;
         width:180px;
     }
     .searchresultsgridlink{
+        margin-top:0px;
         grid-template-columns: repeat(9, 1fr);
     }
     .fightercardresultbox{
@@ -2140,6 +2177,10 @@ text-align: center;
 }
 
 @media only screen and (min-width:1850px) {
+    .countryflagimgsearch{
+        margin-left: 43%;
+        margin-top: 50px;
+    }
     .widescreenmenubar input{
         margin-left:400px;
         width:600px;
