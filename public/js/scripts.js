@@ -49,7 +49,7 @@ async function loadPageName() {
     //     pageNameLogo = document.createElement('i');
     //     pageNameLogo.className = 'fa fa-home';
     // }
-    pageName.innerHTML = docTitle + "&ensp;&#8595;";
+    //pageName.innerHTML = "menu" + "&ensp;&#8595;";
     await searchOnEnterPress("searchFieldMobileDefault", "mobileButtonForSearch");
     await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {

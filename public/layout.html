@@ -6,16 +6,16 @@
             <div class="header">
                 <div class="widescreenmenubar">
                     <a href="/"><img src="/img/logo.png" class="logo" alt="123" /></a>
-                    <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Page Name</a></p>
+                    <p><a id="pageName" class="pagename" onclick="showMenuLinks()">Menu&ensp;&#8595;</a></p>
                     <p class="widescreenmenuinputs">
                         <input type="text" id="searchFieldWideScreen" placeholder="&#128269;Search" />
                         <button type="submit" id="searchButtonWideScreen" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
                     </p>
-                    <p class="aboutpagelink"><a href="/about"><i class="fa fa-book"></i> About</a></p>
+                    <p class="aboutpagelink"><a href="/API"><i class="fa fa-book"></i> API</a></p>
                 </div>
                 <div class="linkstopages" id="menuOptions">
                     <p class="widescreenmenupagelinks" id="wideScreenLinks"><a href="/" id="homeLink"><i class="fa fa-home"></i> Home</a>
-                        <a href="" id="fightCatalogueLink">Fight Catalogue</a>
+                        <a href="" id="fightCatalogueLink"><img src="/img/ringclipart.png" class="menuoptionlogo"/>Fight Catalogue</a>
                         <a href="/fighterCatalogue" id="fighterCatalogueLink"><img src="/img/fightercataloguelogo.png" class="menuoptionlogo"/>Fighter Catalogue</a>
                         <span class="widescreenslogan">Bringing automation to boxing</span>
                     </p>
@@ -41,14 +41,15 @@
                     <a href="/"><img src="/img/logo.png" class="mobilelogo" alt="123" /></a>
                     <div class="mobilemenulinks">
                         <div class="mobilemenulink" id="mobileHomeLink"><p><a  href="/"><i class="fa fa-home"></i> Home</a></p></div>
-                        <div class="mobilemenulink" id="mobileFightCatalogueLink"><p><a>Fight Catalogue</a></p></div>
+                        <div class="mobilemenulink" id="mobileFightCatalogueLink"><p><a><img src="/img/ringclipart.png" class="menuoptionlogo"/>Fight Catalogue</a></p></div>
                         <div class="mobilemenulink" id="mobileFighterCatalogueLink"><p><a  href="/fighterCatalogue"><img src="/img/fightercataloguelogo.png" class="menuoptionlogo"/>Fighter Catalogue</a></p></div>
                         <div class="mobilemenulink" id="mobilemenulinkLast">
                             <input type="text" id="searchFieldMobile" placeholder="&#128269; Search" />
                             <button type="submit" id="searchButtonMobile" onclick="search(this.id)" style="display: none;"><i class="fa fa-search"></i></button>
                         </div>
                         <div class="mobilemenulink" id="mobileAboutLink">
-                            <p><a href="/about"><i class="fa fa-book"></i> About</a></p>
+                            <p><a href="/API"><i class="fa fa-book"></i> API</a></p>
+                            <p><a href="/about">Donate</a></p>
                         </div>
                         <!-- <div class="mobilemenulink">
                             <p class="mobileslogan">Bringing automation to boxing</p>

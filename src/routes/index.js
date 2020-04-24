@@ -31,8 +31,8 @@ app.get('/searchResults/:searchTerm', function(request,response){
     var searchTerm = request.params.searchTerm;
     response.render('../public/searchresults',{searchTerm: searchTerm});
 });
-app.get('/about/', function(request,response){
-    response.render('../public/about');
+app.get('/API/', function(request,response){
+    response.render('../public/API');
 });
 app.use(function(request,response){
     response.status(404).render('../public/errorpages/error404');
