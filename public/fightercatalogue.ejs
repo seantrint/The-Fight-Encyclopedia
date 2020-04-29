@@ -12,7 +12,7 @@
     </header>
     <div class="pagedescription">
         <p id="viewParam" style="opacity: 0;font-size: 2px;"><%= viewType %></p>
-        <p><button class="cataloguebutton" id="GridViewButton" onclick="changeCatalogueView(this.id)">&#9744;</button><button class="cataloguebutton" id="ListViewButton" onclick="changeCatalogueView(this.id)">&#8801;</button></p>
+        <p><button class="cataloguebutton" id="GridViewButton" onclick="changeCatalogueView(this.id)"><i class="fa fa-th-large"></i></button><button class="cataloguebutton" id="ListViewButton" onclick="changeCatalogueView(this.id)"><i class="fa fa-align-justify"></i></button></p>
         <div class="cataloguepagebuttons" id="catalogueButtonsLink">
             <!-- <a onclick="loadGridData(this.id)" id="cataloguePrevious">&laquo;</a>
             <a onclick="loadGridData(this.id)" id="catalogueNext">&raquo;</a> -->
@@ -26,7 +26,6 @@
             <p>Sort by: <a href="javascript:void(0)" class="filterlink" onclick="showFilterMenu()" id="currentFilter"><%= mainFilter %></a>&#8595;</p>
         </div>
         <div class="filtermenu" id="filterMenu">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeFilterMenu()">&times;</a>
             <ul>
                 <li>
                     <a onclick="filterAlphabeticalRankingRandom(this.id)" id="alphabeticalFilter">Alphabetical</a>
@@ -43,7 +42,6 @@
             <p>Weight Class: <a href="javascript:void(0)" class="filterlink" onclick="showWeightFilterMenu()" id="currentWeightFilter"><%= weightFilter %></a>&#8595;</p>
         </div>
         <div class="filterweightmenu" id="filterWeightMenu">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeWeightFilterMenu()">&times;</a>
             <ul>
                 <li>
                     <a onclick="filterWeightClass(this.id)" id="allWeights">All weights</a>
@@ -75,7 +73,6 @@
             <p>Gender: <a href="javascript:void(0)" class="filterlink" onclick="showGenderFilterMenu()" id="currentGenderFilter"><%= genderFilter %></a>&#8595;</p>
         </div>
         <div class="filtergendermenu" id="filterGenderMenu">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeGenderFilterMenu()">&times;</a>
             <ul>
                 <li>
                     <a onclick="filterGender(this.id)" id="men">Men</a>
@@ -86,10 +83,12 @@
             </ul>
         </div>
     </div>
-    
-
+    <div class="loadinggifspace"id="catalogueLoadingGif">
+        <p><img src='/img/loading.gif' /></p>
+    </div>
 
     <div class="cataloguegrid" id="CatalogueGrid">
+
     </div>
 
     <div class="errorspace" id="ErrorSpace"></div>

@@ -22,10 +22,10 @@
                      in the dark and produce energy. Let it go out of control and it can hurt you, even kill you…fear is a friend of exceptional people.“-Cus D'Amato</p> -->
             </div>
             <div class="featuredfightersspace">
-                <div class="featuredfightersspaceone">
+                <div class="featuredfightersspaceone" id="FeaturedFightersSpaceOne">
                     <p>Boxers</p>
-                    <span>See the current collection of boxers</span>
-                    <button class="expandpanelbutton">-</button>
+                    <span>See the current collection of boxers. Count: <span id="BoxersCount"></span></span>
+                    <button class="expandpanelbutton" onclick="expandPanel(this.id)" id="ExpandPanelButton">-</button>
                 </div>
                 <div class="featuredfightersspacetwo">
                     <div class="featuredfighterimages" id="FeaturedFighterImages">
@@ -36,10 +36,10 @@
                 </div>
             </div>
             <div class="featuredfightsspace">
-                <div class="featuredfightsspaceone">
+                <div class="featuredfightsspaceone" id="FeaturedFightsSpaceOne">
                     <p>Historical Fights</p>
-                    <span>See the current collection of fights</span>
-                    <button class="expandpanelbutton">-</button>
+                    <span>See the current collection of fights. Count: <span id="FightsCount">0</span></span>
+                    <button class="expandpanelbutton" onclick="expandPanel(this.id)" id="ExpandPanelButton2">-</button>
                 </div>
                 <div class="featuredfightsspacetwo">
                     <div class="featuredfighterimages">
@@ -56,22 +56,22 @@
                     </div>
                 </div>
                 <div class="featuredfightsspacethree">
-                    <div class="cataloguelink"><a asp-area="" asp-page="/FightCatalogue">See full Catalogue &#8658;</a></div>
+                    <div class="cataloguelink"><a href="/fightercatalogue">See full Catalogue &#8658;</a></div>
                 </div>
             </div>
-            <div class="previousbuttonspace">
+            <div class="previousbuttonspace" id="Previous">
                 <button class="nextpreviousbutton" id="previousButton" onclick="previousFight()">&#8656;</button>
             </div>
-            <div class="nextbuttonspace">
+            <div class="nextbuttonspace" id="Next">
                 <button class="nextpreviousbutton" id="nextButton" onclick="nextFight()">&#8658;</button>
             </div>
             <div class="one">
                 <div class="onetitle">
                     <p>Upcoming Fights</p>
                     <span>See a schedule of upcoming fights</span>
-                    <button class="expandpanelbutton">-</button>
+                    <button class="expandpanelbutton" onclick="expandUpcomingFights(this.id)" id="ExpandPanelButton3">-</button>
                 </div>
-                <div class="polaroid">
+                <div class="polaroid" id="Polaroid">
                     <!-- <h2>Upcoming fights</h2> -->
                     <h3 id="upComingFightName"></h3>
                     <p id="upComingFightDivision"></p>
@@ -79,7 +79,7 @@
                     <p id="upComingFightDate"></p>
                 </div>
             </div>
-            <div class="three">
+            <div class="three" id="Three">
                     <a id="fighterbuttonAFull" class="fighterbuttonimageFull" ><img src="" class="frontfaceimg" alt="fighterA" id="fighterAImage"/></a>
                     <div class="fightername"><a id="fighterALink"><p id="fighterAName"></p></a><table class="fighterrecord"><tr><td id="fighterAInfoWins"></td><td id="fighterAInfoLosses"></td><td id="fighterAInfoDraws"></td></tr></table></div>
                     <table class="statstable">
@@ -89,7 +89,7 @@
                         <tr><td class="statslabelcell">Nationality </td><td><span id="fighterANationality"></span></td></tr>
                     </table>
             </div>
-            <div class="four">
+            <div class="four" id="Four">
                     <a id="fighterbuttonBFull" class="fighterbuttonimageFull"><img src="" class="frontfaceimg" id="fighterBImage"/></a>
                     <div class="fightername"><a id="fighterBLink"><p id="fighterBName"></p></a><table class="fighterrecord"><tr><td id="fighterBInfoWins"></td><td id="fighterBInfoLosses"></td><td id="fighterBInfoDraws"></td></tr></table></div>
                     <table class="statstable">
@@ -99,7 +99,7 @@
                         <tr><td class="statslabelcell">Nationality </td><td><span id="fighterBNationality"></span></td></tr>
                     </table>                
             </div>
-            <div class="five">
+            <div class="five" id="Five">
                 <div class="last5gridLabel">Recent performances</div>
                 <table class="fighterinfohistoryspacetable" id="Last5TableB">
                     <tr class="fighterinfohistoryspacetableheaderrow">
@@ -109,7 +109,7 @@
                 <br/>
                 <a id="toFighterLinkB" class="toFighterLink">See full record, stats & more...</a>
             </div>
-            <div class="six">
+            <div class="six" id="Six">
                 <div class="last5gridLabel">Recent performances</div>
                 <table class="fighterinfohistoryspacetable" id="Last5TableA">
                     <tr class="fighterinfohistoryspacetableheaderrow">
@@ -118,6 +118,15 @@
                 </table>
                 <br/>
                 <a id="toFighterLinkA"class="toFighterLink">See full record, stats & more...</a>
+            </div>
+            <div class="seven">
+                <div class="onetitle">
+                    <p>Boxing API</p>
+                    <span>Make your own boxing based applications</span>
+                </div>
+                <div class="sevenlink">
+                    <a href="/API">More info &#8658;</a>
+                </div>
             </div>
             <div class="footer" id="footer">
                  <p>The Fight Encycolpedia &trade; - 2020</p> 

@@ -1,13 +1,13 @@
 :root {
-    --page-background-color: #f3f3f3;
-    --content-background-color: #f3f3f3; /*#e0dbdb*//*#fdfdfd*//*#f3f3f3*/
+    --page-background-color: white;
+    --content-background-color: white; /*#e0dbdb*//*#fdfdfd*//*#f3f3f3*/
     --main-font-color: rgb(42, 42, 42);/*#0c0c0c;*/
     --links-font-color: #12343b; 
     --image-shadow-settings: 0 0 6px 3px #141414;
     --image-filter-settings: grayscale(50%);
     --scrollbar-width-setting: thin;
     --scrollbar-color-setting: rgb(164, 164, 165) rgb(202, 202, 202);
-    --tab-unclicked-color:#d1d1d1;
+    --tab-unclicked-color:#f6f6f6;
     --bottom-border-color:rgb(202, 201, 201);
     --bottom-border-type:inset;
     --bottom-border-size:1px;
@@ -22,21 +22,31 @@ body {
     margin: 0 auto;
     font-size:14px;
 }
-div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, .cataloguebutton:hover{
+div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, .cataloguebutton:hover,.cataloguelink a:visited:hover{
     color:#52a7bd;
 }
 .tab1 a:hover, .tab2 a:hover, .tab3 a:hover{
     color:#9e9e9e;
 }
+#FightsCount, #BoxersCount{
+    font-weight: bold;
+}
 .widescreenmenubar, .linkstopages, .mobilebar, .popupmenu, .featuredfightersspace p,.featuredfightsspace h2, .tab1, .tab2, .tab3, .fighterinfonamespace {
     font-family:"Montserrat";
 }
-
 .featuredfightersspaceone p, .featuredfightsspaceone p{
     font-size:16px;
 }
 .featuredfightersspace span{
     text-align:left;
+}
+.loadinggifspace{
+    margin:0 auto;
+    width:100%;
+}
+.loadinggifspace img{
+    height:50px;
+    width:50px;
 }
 .onetitle{
     text-align:left; 
@@ -80,11 +90,18 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     color:#CE2029;
     background-color: var(--content-background-color); 
 }
+.errorpagemessage img{
+    height:150px;
+    width:200px;
+}
 .errorpagesearch{
     color:black;
 }
 .errorpagesearchtools{
     margin-top:-5%;
+}
+.errorpagesearchtools input{
+    margin-top:10px;
 }
     .errorpagesearchtools button{
         background:none;
@@ -261,10 +278,10 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
 }
 .quotesspace{
     grid-column: 1/9;
-    grid-row: 15;
+    grid-row: 18;
     border-top:var(--bottom-border-size) outset var(--bottom-border-color);
 }
-.featuredfightersspace, .featuredfightsspace{
+.featuredfightersspace, .featuredfightsspace, .sevenlink a{
     font-size:12px;
 }
 .featuredfightersspace {
@@ -290,6 +307,11 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     scrollbar-color: var(--scrollbar-color-setting);
     scrollbar-width: var(--scrollbar-width-setting);
     -webkit-scrollbar-width:2px;
+    transition: height 1s, width 1s, padding 1s, visibility 1s, opacity 0.5s ease-out;
+}
+.featuredfightersspacetwo.slide{
+    height:0%;
+    width:0%;
 }
 ::-webkit-scrollbar {
     width: 1px;
@@ -424,7 +446,16 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
 
 .seven {
     grid-column: 1 / 8;
-    grid-row: 16 / 18;
+    grid-row: 14;
+    text-align: left;
+}
+.seven a{
+    color:var(--links-font-color);
+    
+}
+.sevenlink{
+    margin-left:1.5%;
+    margin-top:5px;
 }
 .previousbuttonspace {
     grid-column: 1 / 4;
@@ -662,14 +693,13 @@ text-align: center;
     margin: 0 auto;
 }
 .catalogueentry {
-    padding: 5%;
     background-color: var(--content-background-color);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
     .catalogueentry img {
-        height: 70%;
-        width: 70%;
+        height: 150px;
+        width: 150px;
         -webkit-filter: var(--image-filter-settings);
         filter: var(--image-filter-settings);
         border-radius: 2px;
@@ -757,7 +787,6 @@ text-align: center;
         margin-left: -15px;
         margin-bottom: 5px;
         text-align: left;
-        text-decoration: underline;
         color: var(--links-font-color);
         cursor:pointer;
     }
@@ -793,7 +822,6 @@ text-align: center;
         margin-left: -15px;
         margin-bottom: 5px;
         text-align: left;
-        text-decoration: underline;
         cursor:pointer;
         color: var(--links-font-color);
     }
@@ -828,7 +856,6 @@ text-align: center;
         margin-left: -15px;
         margin-bottom: 5px;
         text-align: left;
-        text-decoration: underline;
         color: var(--links-font-color);
         cursor:pointer;
     }
@@ -862,6 +889,7 @@ text-align: center;
     grid-template-columns: repeat(7, 1fr);
     grid-template-rows: repeat(auto-fill, 120px);
     grid-gap: 2px;
+    margin-top:35px;
 }
 .fighterinfoimagespace {
     grid-column: 1 / 8;
@@ -885,7 +913,7 @@ text-align: center;
     grid-row: 8;
 }
 .fighterinforecordspace {
-    grid-column: 1 / 8;
+    grid-column: 2 / 7;
     grid-row: 9;
     padding-bottom: 2%;
 }
@@ -907,6 +935,9 @@ text-align: center;
 #fighterAInfoDraws, #fighterBInfoDraws, #fighterInfoDraws, #fighterInfoDrawsCss, .totaldraws{
     color:#2d545e;
 }
+#fighterInfoWins, #fighterInfoLosses, #fighterInfoDraws{
+    font-weight: bold;
+}
 .tab1, .tab2, .tab3 {
     background-color: var(--tab-unclicked-color);
     cursor: pointer;
@@ -921,11 +952,11 @@ text-align: center;
     display:block;
 }
 .tab2 {
-    grid-column: 3/5;
+    grid-column: 3/6;
     grid-row: 10;
 }
 .tab3{
-    grid-column:5/7;
+    grid-column:6/8;
     grid-row:10;
 }
 .fighterinfotextspace {
@@ -1118,6 +1149,69 @@ text-align: center;
     text-decoration: none;
     color:var(--links-font-color);
 }
+.apipagegrid{
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows:auto;
+    margin-top:30px;
+}
+.instructionsheader{
+    grid-column: 1/13;
+    grid-row:1;
+}
+.instructionstext{
+    grid-column: 2/6;
+    grid-row:2; 
+    text-align: left;
+}
+.instructionsrequirements{
+    grid-column: 7/12;
+    grid-row:2; 
+    text-align: left;
+}
+.instructionsrequirements a{
+    color: var(--links-font-color);
+}
+.instructionsrequirements img{
+    height:90px;
+    width:120px;
+}
+.instructionsrequirementslogo{
+    text-align:center;
+}
+
+ .instructionslicensing h3, .instructionsrequirements h3, .instructionsrequirements h4{
+    text-align: center;
+}
+.instructionsdonate{
+    border-top:var(--bottom-border-size) outset var(--bottom-border-color);
+    grid-column: 2/8;
+    grid-row:5; 
+    text-align: left;
+}
+.instructionsdonateimg{
+    border-top:var(--bottom-border-size) outset var(--bottom-border-color);
+    grid-column: 8/12;
+    grid-row:5/6; 
+    text-align: left;
+}
+.instructionsdonate img{
+    height:70px;
+    width:120px;
+}
+.instructionsdonate button{
+    justify-self: center;
+    background: none;
+    border: none;
+    color: var(--links-font-color);
+}
+.instructionslicensing{
+    margin-top:15px;
+    border-top:var(--bottom-border-size) outset var(--bottom-border-color);
+    grid-column: 2/12;
+    grid-row:8; 
+    text-align: left;
+}
 @media only screen and (min-width: 360px){
     .fighterinfohistoryspacetable{
         font-size:12px;
@@ -1210,12 +1304,11 @@ text-align: center;
     .cataloguegrid {
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 15px;
-        grid-auto-rows: 160px;
+        grid-auto-rows: 180px;
     }
-
-    .catalogueentry img {
-        height: 70%;
-        width: 70%;
+    .catalogueentry img{
+        height:130px;
+        width:130px;
     }
     .featuredfightsspace img, .featuredfightersspace img {
         width: 100px;
@@ -1269,14 +1362,14 @@ text-align: center;
     .cataloguegrid {
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 10px;
-        grid-auto-rows: 180px;
+        grid-auto-rows: 220px;
         padding-left: 3px;
         padding-right: 3px;
     }
 
     .catalogueentry img {
-        height: 60%;
-        width: 70%;
+        height: 130px;
+        width: 130px;
     }
     .nextpreviousbutton {
         margin-top: 35%;
@@ -1345,7 +1438,7 @@ text-align: center;
     .last5gridLabel{
         font-size:14px;
     }
-    .featuredfightersspace, .featuredfightsspace{
+    .featuredfightersspace, .featuredfightsspace, .sevenlink a{
         font-size:14px;
     }
     .fighterinfostatsspaceHeader{
@@ -1419,49 +1512,71 @@ text-align: center;
 }
 
 @media only screen and (min-width: 700px) and (min-height:1000px) {
-    .popupmenu {
-        height: 100%;
-        width: 55%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        padding-top: 60px;
-        display: none;
+    .featuredfightersspace {
+        margin-top: 0;
+        grid-column: 2 / 11;
+    }
+    .featuredfightsspace {
+        grid-column: 2 / 11;
+    }
+    #content {
+        padding-top: 8%;
+        margin-top:initial;
+        grid-template-columns: repeat(11, 1fr);
     }
 
-        .popupmenu a {
-            padding: 10% 25% 7% 5%;
-            float: left;
-        }
+    .one {
+        grid-column: 2/11;
+        grid-row: 7/9;
+    }
 
-            .popupmenu a:visited {
-                text-decoration: underline;
-            }
+    .three {
+        grid-column: 2/6;
+        grid-row: 9/12;
+        margin-top: 20px;
+    }
 
-        .popupmenu input {
-            float: left;
-            border: 1px ridge gray;
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 85%;
-            height: 35px;
-        }
+    .four {
+        grid-column: 7/11;
+        grid-row: 9/12;
+        margin-top: 20px;
+    }
 
-        .popupmenu img {
-            height: 25%;
-            width: 100%;
-            border-bottom: var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
-        }
+    .five {
+        grid-column: 7/11;
+        grid-row: 12/15;
+    }
 
-        .popupmenu button{
-            margin-top:10px;
-        }
-
-        .popupmenu .closebtn {
-            position: absolute;
-            top: 0;
-            margin-right: -20%;
-        }
+    .six {
+        grid-column: 2/6;
+        grid-row: 12/15;
+    }
+    .quotesspace{
+        grid-column: 2/11;
+        grid-row: 17;
+        border-top:var(--bottom-border-size) outset var(--bottom-border-color);
+    }
+    .previousbuttonspace {
+        grid-column: 3;
+        grid-row: 8;
+    }
+    .footer{
+        grid-column:1/12;
+    }
+    .nextbuttonspace {
+        grid-column: 9;
+        grid-row: 8;
+    }
+    .nextpreviousbutton {
+        margin-top: 40%;
+        margin-bottom: 2%;
+        height: 100%;
+        width: 50%;
+        background: none;
+        margin-top: 36%;
+        margin-bottom: 2%;
+        font-size:28px;
+    }
     .cataloguefilters {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -1484,37 +1599,39 @@ text-align: center;
 
     .cataloguegrid {
         grid-gap: 15px;
-        grid-auto-rows: 240px;
+        grid-auto-rows: 200px;
         padding-left: 5px;
         padding-right: 5px;
+        font-size:14px;
     }
     .catalogueentry img {
-        height: 70%;
-        width: 85%;
+        height: 130px;
+        width: 130px;
     }
     .fighterinfogrid {
-        grid-template-columns: repeat(10, 1fr);
+        margin-top:50px;
+        grid-template-columns: repeat(12, 1fr);
     }
     .fighterinfoimagespace{
-        grid-column: 2/10;
+        grid-column: 3/11;
     }
     .fighterinforecordspace{
-        grid-column: 2/10;
+        grid-column: 3/11;
     }
     .fighterinfonamespace{
-        grid-column: 2/10;
+        grid-column: 3/11;
     }
     .fighterinfotextspace{
-        grid-column: 2/10;
+        grid-column: 1/13;
     }
     .tab1 {
-        grid-column: 2/4;
+        grid-column: 1/5;
     }
     .tab2 {
-        grid-column: 4/6;
+        grid-column: 5/9;
     }
     .tab3{
-        grid-column: 6/9;
+        grid-column: 9/13;
     }
     .fighterinfoimagespace img {
         height: 250px;
@@ -1580,9 +1697,26 @@ text-align: center;
         margin-left: -1%;
         margin-top: 1%;
     }
+    .searchspacegrid{
+        grid-column:3/10;
+    }
+    .searchresultsgrid{
+        grid-column: 3/10;
+    }
+    /* .searchresultsgridchild{
+        padding:5%;
+    } */
+    
 }
 
 @media only screen and (min-width: 1024px) {
+    .errorpagemessage img{
+        height:200px;
+        width:270px;
+    }
+    .apipagegrid{
+        margin-top:50px;
+    }
     .onetitle{ 
         margin-left:1%;
     }
@@ -1624,7 +1758,6 @@ text-align: center;
     }
     #fighterInfoWins, #fighterInfoLosses, #fighterInfoDraws{
         font-size:18px;
-        font-weight: bold;
     }
     .statslabelcell{
         font-size:14px;
@@ -1690,6 +1823,7 @@ text-align: center;
         .aboutpagelink a{
             color: var(--links-font-color);
             text-decoration: none;
+            margin-left:100px;
         }
         .aboutpagelink a:visited{
             color: var(--links-font-color);
@@ -1752,8 +1886,8 @@ text-align: center;
     }
 
     .catalogueentry img {
-        height: 60%;
-        width: 70%;
+        height: 130px;
+        width: 130px;
     }
 
     .fighterinfostatsspace{
@@ -1936,36 +2070,6 @@ text-align: center;
     .countryflagfightercard{
         height:20px;
     }
-}
-
-@media only screen and (min-width: 1250px) {
-    .widescreenmenubar input{
-        width:400px;
-    }
-    .cataloguegrid {
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: 10px;
-        grid-auto-rows: 220px;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-    .catalogueentry img {
-        height: 70%;
-        width: 70%;
-    }
-    .pagename {
-        transition-duration: 0.5s;
-    }
-    .nextpreviousbutton {
-        margin-top: 30%;
-    }
-    .last5table {
-        line-height: 2;
-    }
-    .frontfaceimg {
-        height: 270px;
-    }
     .filtermenu {
         margin-left: 12%;
         margin-top: 35px;
@@ -1979,13 +2083,56 @@ text-align: center;
         margin-left: 80%;
         margin-top: 35px;
     }
+    .sevenlink{
+        margin-left:1%;
+    }
+}
+
+@media only screen and (min-width: 1250px) {
+    .aboutpagelink a{
+        margin-left:170px;
+    }
+    .widescreenmenubar input{
+        width:400px;
+    }
+    .cataloguegrid {
+        grid-template-columns: repeat(5, 1fr);
+        grid-auto-rows: 200px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .catalogueentry img {
+        height: 130px;
+        width: 130px;
+    }
+    .pagename {
+        transition-duration: 0.5s;
+    }
+    .nextpreviousbutton {
+        margin-top: 30%;
+    }
+    .last5table {
+        line-height: 2;
+    }
+    .frontfaceimg {
+        height: 270px;
+    }
     .searchresultsgridlink{
         grid-template-columns: repeat(8, 1fr);
-
+    }
+    .filtermenu {
+        margin-left: 15%;
+    }
+    .filtergendermenu {
+        margin-left: 78%;
     }
 }
 
 @media only screen and (min-width: 1450px) {
+    .aboutpagelink a{
+        margin-left:200px;
+    }
     .onetitle p{
         font-size:22px;
     }
@@ -2002,7 +2149,7 @@ text-align: center;
         margin-left:250px;
         width:450px;
     }
-    .featuredfightersspace, .featuredfightsspace{
+    .featuredfightersspace, .featuredfightsspace, .sevenlink a{
         font-size:16px;
     }
     body{
@@ -2021,7 +2168,7 @@ text-align: center;
         height: 65px;
     }
     .filtermenu {
-        margin-left: 13%;
+        margin-left: 15%;
         margin-top: 40px;
     }
     .filterweightmenu {
@@ -2085,6 +2232,9 @@ text-align: center;
 }
 
 @media only screen and (min-width: 1650px) {
+    .apipagegrid{
+        margin-top:80px;
+    }
     .quotesspace{
         display: block;
         grid-column: 1/3;
@@ -2112,7 +2262,7 @@ text-align: center;
         font-size:16px;
     }
     .aboutpagelink a{
-        margin-left:200px;
+        margin-left:250px;
     }
     .nextpreviousbutton {
         margin-top: 24%;
@@ -2122,10 +2272,6 @@ text-align: center;
     .widescreenmenulinks {
         width: 220px;
         margin-top: -1%;
-    }
-
-    .filtermenu {
-        margin-left: 14%;
     }
 
     .filterweightmenu {
@@ -2241,6 +2387,18 @@ text-align: center;
         height:25px;
         vertical-align: middle;
     }
+    .filtermenu {
+        margin-left: 16%;
+    }
+    .filterweightmenu {
+        margin-left: 49%;
+    }
+    .filtergendermenu {
+        margin-left: 79%;
+    }
+    .seven {
+        grid-row: 15;
+    }
 }
 
 @media only screen and (min-width:1850px) {
@@ -2267,8 +2425,8 @@ text-align: center;
     }
 
     .catalogueentry img {
-        height: 70%;
-        width: 70%;
+        height: 160px;
+        width: 160px;
     }
     .nextpreviousbutton {
         margin-top: 20%;
@@ -2335,6 +2493,13 @@ text-align: center;
 
     .tab3 {
         grid-column: 9/12;
+    }
+    .filtermenu {
+        margin-left: 19%;
+    }
+
+    .filtergendermenu {
+        margin-left: 77%;
     }
 }
 

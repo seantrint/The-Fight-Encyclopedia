@@ -18,7 +18,6 @@ async function numberOfElementsPerPage(){
     }     
 }
 async function fetchData(route, parameter1 = '', parameter2 = '', parameter3 = '', parameter4 = ''){
-    //could this go in server page?
     const request = await fetch(route+parameter1+parameter2+parameter3+parameter4);
     var requestData = request.json();
 
@@ -42,7 +41,7 @@ async function loadPageName() {
     var mobilefighterCatalogueLink = document.getElementById("mobileFighterCatalogueLink");
     var mobileSearchField = document.getElementById("mobilemenulinkLast");
     var aboutLink = document.getElementById("mobileAboutLink");
-    
+    //var arrow = 'y\uU+0291E';
     var fighterCatalogueLink = document.getElementById("fighterCatalogueLink");
     var pageNameLogo;
     // if (docTitle == "Home") {
@@ -53,25 +52,29 @@ async function loadPageName() {
     await searchOnEnterPress("searchFieldMobileDefault", "mobileButtonForSearch");
     await searchOnEnterPress("searchFieldWideScreen", "searchButtonWideScreen");
     if (docTitle == "Home") {
-        mobileHomeLink.style.backgroundColor = 'rgb(204, 204, 204)';
+        mobileHomeLink.style.backgroundColor = '#d1d1d1';
+        var boxersCount = await fetchData('/getBoxersCount');
+        document.getElementById('BoxersCount').textContent = boxersCount.recordset[0].boxerCount;
+        //homeLink.textContent = arrow + homeLink.textContent;
         await loadUpcomingFightsData();
         await loadDailyQuotes();
         await addImagesToFighterPreviewBox();
+
     }
-    if (docTitle == "Fighter Catalogue") {
-        mobilefighterCatalogueLink.style.backgroundColor= 'rgb(204, 204, 204)';
+    else if (docTitle == "Fighter Catalogue") {
+        mobilefighterCatalogueLink.style.backgroundColor= '#d1d1d1';
         await numberOfElementsPerPage();
         await loadFighterCatalogue();
     }
     // if(docTitle == "Fighter Card"){
     //     await loadFighterCard();
     // }
-    if(docTitle == "Search Results"){
-        mobileSearchField.style.backgroundColor = 'rgb(204, 204, 204)';
+    else if(docTitle == "Search Results"){
+        mobileSearchField.style.backgroundColor = '#d1d1d1';
         await loadSearchResults();
     }
-    if(docTitle == "About"){
-        aboutLink.style.backgroundColor = 'rgb(204, 204, 204)';
+    else if(docTitle == "API"){
+        aboutLink.style.backgroundColor = '#d1d1d1';
     }
     else{
         await loadFighterCard();
@@ -91,6 +94,37 @@ async function loadDailyQuotes(){
         quoteParagraph.textContent = dailyQuotes.recordset[quote].quote;
         quotesspace.appendChild(quoteParagraph);
     }
+}
+async function expandPanel(id){
+    var elementToChange = document.getElementById(id).parentNode.nextSibling.nextSibling;
+    if(elementToChange.style.display != 'none'){
+        elementToChange.style.display = 'none';
+        document.getElementById(id).textContent = '+';
+    }
+    else if(elementToChange.style.display == 'none'){
+        elementToChange.style.display = 'block';
+        document.getElementById(id).textContent = '-';
+    }
+}
+async function expandUpcomingFights(id){
+    var polaroid = document.getElementById('Polaroid');
+    var button = document.getElementById(id);
+    var idsToHide = ['Polaroid', 'Previous', 'Next', 'Three', 'Four', 'Five', 'Six']
+    if(polaroid.style.display != 'none'){
+        polaroid.style.display = 'none';
+        button.textContent = '+';
+        for (i=0;i<=idsToHide.length-1;i++){
+            document.getElementById(idsToHide[i]).style.display = 'none';
+        }
+    }
+    else if(polaroid.style.display == 'none'){
+        polaroid.style.display = 'block';
+        button.textContent = '-';
+        for (i=0;i<=idsToHide.length-1;i++){
+            document.getElementById(idsToHide[i]).style.display = 'block';
+        }
+    }
+
 }
 async function showSearchBar(){
     document.getElementById("searchFieldMobileDefault").style.display = 'block';
@@ -130,8 +164,12 @@ async function loadSearch(searchResultsData){
 
             var fighterImageApiData = await fetchData('/getBoxerImage/',searchResultsData.recordset[key][key1]);
 
-
-            fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            if(fighterImageApiData.recordset[0] != undefined){
+                fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            }
+            else{
+                fighterImage.src = '/img/logo.png'
+            }
             fighterImage.id = 'fighterimageid'+i;
             var fighterImageLink = document.createElement('a');
             fighterImageLink.href = '/fighterCard/'+searchResultsData.recordset[key][key1];
@@ -161,7 +199,9 @@ async function loadSearch(searchResultsData){
             var boxerRecordData = await fetchData('/getBoxerRecord/',nameParagraph.textContent);
 
             var wins = document.createElement('span');
-            wins.textContent=boxerRecordData.recordset[0].TotalWins;
+            if(boxerRecordData.recordset[0] != undefined){
+                wins.textContent=boxerRecordData.recordset[0].TotalWins;
+            }
             wins.className='totalwins';
 
             var slash1 =document.createElement('span');
@@ -171,11 +211,15 @@ async function loadSearch(searchResultsData){
             slash2.textContent = '/';
 
             var losses = document.createElement('span');
-            losses.textContent = boxerRecordData.recordset[0].TotalLosses;
+            if(boxerRecordData.recordset[0] != undefined){
+                losses.textContent = boxerRecordData.recordset[0].TotalLosses;
+            }
             losses.className='totallosses';
 
             var draws = document.createElement('span');
-            draws.textContent=boxerRecordData.recordset[0].TotalDraws;
+            if(boxerRecordData.recordset[0] != undefined){
+                draws.textContent=boxerRecordData.recordset[0].TotalDraws;
+            }
             draws.className='totaldraws';
 
             nameParagraph3.appendChild(wins);
@@ -241,7 +285,10 @@ async function getFlag(nationality, classname){
     var boxerCountryFlagData = await fetchData('/getBoxerCountryFlag/',nationality);
     var countryFlagImg = document.createElement('img');
     countryFlagImg.className = classname;
-    countryFlagImg.src = boxerCountryFlagData.recordset[0].CountryFlagRef;
+    if(boxerCountryFlagData.recordset[0] != undefined){
+        countryFlagImg.src = boxerCountryFlagData.recordset[0].CountryFlagRef;  
+    }
+    
 
     return countryFlagImg;
 }
@@ -545,7 +592,12 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             nameParagraph.textContent = fighterCatalogueData.recordset[key][key1]; 
             nameParagraph.id = 'fighternameid'+i;
             fighterImage.className = 'catalogueimage';
-            fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            if(fighterImageApiData.recordset[0] != undefined){
+                fighterImage.src = '/'+fighterImageApiData.recordset[0].BoxerImageReference;
+            }
+            else{
+                fighterImage.src = '/img/logo.png'
+            }
             fighterImage.id = 'fighterimageid'+i;
             
             linkToCard.appendChild(fighterImage);
@@ -562,6 +614,7 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
             i++; 
         }
     }
+    document.getElementById("catalogueLoadingGif").style.display = 'none';
     //load stuff to build and test pagination
     // var testDataCount = 0;
     // for(testDataCount;testDataCount<100;testDataCount++){
@@ -1286,7 +1339,7 @@ async function loadUpcomingFightsData(){
     var j = 0;
     var fhcountA = 1;
     var fhcountB = 1;
-    if(screen.width <= 360){
+    if(screen.width <= 420){
         document.getElementById("last5DateColumnA").style.display = 'none';
         document.getElementById("last5DateColumnB").style.display = 'none';
     }
@@ -1339,7 +1392,7 @@ async function loadUpcomingFightsData(){
                 testData.appendChild(fighterLink);
             } 
             if ( fhcountA && (fhcountA % 3 === 1)) { 
-                if(screen.width<=360){
+                if(screen.width<=420){
                     testData.textContent ='';
                 }
                 else{
@@ -1402,7 +1455,7 @@ async function loadUpcomingFightsData(){
                 testData.appendChild(fighterLink);
             } 
             if ( fhcountB && (fhcountB % 3 === 1)) { 
-                if(screen.width<=360){
+                if(screen.width<=420){
                     testData.textContent ='';
                 }
                 else{
@@ -1487,7 +1540,7 @@ async function nextFight(){
         var fhcountB = 1;
 
         await clearlast5();
-        if(screen.width <= 360){
+        if(screen.width <= 420){
             document.getElementById("last5DateColumnA").style.display = 'none';
             document.getElementById("last5DateColumnB").style.display = 'none';
         }
@@ -1539,7 +1592,7 @@ async function nextFight(){
                     testData.appendChild(fighterLink);
                 } 
                 if ( fhcountA && (fhcountA % 3 === 1)) { 
-                    if(screen.width<=360){
+                    if(screen.width<=420){
                         testData.textContent ='';
                     }
                     else{
@@ -1603,7 +1656,7 @@ async function nextFight(){
                     testData.appendChild(fighterLink);
                 } 
                 if ( fhcountB && (fhcountB % 3 === 1)) { 
-                    if(screen.width<=360){
+                    if(screen.width<=420){
                         testData.textContent ='';
                     }
                     else{
@@ -1688,7 +1741,7 @@ async function previousFight(){
         var fhcountB = 1;
 
         await clearlast5();
-        if(screen.width <= 360){
+        if(screen.width <= 420){
             document.getElementById("last5DateColumnA").style.display = 'none';
             document.getElementById("last5DateColumnB").style.display = 'none';
         }
@@ -1740,7 +1793,7 @@ async function previousFight(){
                     testData.appendChild(fighterLink);
                 } 
                 if ( fhcountA && (fhcountA % 3 === 1)) { 
-                    if(screen.width<=360){
+                    if(screen.width<=420){
                         testData.textContent ='';
                     }
                     else{
@@ -1804,7 +1857,7 @@ async function previousFight(){
                     testData.appendChild(fighterLink);
                 } 
                 if ( fhcountB && (fhcountB % 3 === 1)) { 
-                    if(screen.width<=360){
+                    if(screen.width<=420){
                         testData.textContent ='';
                     }
                     else{

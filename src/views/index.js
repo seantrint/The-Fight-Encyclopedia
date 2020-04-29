@@ -223,6 +223,17 @@ app.get('/getRandomFighterImages',async function(request,response){
             response.send(recordset);  
         })
 })
+app.get('/getBoxersCount',async function(request,response){
+    request = new sql.Request();
+    request.query('select COUNT(BoxerName) as boxerCount from Boxer'
+        ,async function(err,recordset){
+            if(err)
+            {
+                console.log(err);
+            }
+            response.send(recordset);  
+        })
+})
 app.get('/getAllBoxers',function(request,response){
 
     request = new sql.Request();
