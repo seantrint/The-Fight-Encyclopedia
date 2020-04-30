@@ -52,9 +52,15 @@ app.get('/getSearchResults/:searchTerm', async function(request,response){
     var illegalValue = await checkForIllegals(searchTerm);
     illegalValue = '%'+illegalValue+'%';
     ps.input('searchTerm', sql.VarChar);
-    ps.prepare(' select BoxerName'
-                +' from Boxer'
-                +' where BoxerName like @searchTerm',async function(err){
+    ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+                +' from Boxer b'
+                +' inner join BoxerRecord r'
+                +' inner join BoxerStats s' 
+                +' inner join BoxerImage i'
+                +' on i.BoxerID = s.BoxerStatsID'
+                +' on s.BoxerStatsID = r.BoxerRecordID'
+                +' on r.BoxerRecordID = b.BoxerId'
+                +' where b.BoxerName like @searchTerm',async function(err){
                     if(err)
                     {
                         response.send(await loadDbDownPage());
@@ -401,10 +407,14 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerName' 
-                         +' from Boxer b'
-                         +' inner join BoxerStats s'
-                         +' on b.BoxerId = s.BoxerID'
+            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+                        +' from Boxer b'
+                        +' inner join BoxerRecord r'
+                        +' inner join BoxerStats s' 
+                        +' inner join BoxerImage i'
+                        +' on i.BoxerID = s.BoxerStatsID'
+                        +' on s.BoxerStatsID = r.BoxerRecordID'
+                        +' on r.BoxerRecordID = b.BoxerId'   
                          +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
                          +' order by b.BoxerName asc', function(err, recordset){
                              ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
@@ -424,10 +434,14 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerName' 
-                         +' from Boxer b'
-                         +' inner join BoxerStats s'
-                         +' on b.BoxerId = s.BoxerID'
+            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+                        +' from Boxer b'
+                        +' inner join BoxerRecord r'
+                        +' inner join BoxerStats s' 
+                        +' inner join BoxerImage i'
+                        +' on i.BoxerID = s.BoxerStatsID'
+                        +' on s.BoxerStatsID = r.BoxerRecordID'
+                        +' on r.BoxerRecordID = b.BoxerId'   
                          +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
                          +' order by newid()', function(err, recordset){
                              ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
@@ -445,10 +459,14 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
     else{
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerName' 
+            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
                          +' from Boxer b'
-                         +' inner join BoxerStats s'
-                         +' on b.BoxerId = s.BoxerID'
+                         +' inner join BoxerRecord r'
+                         +' inner join BoxerStats s' 
+                         +' inner join BoxerImage i'
+                         +' on i.BoxerID = s.BoxerStatsID'
+                         +' on s.BoxerStatsID = r.BoxerRecordID'
+                         +' on r.BoxerRecordID = b.BoxerId'   
                          +' where s.Gender = @primaryGender'
                          +' order by b.BoxerName asc', function(err, recordset){
                              ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
@@ -467,10 +485,14 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         }    
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerName' 
-                         +' from Boxer b'
-                         +' inner join BoxerStats s'
-                         +' on b.BoxerId = s.BoxerID'
+            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+                        +' from Boxer b'
+                        +' inner join BoxerRecord r'
+                        +' inner join BoxerStats s' 
+                        +' inner join BoxerImage i'
+                        +' on i.BoxerID = s.BoxerStatsID'
+                        +' on s.BoxerStatsID = r.BoxerRecordID'
+                        +' on r.BoxerRecordID = b.BoxerId'   
                          +' where s.Gender = @primaryGender'
                          +' order by newid()', function(err, recordset){
                              ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
@@ -497,4 +519,19 @@ app.get('/getQuotesOfTheDay', async function(request,response){
         response.send(recordset);
     })
 })
+// app.get('/testArrayInput/:array', async function(request,response){
+//     var array = request.params.array;
+//     console.log(array);
+//     console.log(array[0]);
+//     console.log("length is "+array.length);
+//     request = new sql.Request();
+//     request.query('select top (3) quote from SpecialSayings order by newid()', async function (err, recordset){
+//         if(err)
+//         {
+//             response.send(await loadDbDownPage());
+//             console.log(err);
+//         }
+//         response.send(recordset);
+//     })
+// })
 module.exports = app;
