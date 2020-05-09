@@ -1100,52 +1100,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
                     }
                 }
             }
-            
-            // var fightResult;
-            // if(winsArray.includes(arraySlice[key].last5))
-            // {
-            //     fightResult = document.createElement('div');
-            //     fightResult.className = 'last5box';
-            //     fightResult.style.backgroundColor = 'green';
-    
-            // }
-            // if(lossArray.includes(arraySlice[key].last5))
-            // {
-            //     fightResult = document.createElement('div');
-            //     fightResult.className = 'last5box';
-            //     fightResult.style.backgroundColor = '#CE2029';
-            // }
-            // if(drawArray.includes(arraySlice[key].last5))
-            // {
-            //     fightResult = document.createElement('div');
-            //     fightResult.className = 'last5box';
-            //     fightResult.style.backgroundColor = '#2d545e';
-            // }    
-            // tableData4.appendChild(fightResult);
         }
-
-        // namesArrayForLast5Fights.push(arraySlice[key].BoxerId);
-        // if(arraySlice[key].TotalWins != null){
-        //     var fightHistory = await fetchData('/getBoxerFightHistoryLast5/',arraySlice[key].BoxerName);
-        //     for (var key in fightHistory.recordset) {
-        //         var fightResult = document.createElement('div');
-        //         fightResult.className = 'last5box';
-        //         if(winsArray.includes(fightHistory.recordset[key].FightResult))
-        //         {
-        //             fightResult.style.backgroundColor = 'green';
-    
-        //         }
-        //         else if(lossArray.includes(fightHistory.recordset[key].FightResult))
-        //         {
-        //             fightResult.style.backgroundColor = '#CE2029';
-        //         }
-        //         else if(drawArray.includes(fightHistory.recordset[key].FightResult))
-        //         {
-        //             fightResult.style.backgroundColor = '#2d545e';
-        //         }
-        //         tableData4.appendChild(fightResult);
-        //     }          
-        // }
 
         linkToCard.appendChild(nameParagraph);
         tableData.appendChild(linkToCard);

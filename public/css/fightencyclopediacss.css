@@ -21,6 +21,7 @@ body {
     font-family: "Raleway";/*Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"Playfair Display";*/
     margin: 0 auto;
     font-size:14px;
+    overflow-y: scroll;
 }
 div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, 
 .cataloguebutton:hover,.cataloguelink a:visited:hover{
@@ -269,7 +270,7 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     width:0%;
 }
 ::-webkit-scrollbar {
-    width: 1px;
+    width: 8px;
     height:8px;
   }
   
