@@ -643,6 +643,7 @@ var grid = true;
 var table = false;
 var first = true;
 async function loadFighterCatalogueAsGrid(fighterCatalogueData){
+    document.getElementById("catalogueLoadingGif").style.display = 'block';
     grid = true;
     table = false;
     dataArray = [];
@@ -655,7 +656,6 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
     }
     first = false;
     dataArray.push(fighterCatalogueData.recordset); 
-    console.log('begin: '+begin+' end: '+end);
     var arraySlice = dataArray[0].slice(begin,end);
     for (var key in arraySlice) {
         var catalogueEntryDiv = document.createElement('div');
@@ -1009,12 +1009,11 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         await createCatalogueTable();
     }
     first = false;
+    console.log(fighterCatalogueData);
     dataArray.push(fighterCatalogueData.recordset); 
-    console.log('begin: '+begin+' end: '+end);
     var arraySlice = dataArray[0].slice(begin,end);
     var i =0;
     var numberList = 1;
-    console.log(globalCatalogueListCount);
     for (var key in arraySlice) {
         var tableRow = document.createElement('tr');
         var tableData = document.createElement('td');
@@ -1065,29 +1064,88 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
 
         division.style.color='black';
         tableData3.appendChild(division);
+        if(arraySlice[key].last5 != null){
+            var fightResult;
+            var isFinished = false;
+            for(var counter = 0;counter <= winsArray.length-1;counter++){
+                if(arraySlice[key].last5.includes(winsArray[counter]) 
+                || arraySlice[key].last5.includes(lossArray[counter]) 
+                || arraySlice[key].last5.includes(drawArray[counter])){
+                    var splitString = arraySlice[key].last5.split(',');
+                    if(!isFinished){
+                        for(var splitCounter = 0; splitCounter <= splitString.length - 1; splitCounter++){
+                            splitString[splitCounter] = splitString[splitCounter].trim();
+                            if(winsArray.includes(splitString[splitCounter]))
+                            {
+                                fightResult = document.createElement('div');
+                                fightResult.className = 'last5box';
+                                fightResult.style.backgroundColor = 'green';
+                    
+                            }
+                            if(lossArray.includes(splitString[splitCounter]))
+                            {
+                                fightResult = document.createElement('div');
+                                fightResult.className = 'last5box';
+                                fightResult.style.backgroundColor = '#CE2029';
+                            }
+                            if(drawArray.includes(splitString[splitCounter]))
+                            {
+                                fightResult = document.createElement('div');
+                                fightResult.className = 'last5box';
+                                fightResult.style.backgroundColor = '#2d545e';
+                            }    
+                            tableData4.appendChild(fightResult);  
+                            isFinished = true;
+                        }
+                    }
+                }
+            }
+            
+            // var fightResult;
+            // if(winsArray.includes(arraySlice[key].last5))
+            // {
+            //     fightResult = document.createElement('div');
+            //     fightResult.className = 'last5box';
+            //     fightResult.style.backgroundColor = 'green';
     
-        namesArrayForLast5Fights.push(arraySlice[key].BoxerId);
-        if(arraySlice[key].TotalWins != null){
-            var fightHistory = await fetchData('/getBoxerFightHistoryLast5/',arraySlice[key].BoxerName);
-            for (var key in fightHistory.recordset) {
-                var fightResult = document.createElement('div');
-                fightResult.className = 'last5box';
-                if(winsArray.includes(fightHistory.recordset[key].FightResult))
-                {
-                    fightResult.style.backgroundColor = 'green';
-    
-                }
-                else if(lossArray.includes(fightHistory.recordset[key].FightResult))
-                {
-                    fightResult.style.backgroundColor = '#CE2029';
-                }
-                else if(drawArray.includes(fightHistory.recordset[key].FightResult))
-                {
-                    fightResult.style.backgroundColor = '#2d545e';
-                }
-                tableData4.appendChild(fightResult);
-            }          
+            // }
+            // if(lossArray.includes(arraySlice[key].last5))
+            // {
+            //     fightResult = document.createElement('div');
+            //     fightResult.className = 'last5box';
+            //     fightResult.style.backgroundColor = '#CE2029';
+            // }
+            // if(drawArray.includes(arraySlice[key].last5))
+            // {
+            //     fightResult = document.createElement('div');
+            //     fightResult.className = 'last5box';
+            //     fightResult.style.backgroundColor = '#2d545e';
+            // }    
+            // tableData4.appendChild(fightResult);
         }
+
+        // namesArrayForLast5Fights.push(arraySlice[key].BoxerId);
+        // if(arraySlice[key].TotalWins != null){
+        //     var fightHistory = await fetchData('/getBoxerFightHistoryLast5/',arraySlice[key].BoxerName);
+        //     for (var key in fightHistory.recordset) {
+        //         var fightResult = document.createElement('div');
+        //         fightResult.className = 'last5box';
+        //         if(winsArray.includes(fightHistory.recordset[key].FightResult))
+        //         {
+        //             fightResult.style.backgroundColor = 'green';
+    
+        //         }
+        //         else if(lossArray.includes(fightHistory.recordset[key].FightResult))
+        //         {
+        //             fightResult.style.backgroundColor = '#CE2029';
+        //         }
+        //         else if(drawArray.includes(fightHistory.recordset[key].FightResult))
+        //         {
+        //             fightResult.style.backgroundColor = '#2d545e';
+        //         }
+        //         tableData4.appendChild(fightResult);
+        //     }          
+        // }
 
         linkToCard.appendChild(nameParagraph);
         tableData.appendChild(linkToCard);
@@ -1131,7 +1189,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     document.getElementById("catalogueLoadingGif").style.display = 'none';
     var existingCatalogueDiv = document.getElementsByClassName('cataloguetable');
 
-    if(globalCatalogueListCount === 0 && dataArray[0].length === 0){
+    if(globalCatalogueListCount === 1 && dataArray[0].length === 0){
         //empty data set
         await clearCatalogue();
         await createErrorDiv('','No results found for filter selection');
@@ -1229,8 +1287,8 @@ async function TriggerJumpToTopButton() {
         x.style.display = "none";
     }
 }
-function jumpToTop() {
-    window.pageYOffset = 0; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+async function jumpToTop() {
+    window.scrollY = 0; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
 }
 function showWeightFilterMenu() {
     var x = document.getElementById("filterWeightMenu");

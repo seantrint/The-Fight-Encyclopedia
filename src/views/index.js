@@ -407,7 +407,7 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
                         +' from Boxer b'
                         +' inner join BoxerRecord r'
                         +' inner join BoxerStats s' 
@@ -434,7 +434,7 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
                         +' from Boxer b'
                         +' inner join BoxerRecord r'
                         +' inner join BoxerStats s' 
@@ -459,7 +459,7 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
     else{
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
                          +' from Boxer b'
                          +' inner join BoxerRecord r'
                          +' inner join BoxerStats s' 
@@ -485,7 +485,7 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         }    
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
+            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
                         +' from Boxer b'
                         +' inner join BoxerRecord r'
                         +' inner join BoxerStats s' 

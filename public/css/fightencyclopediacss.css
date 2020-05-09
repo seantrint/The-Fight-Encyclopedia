@@ -8,7 +8,7 @@
     --scrollbar-width-setting: thin;
     --scrollbar-color-setting: rgb(164, 164, 165) rgb(202, 202, 202);
     --tab-unclicked-color:#f6f6f6;
-    --bottom-border-color:rgb(202, 201, 201);
+    --bottom-border-color:rgb(219, 219, 219);
     --bottom-border-type:inset;
     --bottom-border-size:1px;
     --menu-color:#fdfdfd;
@@ -22,8 +22,14 @@ body {
     margin: 0 auto;
     font-size:14px;
 }
-div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, .cataloguebutton:hover,.cataloguelink a:visited:hover{
+div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, 
+.cataloguebutton:hover,.cataloguelink a:visited:hover{
     color:#52a7bd;
+}
+.cataloguebutton, .expandpanelbutton, .nextpreviousbutton, .linktofightercataloguetable, .filtermenu li, 
+.filterweightmenu li, .filtergendermenu li, .pagename, .tab1, .tab2, .tab3, .toFighterLink,
+.cataloguepagebuttons a, .searchresultsgridchildimg, .searchresultsparagraph{
+    cursor: pointer;
 }
 .tab1 a:hover, .tab2 a:hover, .tab3 a:hover{
     color:#9e9e9e;
@@ -31,7 +37,8 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
 #FightsCount, #BoxersCount{
     font-weight: bold;
 }
-.widescreenmenubar, .linkstopages, .mobilebar, .popupmenu, .featuredfightersspace p,.featuredfightsspace h2, .tab1, .tab2, .tab3, .fighterinfonamespace {
+.widescreenmenubar, .linkstopages, .mobilebar, .popupmenu, .featuredfightersspace p,.featuredfightsspace h2, 
+.tab1, .tab2, .tab3, .fighterinfonamespace {
     font-family:"Montserrat";
 }
 .featuredfightersspaceone p, .featuredfightsspaceone p{
@@ -57,7 +64,7 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
 .onetitle p{
     font-size:16px;
 }
-.onetitle span{
+.onetitle span, .countspan{
     font-size:12px;
 }
 .expandpanelbutton{
@@ -68,7 +75,6 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     font-size:16px;
     color:black;
     float:right;
-    cursor:pointer;
 }
 .menuoptionlogo{
     height:20px;
@@ -199,59 +205,8 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     border: none;
     color: var(--links-font-color);
 }
-.mobileheader {
-    top: 0;
-    object-fit: cover;
-    padding: 1px;
-    display: -ms-grid;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(3, minmax(5px, auto));
-    grid-gap: 2px;
-    border-bottom: var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
-    background-color: var(--menu-color);
-    width:100%;
-    height:80px;
-    position:fixed;
-    z-index:6;
-}
-.mobileheaderone {
-    grid-column: 1 / 2;
-    grid-row: 1/3;
-    align-items: stretch;
-    justify-items: left;
-    z-index: 5;
-    color: var(--main-font-color);
-}
 .mobiletitle{
     font-size:18px;
-}
-.mobileheadertwo {
-    grid-column: 1 / 6;
-    grid-row: 1/2;
-    align-items: stretch;
-    justify-items: left;
-}
-
-.mobileheaderthree {
-    grid-column: 2 / 5;
-    grid-row: 2/3;
-    align-items: stretch;
-    justify-items: left;
-}
-.mobileheaderfour{
-    grid-column: 1 / 6;
-    grid-row: 3/4;
-    align-items: stretch;
-    justify-items: left;
-    display:none;
-}
-.mobileheader p{
-    text-align:center;
-}
-.mobileheader img{
-    height:100px;
-    width:200px;
 }
 .menubutton{
     float:left;
@@ -469,9 +424,8 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     grid-row: 8/9;
     margin-top: 30%;
     width: 70%;
-    text-align: right;
     z-index: 2;
-    margin-left:30%;
+    margin-left:35%;
 }
 .nextpreviousbutton {
     width: 100%;
@@ -480,7 +434,6 @@ div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousb
     color: var(--links-font-color);
     margin-top: 105px;
     font-size:20px;
-    cursor:pointer;
 }
 .widescreenmenubar{
     display: none;
@@ -726,9 +679,6 @@ text-align: center;
     height:15px;
     vertical-align: middle;
 }
-.linktofightercataloguetable{
-    cursor:pointer;
-}
 .cataloguebutton{
     margin-right:5px;
     margin-right:5px;
@@ -789,7 +739,6 @@ text-align: center;
         margin-bottom: 5px;
         text-align: left;
         color: var(--links-font-color);
-        cursor:pointer;
     }
 .filterweightmenu {
     width: 150px;
@@ -823,7 +772,6 @@ text-align: center;
         margin-left: -15px;
         margin-bottom: 5px;
         text-align: left;
-        cursor:pointer;
         color: var(--links-font-color);
     }
 .filtergendermenu {
@@ -858,7 +806,6 @@ text-align: center;
         margin-bottom: 5px;
         text-align: left;
         color: var(--links-font-color);
-        cursor:pointer;
     }
 .jumptopbuttonspace {
     width: 50px;
@@ -883,7 +830,6 @@ text-align: center;
 }
 .pagename{
     margin-bottom:0%;
-    cursor:pointer;
 }
 .fighterinfogrid {
     display: grid;
@@ -941,7 +887,6 @@ text-align: center;
 }
 .tab1, .tab2, .tab3 {
     background-color: var(--tab-unclicked-color);
-    cursor: pointer;
 }
 .tab1 {
     grid-column: 1/3;
@@ -1088,7 +1033,6 @@ text-align: center;
 .toFighterLink{
     text-decoration: underline;
     color: var(--links-font-color);
-    cursor:pointer;
     font-size:12px; 
 }
 .last5gridLabel{
@@ -1130,7 +1074,6 @@ text-align: center;
 }
     .cataloguepagebuttons a{
         color: var(--links-font-color);
-        cursor:pointer;
         padding:1%;
         text-decoration: underline;
     }
@@ -1222,7 +1165,7 @@ text-align: center;
     .onetitle p{
         font-size:18px;
     }
-    .onetitle span{
+    .onetitle span, .countspan{
         font-size:14px;
     }
     .featuredfightersspaceone p, .featuredfightsspaceone p{
@@ -1237,23 +1180,7 @@ text-align: center;
     .fighterinfohistoryspacetable{
         font-size:14px;
     }
-    .mobileheader{
-        height:100px;
-    }
-    .mobileheaderfour{
-        display:block;
-    }
-    .mobileheaderfour input{
-        width:40%;
-        background-color: #ffffff;
-        border: var(--bottom-border-size) var(--bottom-border-type) var(--bottom-border-color);
-        border-radius: 2px;
-    }
-    .mobileheaderfour button{
-        background:none;
-        border:none;
-        color: var(--links-font-color);
-    }
+
     #mobilemenulinkLast{
         border-bottom:none;
     }
@@ -1394,9 +1321,6 @@ text-align: center;
         grid-auto-rows: 90px;
         grid-gap:0px;
         margin-top:25px;
-    }
-    .searchresultsgridchildimg, .searchresultsparagraph{
-        cursor: pointer;
     }
     .searchresultsgridchildimg img{
         height:130px;
@@ -1727,7 +1651,7 @@ text-align: center;
     .onetitle p{
         font-size:20px;
     }
-    .onetitle span{
+    .onetitle span, .countspan{
         font-size:14px;
     }
     .menuoptionlogo{
@@ -1777,9 +1701,6 @@ text-align: center;
     }
     .errordiv{
         padding-top:150px;
-    }
-    .mobileheader {
-        display: none;
     }
     .widescreenmenubar{
         display:block;  
@@ -2137,7 +2058,7 @@ text-align: center;
     .onetitle p{
         font-size:22px;
     }
-    .onetitle span{
+    .onetitle span, .countspan{
         font-size:16px;
     }
     .featuredfightersspaceone p, .featuredfightsspaceone p{
