@@ -9,6 +9,7 @@ var itemsPerCatalogue = 10;
 var begin = 0;
 var end;
 var change = 10;
+var errorDivCreated = false;
 async function numberOfElementsPerPage(){
     if(screen.width >= 0 && screen.width <= 640){
         itemsPerCatalogue = 15;
@@ -75,6 +76,7 @@ async function loadPageName() {
         await loadUpcomingFightsData();
         await loadDailyQuotes();
         await addImagesToFighterPreviewBox();
+        document.getElementById('catalogueLoadingGif').style.display='none';
     }
     else if (docTitle == "Fighter Catalogue") {
         mobilefighterCatalogueLink.style.backgroundColor= '#d1d1d1';
@@ -301,16 +303,17 @@ async function loadSearch(searchResultsData){
         testDiv.id = 'searchResultsGridChild'+i;
         testDiv.appendChild(searchResultLink);
         
-
         document.getElementById('SearchResultsGrid').appendChild(testDiv);
         i++;
     }
+    document.getElementById('catalogueLoadingGif').style.display = 'none';
     var existingSearchDiv = document.getElementsByClassName('searchresultsgridchild');
-    if(i === 0 && searchDataArray[0].length === 0){
+    if(i === 0 && searchDataArray[0].length === 0 && !errorDivCreated){
         //empty search results
         var testError = document.getElementById('SearchResultsGrid');
         //make generic
         await createErrorDiv(testError, 'No results found for search');
+        errorDivCreated = true;
     } 
     else if(i === 0 && typeof existingSearchDiv != undefined){
         //scrolled to end of dataset so disable scrolling
@@ -363,13 +366,13 @@ async function loadFighterCard(){
     var boxerRecordData = await fetchData('/getBoxerRecord/',boxerName);
     var boxerFightHistoryData = await fetchData('/getBoxerFightHistory/',boxerName);
     var cardGrid = document.getElementById('FighterInfoGrid');
-
+    document.getElementById('fighterInfoImage').src = "/img/loading.gif";
     try{
         var imagepath = '/'+boxerImageData.recordset[0].BoxerImageReference;
         document.getElementById('fighterInfoImage').src = imagepath;
         var i = 0;
         var j = 0;
-
+        console.log(boxerStatsData)
         //stats
         for (var key in boxerStatsData.recordset) {
             for (var key1 in boxerStatsData.recordset[key]) {
@@ -713,9 +716,10 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
     //await loadGridData(currentPage);
     var existingCatalogueDiv = document.getElementsByClassName('catalogueentry');
 
-    if(i === 0 && dataArray[0].length === 0){
+    if(i === 0 && dataArray[0].length === 0 && !errorDivCreated){
         //empty data set
         await createErrorDiv('','No results found for filter selection');
+        errorDivCreated = true;
     }
     else if (i === 0 && typeof existingCatalogueDiv != undefined){
         //end of data set
@@ -1144,10 +1148,11 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
     document.getElementById("catalogueLoadingGif").style.display = 'none';
     var existingCatalogueDiv = document.getElementsByClassName('cataloguetable');
 
-    if(globalCatalogueListCount === 1 && dataArray[0].length === 0){
+    if(globalCatalogueListCount === 1 && dataArray[0].length === 0 && !errorDivCreated){
         //empty data set
         await clearCatalogue();
         await createErrorDiv('','No results found for filter selection');
+        errorDivCreated = true;
     }
     else if (globalCatalogueListCount === 0 && typeof existingCatalogueDiv != undefined){
         //end of data set
@@ -1179,7 +1184,24 @@ async function loadFighterCatalogue(){
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
     var currentGenderFilter = document.getElementById("currentGenderFilter").textContent;
     var fighterCatalogueData = await fetchData('/sortBoxerCatalogue/',currentSortingFilter+'/',currentWeightFilter+'/',currentGenderFilter);
-    var viewParam = document.getElementById("viewParam").textContent;;
+    var viewParam = document.getElementById("viewParam").textContent;
+
+    var dropdownArray = ['allWeights', 'heavyweight', 'cruiserweight', 'lightheavyweight', 
+    'supermiddleweight', 'middleweight', 'lightmiddleweight', 'welterweight', 'alphabeticalFilter', 
+    'rankingFilter', 'randomFilter', 'men', 'women'];
+    //remove current option from dropdown list
+    for(var i = 0; i < dropdownArray.length-1;i++){
+        if(currentWeightFilter == document.getElementById(dropdownArray[i]).textContent){
+            document.getElementById(dropdownArray[i]).style.display = 'none';
+        }
+        else if(currentSortingFilter == document.getElementById(dropdownArray[i]).textContent){
+            document.getElementById(dropdownArray[i]).style.display = 'none';
+        }
+        if(currentGenderFilter == document.getElementById(dropdownArray[i]).textContent){
+            document.getElementById(dropdownArray[i]).style.display = 'none';
+        }
+    }
+
     if(viewParam === undefined ){
         if(isGrid === true){
             await loadFighterCatalogueAsGrid(fighterCatalogueData);
@@ -1425,12 +1447,12 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].TotalDraws[1];
     
     //stats - replace with loop
-    document.getElementById('fighterAAge').textContent = upcomingFightsStatsData.recordset[0].Age[0];
-    document.getElementById('fighterBAge').textContent = upcomingFightsStatsData.recordset[0].Age[1];
     document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[0].Height[0];
     document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[0].Height[1];
     document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[0].Reach[0];
     document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[0].Reach[1];
+    document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[0].Stance[0];
+    document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[0].Stance[1];    
     if(countriesArray.includes(upcomingFightsStatsData.recordset[0].Nationality[0])){
         var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[0].Nationality[0], 'countryflagfightercard');
         document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[0].Nationality[0];
@@ -1626,12 +1648,12 @@ async function nextFight(){
         document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[1];   
     
         //stats
-        document.getElementById('fighterAAge').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Age[0];
-        document.getElementById('fighterBAge').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Age[1];
         document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
         document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
         document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
         document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
+        document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
+        document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
         if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
             var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
             document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
@@ -1827,12 +1849,12 @@ async function previousFight(){
         document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[1];   
         
         //stats
-        document.getElementById('fighterAAge').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Age[0];
-        document.getElementById('fighterBAge').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Age[1];
         document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
         document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
         document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
         document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
+        document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
+        document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
         if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
             var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
             document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];

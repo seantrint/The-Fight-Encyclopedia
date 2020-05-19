@@ -135,12 +135,12 @@ app.get('/getUpcomingFighterRecords',async function(request,response){
 
 app.get('/getUpcomingFighterStats',async function(request,response){
     request = new sql.Request();
-    request.query('select s1.Age, s1.Height, s1.Reach, s1.Nationality, s2.Age, s2.Height, s2.Reach, s2.Nationality from'
-        +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
+    request.query('select s1.Height, s1.Reach, s1.Stance, s1.Nationality, s2.Height, s2.Reach, s2.Stance, s2.Nationality from'
+        +'( select b.Height, b.Reach, b.Stance, b.Nationality, u.UpcomingFightID'
         +'  from BoxerStats b'
         +'  inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
         +'  inner join'
-        +'( select b.Age, b.Height, b.Reach, b.Nationality, u.UpcomingFightID'
+        +'( select b.Height, b.Reach, b.Stance, b.Nationality, u.UpcomingFightID'
         +'  from BoxerStats b'
         +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
         +'  on s1.UpcomingFightID = s2.UpComingFightID', async function(err,recordset){
@@ -217,10 +217,8 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',async function(request,r
 })
 app.get('/getRandomFighterImages',async function(request,response){
     request = new sql.Request();
-    request.query('SELECT * FROM BoxerImage' 
-    +' WHERE (ABS(CAST'
-    +' ((BINARY_CHECKSUM(*) *' 
-    +' RAND()) as int)) % 100) < 80'
+    request.query('SELECT top(8) * FROM BoxerImage' 
+    +' order by newid()'
         ,async function(err,recordset){
             if(err)
             {
@@ -257,7 +255,7 @@ app.get('/getBoxerStats/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select s.Alias, s.Nationality, s.Age, s.Height, s.Reach, s.Division from BoxerStats s'
+    ps.prepare('select s.Alias, s.Nationality, s.Height, s.Reach, s.Division, s.Stance from BoxerStats s'
                 +' inner join Boxer b'
                 +' on b.BoxerId = s.BoxerID'
                 +' where b.BoxerName = @boxerName', async function(err){
@@ -510,7 +508,7 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
 })
 app.get('/getQuotesOfTheDay', async function(request,response){
     request = new sql.Request();
-    request.query('select top (3) quote from SpecialSayings order by newid()', async function (err, recordset){
+    request.query('select top (3) quote from todaysQuotes', async function (err, recordset){
         if(err)
         {
             response.send(await loadDbDownPage());

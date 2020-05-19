@@ -24,7 +24,7 @@ body {
     overflow-y: scroll;
 }
 div a:hover,a:hover,a p:hover,.header a:hover, .header p a:hover, .nextpreviousbutton:hover, .cataloguelink a, 
-.cataloguebutton:hover,.cataloguelink a:visited:hover{
+.cataloguebutton:hover,.cataloguelink a:visited:hover, .expandpanelbutton:hover{
     color:#52a7bd;
 }
 .cataloguebutton, .expandpanelbutton, .nextpreviousbutton, .linktofightercataloguetable, .filtermenu li, 
@@ -1748,7 +1748,11 @@ text-align: center;
             text-decoration: none;
             margin-left:100px;
         }
-        .aboutpagelink a:visited{
+        .contributelink a{
+            text-decoration: none;
+            color: var(--links-font-color);
+        }
+        .aboutpagelink a:visited, .contributelink a:visited{
             color: var(--links-font-color);
             text-decoration: none;
         }
@@ -2015,6 +2019,9 @@ text-align: center;
     .aboutpagelink a{
         margin-left:170px;
     }
+    .contributelink a{
+        margin-left:20px;
+    }
     .widescreenmenubar input{
         width:400px;
     }
@@ -2055,6 +2062,9 @@ text-align: center;
 @media only screen and (min-width: 1450px) {
     .aboutpagelink a{
         margin-left:200px;
+    }
+    .contributelink a{
+        margin-left:40px;
     }
     .onetitle p{
         font-size:22px;
