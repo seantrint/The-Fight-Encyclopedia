@@ -23,18 +23,19 @@ cursor = conn.cursor()
 cursor.execute('SELECT BoxerName from Boxer')
 
 for row in cursor:
-    nameslist.append(row[0])
+    nameslist.append('Barney Aaron')
 #search the pdf for every name from the db    
+pathAndFileName = 'C:/Users/Sean/Desktop/projects/textfiles_uncleaned/entirepdf.txt'    
+file = open(pathAndFileName,'w', encoding = "utf-8")
+pdfFileObj = open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf', 'rb')
+doc = fitz.open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf')    
+pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+print(pdfReader.numPages)
+pageObj = pdfReader.getPage(0)
 for name in nameslist:
+
     imageName = name #get this from db
     print(imageName)
-    pathAndFileName = 'textfiles_uncleaned/entirepdf.txt'
-    file = open(pathAndFileName,'w', encoding = "utf-8")
-    pdfFileObj = open('Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf', 'rb')
-    doc = fitz.open('Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf')
-    pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-    print(pdfReader.numPages)
-    pageObj = pdfReader.getPage(0)
     i = 0
     picFound = 0
     #for every page in book
@@ -45,24 +46,60 @@ for name in nameslist:
         ResSearch = str(re.search(imageName, textForFile))
         #'match=' is contained in the string when a search result is found, otherwise it says None
         if 'match=' in ResSearch:
-            textForFile = doc[i].getText()
-            file.write(textForFile)
+            rangeStart = 0
+            rangeEnd = 101
+            #print(ResSearch)
+            spanList = str(re.findall('\d+', ResSearch))
+            spanList = re.sub(r"'", '', spanList)     
+            spanList = spanList.replace('[','(').replace(']',')')
+            # while rangeStart < 100:
+            #     rangeStart +=1
+            #     if str(0<= rangeStart >=100) in spanList:
+            #         print('yes')
             #for every line on this page, check if the current name is on a line on its own
             for line in doc[i].getText().splitlines():
                 if(imageName == line):
-                    print(line)
-                    #save image on this line
-                    for img in doc.getPageImageList(i): 
-                        xref = img[0]
-                        pix = fitz.Pixmap(doc, xref)
-                        if picFound <1: 
-                            if pix.n - pix.alpha < 4:     
-                                pix.writePNG("textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
-                                picFound = 1
-                            else:
-                                pix1 = fitz.Pixmap(fitz.csRGB, pix)
-                                pix1.writePNG("textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
-                                pix1 = None
-                                picFound = 1
-                            pix = None
+                    print(line) 
+                    print(ResSearch)
+                    print(spanList)
+                    if spanList in range(0, 100):
+                        print(spanList)
+            #if 'span='+spanList in ResSearch:
+            #     for img in doc.getPageImageList(i): 
+            #         xref = img[0]
+            #         pix = fitz.Pixmap(doc, xref)
+            #         if picFound <1: 
+            #             if pix.n - pix.alpha < 4:     
+            #                 pix.writePNG("C:/Users/Sean/Desktop/projects/textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
+            #                 picFound = 1
+            #             else:
+            #                 pix1 = fitz.Pixmap(fitz.csRGB, pix)
+            #                 pix1.writePNG("C:/Users/Sean/Desktop/projects/textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
+            #                 pix1 = None
+            #                 picFound = 1
+            #             pix = None
+            #        #search for text patterns
+                        
+            #textForFile = doc[i].getText()
+            #file.write(textForFile)
+            #for every line on this page, check if the current name is on a line on its own
+            # for line in doc[i].getText().splitlines():
+            #     print(ResSearch)
+            #     if(imageName == line):
+            #         print(line)
+            #         #save image on this page
+            #         for img in doc.getPageImageList(i): 
+            #             xref = img[0]
+            #             pix = fitz.Pixmap(doc, xref)
+            #             if picFound <1: 
+            #                 if pix.n - pix.alpha < 4:     
+            #                     pix.writePNG("C:/Users/Sean/Desktop/projects/textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
+            #                     picFound = 1
+            #                 else:
+            #                     pix1 = fitz.Pixmap(fitz.csRGB, pix)
+            #                     pix1.writePNG("C:/Users/Sean/Desktop/projects/textfiles_uncleaned/testimagesfolder/{0}.png".format(imageName))
+            #                     pix1 = None
+            #                     picFound = 1
+            #                 pix = None
         i=i+1
+file.close()        

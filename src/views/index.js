@@ -440,9 +440,10 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
                         +' on i.BoxerID = s.BoxerStatsID'
                         +' on s.BoxerStatsID = r.BoxerRecordID'
                         +' on r.BoxerRecordID = b.BoxerId'   
-                         +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
-                         +' order by newid()', function(err, recordset){
-                             ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
+                        +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
+                        +' group by b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference'
+                        +' order by newid()', function(err, recordset){
+                            ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){
                                     if(err)
                                     {
@@ -491,9 +492,10 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
                         +' on i.BoxerID = s.BoxerStatsID'
                         +' on s.BoxerStatsID = r.BoxerRecordID'
                         +' on r.BoxerRecordID = b.BoxerId'   
-                         +' where s.Gender = @primaryGender'
-                         +' order by newid()', function(err, recordset){
-                             ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
+                        +' where s.Gender = @primaryGender'
+                        +' group by b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference'
+                        +' order by newid()', function(err, recordset){
+                            ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){
                                     if(err)
                                     {
