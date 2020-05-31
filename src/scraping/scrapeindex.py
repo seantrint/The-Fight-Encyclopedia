@@ -16,6 +16,17 @@ import fitz
 import subprocess
 import pyodbc 
 
+def swapPositions(list, pos1, pos2): 
+      
+    # popping both the elements from list 
+    first_ele = list.pop(pos1)    
+    second_ele = list.pop(pos2-1) 
+     
+    # inserting in each others positions 
+    list.insert(pos1, second_ele)   
+    list.insert(pos2, first_ele)   
+      
+    return list
 #search the pdf for every name from the db    
 pathAndFileName = 'C:/Users/Sean/Desktop/projects/textfiles_uncleaned/entirepdf.txt'    
 file = open(pathAndFileName,'w+', encoding = "utf-8")
@@ -52,14 +63,25 @@ newfile = open(pathAndFileName, 'r+', encoding = "utf-8")
 reversedOutput = open('C:/Users/Sean/Desktop/projects/textfiles_uncleaned/reversedOutput.txt','w+', encoding = "utf-8")
 for line in newfile:
     line = line.replace(line," ".join(reversed(line.split())))
-    reversedOutput.write(line+'\n')
+    if line:
+        if len(line.split()) == 3:
+            shuffleWords = line.split()
+            newlist = []
+            for val in shuffleWords:
+                newlist.append(val)
+            if newlist[0] == 'Jr':
+                newlist[0] ='Jr.'
+                newlist.sort(key = newlist[0].__eq__)
+            else:    
+                pos1 = 2
+                pos2 = 1
+                swapPositions(newlist, pos1-1, pos2-1)
+            print(newlist) 
+            line = str(newlist)
+            line = line.replace("'",'').replace(',','').replace('[','').replace(']','')
+        reversedOutput.write(line+'\n')
 newfile.close()
 reversedOutput.close()    
-# for line in data:
-#     line = line.split()
-#     data_2.append(" ".join(reversed(line)))   
-#     data_2.append('\n')
 
-#f2.writelines(data_2) 
   
  

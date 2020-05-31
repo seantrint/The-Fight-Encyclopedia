@@ -1,7 +1,7 @@
 var upcomingFightCount = 0;
 var isGrid = true;
 var isList = false;
-var countriesArray = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","UK","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe", "USA"];
+var countriesArray = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","UK","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe", "USA","United Kingdom","United States"];
 var winsArray = ["Win (UD)", "Win (KO)", "Win (SD)", "Win (MD)", "Win (TKO)", "Win (DQ)", "Win (PTS)"];
 var lossArray = ["Loss (UD)", "Loss (KO)", "Loss (SD)", "Loss (MD)", "Loss (TKO)", "Loss (DQ)", "Loss (PTS)"];
 var drawArray = ["Draw (MD)", "Draw (SD)", "Draw (PTS)", "Draw (UD)", "Draw"];
@@ -384,6 +384,7 @@ async function loadFighterCard(){
                     var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagfightercard');
                     testDiv.appendChild(countryFlagImg);
                 }
+                
                 testDiv.style.gridRow = i+1;
                 i++;
                 document.getElementById('fighterInfoStatsSpace').appendChild(testDiv);
@@ -1425,8 +1426,14 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[0];
     document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[1];
     //images
-    document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
-    document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+    try{
+        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
+        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+    }
+    catch(exception){
+        document.getElementById('fighterAImage').src = '/img/logo.png';
+        document.getElementById('fighterBImage').src = '/img/logo.png';
+    }
     //links
     document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[0];
     document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[0].BoxerName[1];
@@ -1629,8 +1636,14 @@ async function nextFight(){
         var fighterAName = document.getElementById('fighterAName').textContent;
         var fighterBName = document.getElementById('fighterBName').textContent;
         //images
-        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        try{
+            document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
+            document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        }
+        catch(exception){
+            document.getElementById('fighterAImage').src = '/img/logo.png';
+            document.getElementById('fighterBImage').src = '/img/logo.png';
+        }
         //links
         document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
@@ -1830,8 +1843,14 @@ async function previousFight(){
         var fighterAName = document.getElementById('fighterAName').textContent;
         var fighterBName = document.getElementById('fighterBName').textContent;
         //images
-        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        try{
+            document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
+            document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+        }
+        catch(exception){
+            document.getElementById('fighterAImage').src = '/img/logo.png';
+            document.getElementById('fighterBImage').src = '/img/logo.png';
+        }
         //links
         document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
         document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];

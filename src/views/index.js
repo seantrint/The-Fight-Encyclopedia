@@ -255,7 +255,7 @@ app.get('/getBoxerStats/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select s.Alias, s.Nationality, s.Height, s.Reach, s.Division, s.Stance from BoxerStats s'
+    ps.prepare('select s.Alias, s.Nationality, s.Height, s.Reach, s.Division, s.Stance, s.dob, s.careerweight from BoxerStats s'
                 +' inner join Boxer b'
                 +' on b.BoxerId = s.BoxerID'
                 +' where b.BoxerName = @boxerName', async function(err){
