@@ -13,31 +13,24 @@ conn = pyodbc.connect('Driver={SQL Server};'
 
 cursor = conn.cursor()
 #select every name from db
-cursor.execute(str('with cte as '
-+'(select b.BoxerId, b.BoxerName, s.BoxerID as statsboxerid, r.BoxerID as reccie, i.BoxerID as imagie, ROW_NUMBER()'
-+' OVER(PARTITION BY b.BoxerName ORDER BY b.BoxerName) row_num'
-+' from Boxer b' 
-+' inner join BoxerStats s' 
-+' inner join BoxerRecord r'
-+' inner join BoxerImage i'
-+' on i.BoxerID = r.BoxerID'
-+' on r.BoxerID = s.BoxerID'
-+' on s.BoxerID = b.BoxerId)'
-+' select BoxerId from cte'
-+' where row_num > 1;'))
+cursor.execute(str('select * from reversedOutput'))
+singleQuote = "'"
 duplicateidslist =[]
 for row in cursor:
-    duplicateidslist.append(row[0])
+    duplicateidslist.append(row)
 for duplicateid in duplicateidslist:
-    removeFromBoxerQuery = 'delete from Boxer where BoxerId = {0}'.format(duplicateid)
-    removeFromBoxerStatsQuery = 'delete from BoxerStats where BoxerID = {0}'.format(duplicateid)
-    removeFromBoxerRecordQuery = 'delete from BoxerRecord where BoxerId = {0}'.format(duplicateid)
-    removeFromBoxerImageQuery = 'delete from BoxerImage where BoxerId = {0}'.format(duplicateid)
+    boxerName = duplicateid[0]
+    boxerId = duplicateid[1]
+    newconn = pyodbc.connect('Driver={SQL Server};'
+                          'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
+                          'Database=autoboxing;'
+                          'Trusted_Connection=yes;')
     
-    cursor.execute(removeFromBoxerQuery)
-    cursor.execute(removeFromBoxerStatsQuery)
-    cursor.execute(removeFromBoxerRecordQuery)
-    cursor.execute(removeFromBoxerImageQuery)
-cursor.commit()  
+    newcursor = newconn.cursor()    
+    addBoxerQuery = 'insert into BoxerData values ({1}, {2}{0}{2}, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)'.format(boxerName,boxerId,singleQuote)
+    newcursor.execute(addBoxerQuery)
+    newcursor.commit()  
+    newcursor.close()
+    newconn.close()  
 cursor.close()
-conn.close()  
+conn.close()    

@@ -147,6 +147,27 @@ async function expandUpcomingFights(id){
     }
 
 }
+async function createRemoveSpinner(create = true, rmv = false){
+    if(create){
+        var z = document.getElementsByClassName('loadingScrollSpinner');
+        var spinner = document.createElement('img')
+        spinner.src = '/img/loading.gif'
+        spinner.className = 'loadingScrollSpinner'
+        spinner.id = 'id'+Math.random(10000)
+        document.getElementById('CatalogueGrid').appendChild(spinner)
+    }
+    else if(rmv){
+        var z = document.getElementsByClassName('loadingScrollSpinner');
+        var elemId='';
+    
+        if(typeof z != undefined){
+            for (var j =0; j < z.length; j+1){
+                elemId = document.getElementById(z[j].id);
+                elemId.remove();
+            }
+        }
+    }
+}
 async function addCatalogueScrollListener(){
     var currentSortingFilter = document.getElementById("currentFilter").textContent; 
     var currentWeightFilter = document.getElementById("currentWeightFilter").textContent;
@@ -158,8 +179,10 @@ async function addCatalogueScrollListener(){
             ticking = false;
             if(!endOfSearchData){
                 if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+                    await createRemoveSpinner(true)
                     //await TriggerJumpToTopButton();
                     await loadFighterCatalogue();
+                    await createRemoveSpinner(false, true)
                 }
             }
             });
@@ -236,8 +259,8 @@ async function loadSearch(searchResultsData){
         var searchResultLink = document.createElement('a');
         var fighterImage = document.createElement('img');
         var nameParagraph = document.createElement('p');
-            if(firstSearchArraySlice[key].BoxerImageReference != null){
-                fighterImage.src = '/'+firstSearchArraySlice[key].BoxerImageReference;
+            if(firstSearchArraySlice[key].ImageReference != null){
+                fighterImage.src = '/'+firstSearchArraySlice[key].ImageReference;
             }
             else{
                 fighterImage.src = '/img/logo.png'
@@ -269,7 +292,7 @@ async function loadSearch(searchResultsData){
         nameParagraph3.id = 'recordid'+i;
         var wins = document.createElement('span');
         if(firstSearchArraySlice[key].TotalWins != null){
-            wins.textContent = firstSearchArraySlice[key].TotalWins;
+            wins.textContent = firstSearchArraySlice[key].Wins;
         }
         wins.className='totalwins';
 
@@ -281,13 +304,13 @@ async function loadSearch(searchResultsData){
 
         var losses = document.createElement('span');
         if(firstSearchArraySlice[key].TotalLosses != null){
-            losses.textContent = firstSearchArraySlice[key].TotalLosses;
+            losses.textContent = firstSearchArraySlice[key].Losses;
         }
         losses.className='totallosses';
 
         var draws = document.createElement('span');
         if(firstSearchArraySlice[key].TotalDraws != null){
-            draws.textContent = firstSearchArraySlice[key].TotalDraws;
+            draws.textContent = firstSearchArraySlice[key].Draws;
         }
         draws.className='totaldraws';        
         nameParagraph3.appendChild(wins);
@@ -368,11 +391,12 @@ async function loadFighterCard(){
     var cardGrid = document.getElementById('FighterInfoGrid');
     document.getElementById('fighterInfoImage').src = "/img/loading.gif";
     try{
-        var imagepath = '/'+boxerImageData.recordset[0].BoxerImageReference;
+        var imagepath = '/'+boxerImageData.recordset[0].ImageReference;
         document.getElementById('fighterInfoImage').src = imagepath;
         var i = 0;
         var j = 0;
-        console.log(boxerStatsData)
+
+        //boxerStatsData.recordset[0].dob = boxerStatsData.recordset[0].dob.toISOString().split('T')[0];
         //stats
         for (var key in boxerStatsData.recordset) {
             for (var key1 in boxerStatsData.recordset[key]) {
@@ -384,7 +408,7 @@ async function loadFighterCard(){
                     var countryFlagImg = await getFlag(boxerStatsData.recordset[0].Nationality, 'countryflagfightercard');
                     testDiv.appendChild(countryFlagImg);
                 }
-                
+
                 testDiv.style.gridRow = i+1;
                 i++;
                 document.getElementById('fighterInfoStatsSpace').appendChild(testDiv);
@@ -392,9 +416,9 @@ async function loadFighterCard(){
         }
 
         //overall record
-        document.getElementById('fighterInfoWins').textContent = boxerRecordData.recordset[0].TotalWins+' ('+boxerRecordData.recordset[0].TotalWinsKO+' KOs)';
-        document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].TotalLosses;
-        document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].TotalDraws;
+        document.getElementById('fighterInfoWins').textContent = boxerRecordData.recordset[0].Wins+' ('+boxerRecordData.recordset[0].WinsKo+' KOs)';
+        document.getElementById('fighterInfoLosses').textContent = boxerRecordData.recordset[0].Losses;
+        document.getElementById('fighterInfoDraws').textContent = boxerRecordData.recordset[0].Draws;
 
         var fhcount = 1;
         var opponentName = '';
@@ -458,7 +482,7 @@ async function loadFighterCard(){
                     //get boxer record based on opponents name
                     //repeat code from colouring records elsewhere
                     var wins = document.createElement('span');
-                    wins.textContent=opponentRecordData.recordset[0].TotalWins;
+                    wins.textContent=opponentRecordData.recordset[0].Wins;
                     wins.className='totalwins';
         
                     var slash1 =document.createElement('span');
@@ -468,11 +492,11 @@ async function loadFighterCard(){
                     slash2.textContent = '/';
         
                     var losses = document.createElement('span');
-                    losses.textContent = opponentRecordData.recordset[0].TotalLosses;
+                    losses.textContent = opponentRecordData.recordset[0].Losses;
                     losses.className='totallosses';
         
                     var draws = document.createElement('span');
-                    draws.textContent=opponentRecordData.recordset[0].TotalDraws;
+                    draws.textContent=opponentRecordData.recordset[0].Draws;
                     draws.className='totaldraws';
                     testData.appendChild(wins);
                     testData.appendChild(slash1);
@@ -620,8 +644,8 @@ async function addImagesToFighterPreviewBox(){
         //elements seem to start filling from center and work their way left
         //also need anchor tag here?
         var testImage = document.createElement('img');
-        if(randomFighterImagesData.recordset[i].BoxerImageReference != null){
-            testImage.src = randomFighterImagesData.recordset[i].BoxerImageReference;
+        if(randomFighterImagesData.recordset[i].ImageReference != null){
+            testImage.src = randomFighterImagesData.recordset[i].ImageReference;
         }
         else{
             testImage.src = 'img/logo.png';
@@ -670,8 +694,8 @@ async function loadFighterCatalogueAsGrid(fighterCatalogueData){
         nameParagraph.textContent = arraySlice[key].BoxerName; 
         nameParagraph.id = 'fighternameid'+i;
         fighterImage.className = 'catalogueimage';
-        if(arraySlice[key].BoxerImageReference != null){
-            fighterImage.src = '/'+arraySlice[key].BoxerImageReference;
+        if(arraySlice[key].ImageReference != null){
+            fighterImage.src = '/'+arraySlice[key].ImageReference;
         }
         else{
             fighterImage.src = '/img/logo.png'
@@ -732,246 +756,246 @@ var currentPage = 1;
 var numPages = 0;
 var pageLinksArray = [];
 
-async function displayPageLinks(){
-    var nextPageLimit;
-    var previousPageLimit;
-    var endLimit = pageLinksArray.length-1;
-    var nextPagesToHideArray = [];
-    var prevPagesToHideArray = [];
+// async function displayPageLinks(){
+//     var nextPageLimit;
+//     var previousPageLimit;
+//     var endLimit = pageLinksArray.length-1;
+//     var nextPagesToHideArray = [];
+//     var prevPagesToHideArray = [];
 
-    var stylecurrentpage = currentPage-1;
-    if(pageLinksArray.length != 0){
-        document.getElementById('pagelink'+stylecurrentpage).style.textDecoration = 'none';
-        document.getElementById('pagelink'+stylecurrentpage).style.color = '#2b7a8a';
-    }
+//     var stylecurrentpage = currentPage-1;
+//     if(pageLinksArray.length != 0){
+//         document.getElementById('pagelink'+stylecurrentpage).style.textDecoration = 'none';
+//         document.getElementById('pagelink'+stylecurrentpage).style.color = '#2b7a8a';
+//     }
 
-    if(currentPage == 1 && pageLinksArray.length > 1){
-        nextPageLimit = currentPage+3;
-        var dots = document.createElement('a');
-        dots.textContent = '...';
-        dots.className = 'spacebetweenpages';
-        dots.id = 'dotsahead';
-        document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
+//     if(currentPage == 1 && pageLinksArray.length > 1){
+//         nextPageLimit = currentPage+3;
+//         var dots = document.createElement('a');
+//         dots.textContent = '...';
+//         dots.className = 'spacebetweenpages';
+//         dots.id = 'dotsahead';
+//         document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
  
-    }
-    else if(currentPage == 2){
-        nextPageLimit = currentPage+2;
-        var dots = document.createElement('a');
-        dots.textContent = '...';
-        dots.className = 'spacebetweenpages';
-        dots.id = 'dotsahead';
-        document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
-    }
-    else{
-        nextPageLimit = currentPage+1;
-        var dots = document.createElement('a');
-        dots.textContent = '...';
-        dots.className = 'spacebetweenpages';
-        dots.id = 'dotsbehind';
-        var dots2 = document.createElement('a');
-        dots2.textContent = '...';
-        dots2.className = 'spacebetweenpages';
-        dots2.id = 'dotsahead';
-        var spacefordotsbehind = currentPage-2;
-        var spacefordotsahead = currentPage+2;
-        if(spacefordotsbehind >= 2){
-            document.getElementById('pagelink'+spacefordotsbehind).parentNode.insertBefore(dots, document.getElementById('pagelink'+spacefordotsbehind));
-        }
-        if(spacefordotsahead < pageLinksArray.length){
-            document.getElementById('pagelink'+spacefordotsahead).parentNode.insertBefore(dots2, document.getElementById('pagelink'+spacefordotsahead));
-        }
-    }
-    if(currentPage >1){
-        previousPageLimit = currentPage-2;
-        for(var i = previousPageLimit; i>0;i--){
-            prevPagesToHideArray.push(pageLinksArray[i]);
-        }
-        for(var i = prevPagesToHideArray.length-1; i>0;i--){
-            document.getElementById(prevPagesToHideArray[i].id).style.display = 'none';
-        }
-    }
+//     }
+//     else if(currentPage == 2){
+//         nextPageLimit = currentPage+2;
+//         var dots = document.createElement('a');
+//         dots.textContent = '...';
+//         dots.className = 'spacebetweenpages';
+//         dots.id = 'dotsahead';
+//         document.getElementById('pagelink'+nextPageLimit).parentNode.insertBefore(dots, document.getElementById('pagelink'+nextPageLimit));
+//     }
+//     else{
+//         nextPageLimit = currentPage+1;
+//         var dots = document.createElement('a');
+//         dots.textContent = '...';
+//         dots.className = 'spacebetweenpages';
+//         dots.id = 'dotsbehind';
+//         var dots2 = document.createElement('a');
+//         dots2.textContent = '...';
+//         dots2.className = 'spacebetweenpages';
+//         dots2.id = 'dotsahead';
+//         var spacefordotsbehind = currentPage-2;
+//         var spacefordotsahead = currentPage+2;
+//         if(spacefordotsbehind >= 2){
+//             document.getElementById('pagelink'+spacefordotsbehind).parentNode.insertBefore(dots, document.getElementById('pagelink'+spacefordotsbehind));
+//         }
+//         if(spacefordotsahead < pageLinksArray.length){
+//             document.getElementById('pagelink'+spacefordotsahead).parentNode.insertBefore(dots2, document.getElementById('pagelink'+spacefordotsahead));
+//         }
+//     }
+//     if(currentPage >1){
+//         previousPageLimit = currentPage-2;
+//         for(var i = previousPageLimit; i>0;i--){
+//             prevPagesToHideArray.push(pageLinksArray[i]);
+//         }
+//         for(var i = prevPagesToHideArray.length-1; i>0;i--){
+//             document.getElementById(prevPagesToHideArray[i].id).style.display = 'none';
+//         }
+//     }
 
-    nextPagesToHideArray = pageLinksArray.slice(nextPageLimit, endLimit);
+//     nextPagesToHideArray = pageLinksArray.slice(nextPageLimit, endLimit);
     
-    for(var data in nextPagesToHideArray){
-        document.getElementById(nextPagesToHideArray[data].id).style.display = 'none';
-    }
-}
-async function createPageLinks(length){ 
-    pageLinksArray=[];
-    var previousButton = document.createElement('a');
-    previousButton.textContent = '«';
-    previousButton.id = 'cataloguePrevious';
-    previousButton.className = 'cataloguepagelink';
-    previousButton.onclick = async function(divId){
-        divId = this.id;
-        await loadGridData(divId);
-    }    
-    document.getElementById('catalogueButtonsLink').appendChild(previousButton);
+//     for(var data in nextPagesToHideArray){
+//         document.getElementById(nextPagesToHideArray[data].id).style.display = 'none';
+//     }
+// }
+// async function createPageLinks(length){ 
+//     pageLinksArray=[];
+//     var previousButton = document.createElement('a');
+//     previousButton.textContent = '«';
+//     previousButton.id = 'cataloguePrevious';
+//     previousButton.className = 'cataloguepagelink';
+//     previousButton.onclick = async function(divId){
+//         divId = this.id;
+//         await loadGridData(divId);
+//     }    
+//     document.getElementById('catalogueButtonsLink').appendChild(previousButton);
 
-    numPages = Math.ceil(length/itemsPerCatalogue);
-    for(var i =0;i<numPages;i++){
-        var pageLink = document.createElement('a');
-        var pagenum=i+1;
-        pageLink.textContent = pagenum;
-        pageLink.id = 'pagelink'+i;
-        pageLink.className = 'cataloguepagelink';
-        document.getElementById('catalogueButtonsLink').appendChild(pageLink); 
-        pageLink.onclick = async function(divId){
-                        divId = this.id;
-                        await goToPage(divId);
-                    }
-        pageLinksArray.push(pageLink);
-    }
-    await displayPageLinks();
-    var nextButton = document.createElement('a');
-    nextButton.textContent = '»';
-    nextButton.id = 'catalogueNext';
-    nextButton.className = 'cataloguepagelink';
-    nextButton.onclick = async function(divId){
-        divId = this.id;
-        await loadGridData(divId);
-    }    
-    document.getElementById('catalogueButtonsLink').appendChild(nextButton);
-}
-async function goToPage(page){ 
-    var pagetext;
-    var pageint;
-if(Number.isInteger(page)){
-    pageint = page;
-}
-else{
-    pagetext = document.getElementById(page);
-    pageint = parseInt(pagetext.textContent);
-}
-currentPage = pageint;
-var newArray = [];
-    if(pageint == 1){
-        begin = 0;
-        end = itemsPerCatalogue;
-        newArray.push(dataArray.slice(begin,end));
-        await clearCatalogue();
-        if((document.getElementById('CatalogueTable') == undefined) && table){
-            await createCatalogueTable();
-        }
-        for(var data in newArray[0]){
-            if(grid){
-                document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
-            }
-            else if (table){
+//     numPages = Math.ceil(length/itemsPerCatalogue);
+//     for(var i =0;i<numPages;i++){
+//         var pageLink = document.createElement('a');
+//         var pagenum=i+1;
+//         pageLink.textContent = pagenum;
+//         pageLink.id = 'pagelink'+i;
+//         pageLink.className = 'cataloguepagelink';
+//         document.getElementById('catalogueButtonsLink').appendChild(pageLink); 
+//         pageLink.onclick = async function(divId){
+//                         divId = this.id;
+//                         await goToPage(divId);
+//                     }
+//         pageLinksArray.push(pageLink);
+//     }
+//     await displayPageLinks();
+//     var nextButton = document.createElement('a');
+//     nextButton.textContent = '»';
+//     nextButton.id = 'catalogueNext';
+//     nextButton.className = 'cataloguepagelink';
+//     nextButton.onclick = async function(divId){
+//         divId = this.id;
+//         await loadGridData(divId);
+//     }    
+//     document.getElementById('catalogueButtonsLink').appendChild(nextButton);
+// }
+// async function goToPage(page){ 
+//     var pagetext;
+//     var pageint;
+// if(Number.isInteger(page)){
+//     pageint = page;
+// }
+// else{
+//     pagetext = document.getElementById(page);
+//     pageint = parseInt(pagetext.textContent);
+// }
+// currentPage = pageint;
+// var newArray = [];
+//     if(pageint == 1){
+//         begin = 0;
+//         end = itemsPerCatalogue;
+//         newArray.push(dataArray.slice(begin,end));
+//         await clearCatalogue();
+//         if((document.getElementById('CatalogueTable') == undefined) && table){
+//             await createCatalogueTable();
+//         }
+//         for(var data in newArray[0]){
+//             if(grid){
+//                 document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+//             }
+//             else if (table){
                 
-                document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
-            }
-        } 
-        await createPageLinks(dataArray.length);
-    }
-    else{
-        end = (pageint*itemsPerCatalogue);
-        begin = end-itemsPerCatalogue;
-        newArray.push(dataArray.slice(begin,end));
-        await clearCatalogue();
-        if((document.getElementById('CatalogueTable') == undefined) && table){
-            await createCatalogueTable();
-        }
-        for(var data in newArray[0]){
-            if(grid){
-                document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
-            }
-            else if (table){
-                document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
-            }
-        } 
-        await createPageLinks(dataArray.length);
-    }
-}
+//                 document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
+//             }
+//         } 
+//         await createPageLinks(dataArray.length);
+//     }
+//     else{
+//         end = (pageint*itemsPerCatalogue);
+//         begin = end-itemsPerCatalogue;
+//         newArray.push(dataArray.slice(begin,end));
+//         await clearCatalogue();
+//         if((document.getElementById('CatalogueTable') == undefined) && table){
+//             await createCatalogueTable();
+//         }
+//         for(var data in newArray[0]){
+//             if(grid){
+//                 document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+//             }
+//             else if (table){
+//                 document.getElementById('CatalogueTable').appendChild(newArray[0][data]);
+//             }
+//         } 
+//         await createPageLinks(dataArray.length);
+//     }
+// }
 
 
-async function loadGridData(page){
-    var newArray = [];
-    if(page === undefined){
-        await createPageLinks(dataArray.length);
-        for(var data in dataArray.slice(0,itemsPerCatalogue)){
-            if(grid){
-                document.getElementById('CatalogueGrid').appendChild(dataArray[data]);
-            }
-            else if(table){
-                document.getElementById('CatalogueTable').appendChild(dataArray[data]);                
-            }
-        }
-    }
-    else if(Number.isInteger(page)){
-        await goToPage(page);
-    }
-    else{
-        var pageNumber = document.getElementById(page);
-        if(pageNumber.id==='catalogueNext'){
-            end=end+itemsPerCatalogue;
-            begin=end-itemsPerCatalogue;
-            newArray.push(dataArray.slice(begin,end));
-            if(newArray[0].length > 0){
-                await clearCatalogue();
-                if((document.getElementById('CatalogueTable') == undefined) && table){
-                    await createCatalogueTable();
-                }
-                for(var data in newArray[0]){
-                    if(grid){
-                        document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
-                    }
-                    else if(table){
-                        document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
-                    }                    
-                } 
-                currentPage++;
-                await createPageLinks(dataArray.length);
-            }
-            else{
-                begin=begin-itemsPerCatalogue;
-                end=end-itemsPerCatalogue;
-            }
-        }
-        if(pageNumber.id==='cataloguePrevious'){
-            if(begin>0){
-                await clearCatalogue();
-                end=end-itemsPerCatalogue;
-                begin=end-itemsPerCatalogue;
-                if(begin<1 && end<itemsPerCatalogue){
-                    begin=0;
-                    end=itemsPerCatalogue;
-                    newArray.push(dataArray.slice(begin,end));
-                    if((document.getElementById('CatalogueTable') == undefined) && table){
-                        await createCatalogueTable();
-                    }
-                    for(var data in newArray[0]){
-                        if(grid){
-                            document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
-                        }
-                        else if(table){
-                            document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
-                        }  
-                    } 
-                    currentPage--;
-                    await createPageLinks(dataArray.length);
-                }
-                else{
-                    newArray.push(dataArray.slice(begin,end));
-                    if((document.getElementById('CatalogueTable') == undefined) && table){
-                        await createCatalogueTable();
-                    }
-                    for(var data in newArray[0]){
-                        if(grid){
-                            document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
-                        }
-                        else if(table){
-                            document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
-                        }  
-                    } 
-                    currentPage--;
-                    await createPageLinks(dataArray.length);
-                }
-            }
-        }              
-    }
-}
+// async function loadGridData(page){
+//     var newArray = [];
+//     if(page === undefined){
+//         await createPageLinks(dataArray.length);
+//         for(var data in dataArray.slice(0,itemsPerCatalogue)){
+//             if(grid){
+//                 document.getElementById('CatalogueGrid').appendChild(dataArray[data]);
+//             }
+//             else if(table){
+//                 document.getElementById('CatalogueTable').appendChild(dataArray[data]);                
+//             }
+//         }
+//     }
+//     else if(Number.isInteger(page)){
+//         await goToPage(page);
+//     }
+//     else{
+//         var pageNumber = document.getElementById(page);
+//         if(pageNumber.id==='catalogueNext'){
+//             end=end+itemsPerCatalogue;
+//             begin=end-itemsPerCatalogue;
+//             newArray.push(dataArray.slice(begin,end));
+//             if(newArray[0].length > 0){
+//                 await clearCatalogue();
+//                 if((document.getElementById('CatalogueTable') == undefined) && table){
+//                     await createCatalogueTable();
+//                 }
+//                 for(var data in newArray[0]){
+//                     if(grid){
+//                         document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+//                     }
+//                     else if(table){
+//                         document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+//                     }                    
+//                 } 
+//                 currentPage++;
+//                 await createPageLinks(dataArray.length);
+//             }
+//             else{
+//                 begin=begin-itemsPerCatalogue;
+//                 end=end-itemsPerCatalogue;
+//             }
+//         }
+//         if(pageNumber.id==='cataloguePrevious'){
+//             if(begin>0){
+//                 await clearCatalogue();
+//                 end=end-itemsPerCatalogue;
+//                 begin=end-itemsPerCatalogue;
+//                 if(begin<1 && end<itemsPerCatalogue){
+//                     begin=0;
+//                     end=itemsPerCatalogue;
+//                     newArray.push(dataArray.slice(begin,end));
+//                     if((document.getElementById('CatalogueTable') == undefined) && table){
+//                         await createCatalogueTable();
+//                     }
+//                     for(var data in newArray[0]){
+//                         if(grid){
+//                             document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+//                         }
+//                         else if(table){
+//                             document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+//                         }  
+//                     } 
+//                     currentPage--;
+//                     await createPageLinks(dataArray.length);
+//                 }
+//                 else{
+//                     newArray.push(dataArray.slice(begin,end));
+//                     if((document.getElementById('CatalogueTable') == undefined) && table){
+//                         await createCatalogueTable();
+//                     }
+//                     for(var data in newArray[0]){
+//                         if(grid){
+//                             document.getElementById('CatalogueGrid').appendChild(newArray[0][data]);
+//                         }
+//                         else if(table){
+//                             document.getElementById('CatalogueTable').appendChild(newArray[0][data]);                
+//                         }  
+//                     } 
+//                     currentPage--;
+//                     await createPageLinks(dataArray.length);
+//                 }
+//             }
+//         }              
+//     }
+// }
 async function createCatalogueTable(){
     var catalogueTable = document.createElement('table');
     catalogueTable.id = 'CatalogueTable';
@@ -1014,7 +1038,6 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         await createCatalogueTable();
     }
     first = false;
-    console.log(fighterCatalogueData);
     dataArray.push(fighterCatalogueData.recordset); 
     var arraySlice = dataArray[0].slice(begin,end);
     var i =0;
@@ -1043,7 +1066,7 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
                 nameParagraph.appendChild(countryFlagImg);
             }
         var wins = document.createElement('span');
-        wins.textContent= arraySlice[key].TotalWins;
+        wins.textContent= arraySlice[key].Wins;
         wins.className='totalwins';
 
         var slash1 =document.createElement('span');
@@ -1053,10 +1076,10 @@ async function loadFighterCatalogueAsList(fighterCatalogueData){
         slash2.textContent = '/';
 
         var losses = document.createElement('span');
-        losses.textContent = arraySlice[key].TotalLosses;
+        losses.textContent = arraySlice[key].Losses;
         losses.className='totallosses';
         var draws = document.createElement('span');
-        draws.textContent= arraySlice[key].TotalDraws;
+        draws.textContent= arraySlice[key].Draws;
         draws.className='totaldraws';        
         tableData2.appendChild(wins);
         tableData2.appendChild(slash1);                
@@ -1412,10 +1435,7 @@ async function loadUpcomingFightsData(){
     var upcomingFightsRecordsData = await fetchData('/getUpcomingFighterRecords');
     var upcomingFightsStatsData = await fetchData('/getUpcomingFighterStats');
     var upcomingFightsImagesData = await fetchData('/getUpcomingFighterImages');   
-
-    //must be a way to make this .textcontent code more efficient, i.e. some kind of loop to go through all fields with 
-    //the same class name and append the right recordset to each?
-
+    try{
     //heading
     document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[0].FightDivision;
     document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[0].FightLocation;
@@ -1427,8 +1447,8 @@ async function loadUpcomingFightsData(){
     document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[0].BoxerName[1];
     //images
     try{
-        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[0];
-        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].BoxerImageReference[1];
+        document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[0].ImageReference[0];
+        document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[0].ImageReference[1];
     }
     catch(exception){
         document.getElementById('fighterAImage').src = '/img/logo.png';
@@ -1446,12 +1466,12 @@ async function loadUpcomingFightsData(){
 
 
     //overall records
-    document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[0].TotalWins[0];
-    document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].TotalLosses[0];
-    document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].TotalDraws[0];
-    document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[0].TotalWins[1];
-    document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].TotalLosses[1];
-    document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].TotalDraws[1];
+    document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[0].Wins[0];
+    document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].Losses[0];
+    document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].Draws[0];
+    document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[0].Wins[1];
+    document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[0].Losses[1];
+    document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[0].Draws[1];
     
     //stats - replace with loop
     document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[0].Height[0];
@@ -1612,419 +1632,433 @@ async function loadUpcomingFightsData(){
         }
         j++;
     }
+    }
+    catch(exception){
+        console.log(exception)
+    }
 }
 async function nextFight(){
     if(upcomingFightCount !=2){
-        var upcomingFightsData = await fetchData('/getUpcomingFights');
-        var upcomingFightsNamesData = await fetchData('/getUpcomingFighterNames');
-        var upcomingFightsRecordsData = await fetchData('/getUpcomingFighterRecords');
-        var upcomingFightsStatsData = await fetchData('/getUpcomingFighterStats');
-        var upcomingFightsImagesData = await fetchData('/getUpcomingFighterImages');   
-    
-        upcomingFightCount++;
-    
-        //heading
-        document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[upcomingFightCount].FightLocation;
-        document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDivision;
-        document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDate;
-        document.getElementById('upComingFightName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0] + ' vs ' +upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-    
-
-        //names
-        document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-        var fighterAName = document.getElementById('fighterAName').textContent;
-        var fighterBName = document.getElementById('fighterBName').textContent;
-        //images
         try{
-            document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-            document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+            var upcomingFightsData = await fetchData('/getUpcomingFights');
+            var upcomingFightsNamesData = await fetchData('/getUpcomingFighterNames');
+            var upcomingFightsRecordsData = await fetchData('/getUpcomingFighterRecords');
+            var upcomingFightsStatsData = await fetchData('/getUpcomingFighterStats');
+            var upcomingFightsImagesData = await fetchData('/getUpcomingFighterImages');   
+        
+            upcomingFightCount++;
+        
+            //heading
+            document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[upcomingFightCount].FightLocation;
+            document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDivision;
+            document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDate;
+            document.getElementById('upComingFightName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0] + ' vs ' +upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+        
+    
+            //names
+            document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+            var fighterAName = document.getElementById('fighterAName').textContent;
+            var fighterBName = document.getElementById('fighterBName').textContent;
+            //images
+            try{
+                document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].ImageReference[0];
+                document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].ImageReference[1];
+            }
+            catch(exception){
+                document.getElementById('fighterAImage').src = '/img/logo.png';
+                document.getElementById('fighterBImage').src = '/img/logo.png';
+            }
+            //links
+            document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+            document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
+            document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
+    
+            //overall records
+            document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Wins[0];
+            document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Losses[0];
+            document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Draws[0];
+            document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Wins[1];
+            document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Losses[1];
+            document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Draws[1];   
+        
+            //stats
+            document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
+            document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
+            document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
+            document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
+            document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
+            document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
+            if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
+                var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
+                document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
+                document.getElementById('fighterANationality').appendChild(countryFlagImg);
+            }
+            if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
+                var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
+                document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+                document.getElementById('fighterBNationality').appendChild(countryFlagImg);
+            }
+        
+            //last 5 fights
+            var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
+            var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
+    
+            var i = 0;
+            var j = 0;
+            var fhcountA = 1;
+            var fhcountB = 1;
+    
+            await clearlast5();
+            if(screen.width <= 420){
+                document.getElementById("last5DateColumnA").style.display = 'none';
+                document.getElementById("last5DateColumnB").style.display = 'none';
+            }
+            for (var key in upcomingFightsLastFiveDataA.recordset) {
+                var testRow = document.createElement('tr');
+                testRow.className = 'last5contentrow';
+                testRow.id ='last5contentrow'+i;
+                for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
+                    var testData = document.createElement('td');
+                    testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                    testData.className = 'last5contentcell';
+                    //make generic
+                    if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var winDiv = document.createElement('div');
+                        winDiv.className = 'fightercardresultbox'
+                        winDiv.style.backgroundColor = 'green';
+                        winDiv.textContent = 'W';
+                        
+                        testData.appendChild(winDiv);
+                    }
+                    else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var lossDiv = document.createElement('div');
+                        lossDiv.className = 'fightercardresultbox'
+                        lossDiv.style.backgroundColor = '#CE2029';
+                        lossDiv.textContent = 'L';
+        
+                        testData.appendChild(lossDiv);
+                    }       
+                    else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var drawDiv = document.createElement('div');
+                        drawDiv.className = 'fightercardresultbox'
+                        drawDiv.style.backgroundColor = '#2d545e';
+                        drawDiv.textContent = 'D';
+        
+                        testData.appendChild(drawDiv);
+                    } 
+                    if ( fhcountA && (fhcountA % 3 === 2)) {
+                        testData.textContent = '';
+                        var fighterLink = document.createElement('a');
+                        fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                        fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                        fighterLink.className = 'fighthistorytablecelllink'
+                        testData.appendChild(fighterLink);
+                    } 
+                    if ( fhcountA && (fhcountA % 3 === 1)) { 
+                        if(screen.width<=420){
+                            testData.textContent ='';
+                        }
+                        else{
+                            testRow.appendChild(testData);
+                        }
+                    } 
+                    else{
+                        testRow.appendChild(testData);
+                    }  
+                    document.getElementById('Last5TableA').appendChild(testRow);
+                    fhcountA++;
+                }
+                i++;
+            }
+    
+            for (var key in upcomingFightsLastFiveDataB.recordset) {
+                var testRow = document.createElement('tr');
+                testRow.className = 'last5contentrow';
+                testRow.id ='last5contentrow'+j;
+                for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
+                    var testData = document.createElement('td');
+                    testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                    testData.className = 'last5contentcell';
+                    //make generic
+                    if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var winDiv = document.createElement('div');
+                        winDiv.className = 'fightercardresultbox'
+                        winDiv.style.backgroundColor = 'green';
+                        winDiv.textContent = 'W';
+                        
+                        testData.appendChild(winDiv);
+                    }
+                    else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var lossDiv = document.createElement('div');
+                        lossDiv.className = 'fightercardresultbox'
+                        lossDiv.style.backgroundColor = '#CE2029';
+                        lossDiv.textContent = 'L';
+        
+                        testData.appendChild(lossDiv);
+                    }       
+                    else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var drawDiv = document.createElement('div');
+                        drawDiv.className = 'fightercardresultbox'
+                        drawDiv.style.backgroundColor = '#2d545e';
+                        drawDiv.textContent = 'D';
+        
+                        testData.appendChild(drawDiv);
+                    } 
+                    if ( fhcountB && (fhcountB % 3 === 2)) {
+                        testData.textContent = '';
+                        var fighterLink = document.createElement('a');
+                        fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                        fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                        fighterLink.className = 'fighthistorytablecelllink'
+                        testData.appendChild(fighterLink);
+                    } 
+                    if ( fhcountB && (fhcountB % 3 === 1)) { 
+                        if(screen.width<=420){
+                            testData.textContent ='';
+                        }
+                        else{
+                            testRow.appendChild(testData);
+                        }
+                    } 
+                    else{
+                        testRow.appendChild(testData);
+                    }  
+                    document.getElementById('Last5TableB').appendChild(testRow);
+                    fhcountB++;
+                }
+                j++;
+            }
         }
         catch(exception){
-            document.getElementById('fighterAImage').src = '/img/logo.png';
-            document.getElementById('fighterBImage').src = '/img/logo.png';
+            console.log(exception)
         }
-        //links
-        document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-        document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
-        document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
-
-        //overall records
-        document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
-        document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[0];
-        document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[0];
-        document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[1];
-        document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[1];
-        document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[1];   
-    
-        //stats
-        document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
-        document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
-        document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
-        document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
-        document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
-        document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
-        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
-            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
-            document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
-            document.getElementById('fighterANationality').appendChild(countryFlagImg);
         }
-        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
-            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
-            document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
-            document.getElementById('fighterBNationality').appendChild(countryFlagImg);
-        }
-    
-        //last 5 fights
-        var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
-        var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
-
-        var i = 0;
-        var j = 0;
-        var fhcountA = 1;
-        var fhcountB = 1;
-
-        await clearlast5();
-        if(screen.width <= 420){
-            document.getElementById("last5DateColumnA").style.display = 'none';
-            document.getElementById("last5DateColumnB").style.display = 'none';
-        }
-        for (var key in upcomingFightsLastFiveDataA.recordset) {
-            var testRow = document.createElement('tr');
-            testRow.className = 'last5contentrow';
-            testRow.id ='last5contentrow'+i;
-            for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
-                var testData = document.createElement('td');
-                testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                testData.className = 'last5contentcell';
-                //make generic
-                if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var winDiv = document.createElement('div');
-                    winDiv.className = 'fightercardresultbox'
-                    winDiv.style.backgroundColor = 'green';
-                    winDiv.textContent = 'W';
-                    
-                    testData.appendChild(winDiv);
-                }
-                else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var lossDiv = document.createElement('div');
-                    lossDiv.className = 'fightercardresultbox'
-                    lossDiv.style.backgroundColor = '#CE2029';
-                    lossDiv.textContent = 'L';
-    
-                    testData.appendChild(lossDiv);
-                }       
-                else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var drawDiv = document.createElement('div');
-                    drawDiv.className = 'fightercardresultbox'
-                    drawDiv.style.backgroundColor = '#2d545e';
-                    drawDiv.textContent = 'D';
-    
-                    testData.appendChild(drawDiv);
-                } 
-                if ( fhcountA && (fhcountA % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                } 
-                if ( fhcountA && (fhcountA % 3 === 1)) { 
-                    if(screen.width<=420){
-                        testData.textContent ='';
-                    }
-                    else{
-                        testRow.appendChild(testData);
-                    }
-                } 
-                else{
-                    testRow.appendChild(testData);
-                }  
-                document.getElementById('Last5TableA').appendChild(testRow);
-                fhcountA++;
-            }
-            i++;
-        }
-
-        for (var key in upcomingFightsLastFiveDataB.recordset) {
-            var testRow = document.createElement('tr');
-            testRow.className = 'last5contentrow';
-            testRow.id ='last5contentrow'+j;
-            for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
-                var testData = document.createElement('td');
-                testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                testData.className = 'last5contentcell';
-                //make generic
-                if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var winDiv = document.createElement('div');
-                    winDiv.className = 'fightercardresultbox'
-                    winDiv.style.backgroundColor = 'green';
-                    winDiv.textContent = 'W';
-                    
-                    testData.appendChild(winDiv);
-                }
-                else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var lossDiv = document.createElement('div');
-                    lossDiv.className = 'fightercardresultbox'
-                    lossDiv.style.backgroundColor = '#CE2029';
-                    lossDiv.textContent = 'L';
-    
-                    testData.appendChild(lossDiv);
-                }       
-                else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var drawDiv = document.createElement('div');
-                    drawDiv.className = 'fightercardresultbox'
-                    drawDiv.style.backgroundColor = '#2d545e';
-                    drawDiv.textContent = 'D';
-    
-                    testData.appendChild(drawDiv);
-                } 
-                if ( fhcountB && (fhcountB % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                } 
-                if ( fhcountB && (fhcountB % 3 === 1)) { 
-                    if(screen.width<=420){
-                        testData.textContent ='';
-                    }
-                    else{
-                        testRow.appendChild(testData);
-                    }
-                } 
-                else{
-                    testRow.appendChild(testData);
-                }  
-                document.getElementById('Last5TableB').appendChild(testRow);
-                fhcountB++;
-            }
-            j++;
-        }
-    }
 }
 async function previousFight(){
     if(upcomingFightCount != 0){
-        var upcomingFightsData = await fetchData('/getUpcomingFights');
-        var upcomingFightsNamesData = await fetchData('/getUpcomingFighterNames');
-        var upcomingFightsRecordsData = await fetchData('/getUpcomingFighterRecords');
-        var upcomingFightsStatsData = await fetchData('/getUpcomingFighterStats');
-        var upcomingFightsImagesData = await fetchData('/getUpcomingFighterImages');   
-
-        upcomingFightCount--;
-    
-        //heading
-        document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[upcomingFightCount].FightLocation;
-        document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDivision;
-        document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDate;
-        document.getElementById('upComingFightName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0] + ' vs ' +upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-
-        //names
-        document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];    
-        var fighterAName = document.getElementById('fighterAName').textContent;
-        var fighterBName = document.getElementById('fighterBName').textContent;
-        //images
         try{
-            document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[0];
-            document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BoxerImageReference[1];
+            var upcomingFightsData = await fetchData('/getUpcomingFights');
+            var upcomingFightsNamesData = await fetchData('/getUpcomingFighterNames');
+            var upcomingFightsRecordsData = await fetchData('/getUpcomingFighterRecords');
+            var upcomingFightsStatsData = await fetchData('/getUpcomingFighterStats');
+            var upcomingFightsImagesData = await fetchData('/getUpcomingFighterImages');   
+    
+            upcomingFightCount--;
+        
+            //heading
+            document.getElementById('upComingFightLocation').textContent = upcomingFightsData.recordset[upcomingFightCount].FightLocation;
+            document.getElementById('upComingFightDivision').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDivision;
+            document.getElementById('upComingFightDate').textContent = upcomingFightsData.recordset[upcomingFightCount].FightDate;
+            document.getElementById('upComingFightName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0] + ' vs ' +upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+    
+            //names
+            document.getElementById('fighterAName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterBName').textContent = upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];    
+            var fighterAName = document.getElementById('fighterAName').textContent;
+            var fighterBName = document.getElementById('fighterBName').textContent;
+            //images
+            try{
+                document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].ImageReference[0];
+                document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BImageReference[1];
+            }
+            catch(exception){
+                document.getElementById('fighterAImage').src = '/img/logo.png';
+                document.getElementById('fighterBImage').src = '/img/logo.png';
+            }
+            //links
+            document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
+            document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
+            document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
+            document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
+    
+            //overall records
+            document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Wins[0];
+            document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Losses[0];
+            document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Draws[0];
+            document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Wins[1];
+            document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Losses[1];
+            document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].Draws[1];   
+            
+            //stats
+            document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
+            document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
+            document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
+            document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
+            document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
+            document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
+            if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
+                var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
+                document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
+                document.getElementById('fighterANationality').appendChild(countryFlagImg);
+            }
+            if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
+                var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
+                document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
+                document.getElementById('fighterBNationality').appendChild(countryFlagImg);
+            }
+            
+            //last 5 fights
+            var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
+            var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
+    
+            var i = 0;
+            var j = 0;
+            var fhcountA = 1;
+            var fhcountB = 1;
+    
+            await clearlast5();
+            if(screen.width <= 420){
+                document.getElementById("last5DateColumnA").style.display = 'none';
+                document.getElementById("last5DateColumnB").style.display = 'none';
+            }
+            for (var key in upcomingFightsLastFiveDataA.recordset) {
+                var testRow = document.createElement('tr');
+                testRow.className = 'last5contentrow';
+                testRow.id ='last5contentrow'+i;
+                for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
+                    var testData = document.createElement('td');
+                    testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                    testData.className = 'last5contentcell';
+                    //make generic
+                    if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var winDiv = document.createElement('div');
+                        winDiv.className = 'fightercardresultbox'
+                        winDiv.style.backgroundColor = 'green';
+                        winDiv.textContent = 'W';
+                        
+                        testData.appendChild(winDiv);
+                    }
+                    else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var lossDiv = document.createElement('div');
+                        lossDiv.className = 'fightercardresultbox'
+                        lossDiv.style.backgroundColor = '#CE2029';
+                        lossDiv.textContent = 'L';
+        
+                        testData.appendChild(lossDiv);
+                    }       
+                    else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var drawDiv = document.createElement('div');
+                        drawDiv.className = 'fightercardresultbox'
+                        drawDiv.style.backgroundColor = '#2d545e';
+                        drawDiv.textContent = 'D';
+        
+                        testData.appendChild(drawDiv);
+                    } 
+                    if ( fhcountA && (fhcountA % 3 === 2)) {
+                        testData.textContent = '';
+                        var fighterLink = document.createElement('a');
+                        fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
+                        fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
+                        fighterLink.className = 'fighthistorytablecelllink'
+                        testData.appendChild(fighterLink);
+                    } 
+                    if ( fhcountA && (fhcountA % 3 === 1)) { 
+                        if(screen.width<=420){
+                            testData.textContent ='';
+                        }
+                        else{
+                            testRow.appendChild(testData);
+                        }
+                    } 
+                    else{
+                        testRow.appendChild(testData);
+                    }   
+                    document.getElementById('Last5TableA').appendChild(testRow);
+                    fhcountA++;
+                }
+                i++;
+            }
+    
+            for (var key in upcomingFightsLastFiveDataB.recordset) {
+                var testRow = document.createElement('tr');
+                testRow.className = 'last5contentrow';
+                testRow.id ='last5contentrow'+j;
+                for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
+                    var testData = document.createElement('td');
+                    testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                    testData.className = 'last5contentcell';
+                    //make generic
+                    if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var winDiv = document.createElement('div');
+                        winDiv.className = 'fightercardresultbox'
+                        winDiv.style.backgroundColor = 'green';
+                        winDiv.textContent = 'W';
+                        
+                        testData.appendChild(winDiv);
+                    }
+                    else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var lossDiv = document.createElement('div');
+                        lossDiv.className = 'fightercardresultbox'
+                        lossDiv.style.backgroundColor = '#CE2029';
+                        lossDiv.textContent = 'L';
+        
+                        testData.appendChild(lossDiv);
+                    }       
+                    else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
+                        //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
+                        testData.textContent = '';
+                        var drawDiv = document.createElement('div');
+                        drawDiv.className = 'fightercardresultbox'
+                        drawDiv.style.backgroundColor = '#2d545e';
+                        drawDiv.textContent = 'D';
+        
+                        testData.appendChild(drawDiv);
+                    } 
+                    if ( fhcountB && (fhcountB % 3 === 2)) {
+                        testData.textContent = '';
+                        var fighterLink = document.createElement('a');
+                        fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
+                        fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
+                        fighterLink.className = 'fighthistorytablecelllink'
+                        testData.appendChild(fighterLink);
+                    } 
+                    if ( fhcountB && (fhcountB % 3 === 1)) { 
+                        if(screen.width<=420){
+                            testData.textContent ='';
+                        }
+                        else{
+                            testRow.appendChild(testData);
+                        }
+                    } 
+                    else{
+                        testRow.appendChild(testData);
+                    }               
+                    document.getElementById('Last5TableB').appendChild(testRow);
+                    fhcountB++;
+                }
+                j++;
+            }        
         }
         catch(exception){
-            document.getElementById('fighterAImage').src = '/img/logo.png';
-            document.getElementById('fighterBImage').src = '/img/logo.png';
+            console.log(exception)
         }
-        //links
-        document.getElementById('fighterbuttonAFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterbuttonBFull').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];
-        document.getElementById('fighterALink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('fighterBLink').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1];   
-        document.getElementById('toFighterLinkA').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[0];
-        document.getElementById('toFighterLinkB').href = 'fighterCard/'+upcomingFightsNamesData.recordset[upcomingFightCount].BoxerName[1]; 
-
-        //overall records
-        document.getElementById('fighterAInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[0];
-        document.getElementById('fighterAInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[0];
-        document.getElementById('fighterAInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[0];
-        document.getElementById('fighterBInfoWins').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalWins[1];
-        document.getElementById('fighterBInfoLosses').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalLosses[1];
-        document.getElementById('fighterBInfoDraws').textContent = upcomingFightsRecordsData.recordset[upcomingFightCount].TotalDraws[1];   
-        
-        //stats
-        document.getElementById('fighterAHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[0];
-        document.getElementById('fighterBHeight').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Height[1];
-        document.getElementById('fighterAReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[0];
-        document.getElementById('fighterBReach').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Reach[1];
-        document.getElementById('fighterAStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[0];
-        document.getElementById('fighterBStance').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Stance[1];   
-        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0])){
-            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0], 'countryflagfightercard');
-            document.getElementById('fighterANationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[0];
-            document.getElementById('fighterANationality').appendChild(countryFlagImg);
         }
-        if(countriesArray.includes(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1])){
-            var countryFlagImg = await getFlag(upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1], 'countryflagfightercard');
-            document.getElementById('fighterBNationality').textContent = upcomingFightsStatsData.recordset[upcomingFightCount].Nationality[1];
-            document.getElementById('fighterBNationality').appendChild(countryFlagImg);
-        }
-        
-        //last 5 fights
-        var upcomingFightsLastFiveDataA = await fetchData('/getUpcomingFighterLastFiveFightsA/',fighterAName);
-        var upcomingFightsLastFiveDataB = await fetchData('/getUpcomingFighterLastFiveFightsB/',fighterBName);
-
-        var i = 0;
-        var j = 0;
-        var fhcountA = 1;
-        var fhcountB = 1;
-
-        await clearlast5();
-        if(screen.width <= 420){
-            document.getElementById("last5DateColumnA").style.display = 'none';
-            document.getElementById("last5DateColumnB").style.display = 'none';
-        }
-        for (var key in upcomingFightsLastFiveDataA.recordset) {
-            var testRow = document.createElement('tr');
-            testRow.className = 'last5contentrow';
-            testRow.id ='last5contentrow'+i;
-            for (var key1 in upcomingFightsLastFiveDataA.recordset[key]) {
-                var testData = document.createElement('td');
-                testData.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                testData.className = 'last5contentcell';
-                //make generic
-                if(winsArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var winDiv = document.createElement('div');
-                    winDiv.className = 'fightercardresultbox'
-                    winDiv.style.backgroundColor = 'green';
-                    winDiv.textContent = 'W';
-                    
-                    testData.appendChild(winDiv);
-                }
-                else if(lossArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var lossDiv = document.createElement('div');
-                    lossDiv.className = 'fightercardresultbox'
-                    lossDiv.style.backgroundColor = '#CE2029';
-                    lossDiv.textContent = 'L';
-    
-                    testData.appendChild(lossDiv);
-                }       
-                else if(drawArray.includes(upcomingFightsLastFiveDataA.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var drawDiv = document.createElement('div');
-                    drawDiv.className = 'fightercardresultbox'
-                    drawDiv.style.backgroundColor = '#2d545e';
-                    drawDiv.textContent = 'D';
-    
-                    testData.appendChild(drawDiv);
-                } 
-                if ( fhcountA && (fhcountA % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataA.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                } 
-                if ( fhcountA && (fhcountA % 3 === 1)) { 
-                    if(screen.width<=420){
-                        testData.textContent ='';
-                    }
-                    else{
-                        testRow.appendChild(testData);
-                    }
-                } 
-                else{
-                    testRow.appendChild(testData);
-                }   
-                document.getElementById('Last5TableA').appendChild(testRow);
-                fhcountA++;
-            }
-            i++;
-        }
-
-        for (var key in upcomingFightsLastFiveDataB.recordset) {
-            var testRow = document.createElement('tr');
-            testRow.className = 'last5contentrow';
-            testRow.id ='last5contentrow'+j;
-            for (var key1 in upcomingFightsLastFiveDataB.recordset[key]) {
-                var testData = document.createElement('td');
-                testData.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                testData.className = 'last5contentcell';
-                //make generic
-                if(winsArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Win','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var winDiv = document.createElement('div');
-                    winDiv.className = 'fightercardresultbox'
-                    winDiv.style.backgroundColor = 'green';
-                    winDiv.textContent = 'W';
-                    
-                    testData.appendChild(winDiv);
-                }
-                else if(lossArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Loss','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var lossDiv = document.createElement('div');
-                    lossDiv.className = 'fightercardresultbox'
-                    lossDiv.style.backgroundColor = '#CE2029';
-                    lossDiv.textContent = 'L';
-    
-                    testData.appendChild(lossDiv);
-                }       
-                else if(drawArray.includes(upcomingFightsLastFiveDataB.recordset[key][key1])){
-                    //var newtext = testData.textContent.replace('Draw','').replace('(','').replace(')','');
-                    testData.textContent = '';
-                    var drawDiv = document.createElement('div');
-                    drawDiv.className = 'fightercardresultbox'
-                    drawDiv.style.backgroundColor = '#2d545e';
-                    drawDiv.textContent = 'D';
-    
-                    testData.appendChild(drawDiv);
-                } 
-                if ( fhcountB && (fhcountB % 3 === 2)) {
-                    testData.textContent = '';
-                    var fighterLink = document.createElement('a');
-                    fighterLink.href = 'fighterCard/'+upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.textContent = upcomingFightsLastFiveDataB.recordset[key][key1];
-                    fighterLink.className = 'fighthistorytablecelllink'
-                    testData.appendChild(fighterLink);
-                } 
-                if ( fhcountB && (fhcountB % 3 === 1)) { 
-                    if(screen.width<=420){
-                        testData.textContent ='';
-                    }
-                    else{
-                        testRow.appendChild(testData);
-                    }
-                } 
-                else{
-                    testRow.appendChild(testData);
-                }               
-                document.getElementById('Last5TableB').appendChild(testRow);
-                fhcountB++;
-            }
-            j++;
-        }        
-    }
 }

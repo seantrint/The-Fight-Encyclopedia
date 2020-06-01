@@ -15,7 +15,8 @@ import fileinput
 import fitz
 import subprocess
 import pyodbc 
-
+#CHANGE THIS TO WRITE DIRECTLY TO DB
+#USE MAX ID AND INCREMENT BY 1
 def swapPositions(list, pos1, pos2): 
       
     # popping both the elements from list 

@@ -52,15 +52,9 @@ app.get('/getSearchResults/:searchTerm', async function(request,response){
     var illegalValue = await checkForIllegals(searchTerm);
     illegalValue = '%'+illegalValue+'%';
     ps.input('searchTerm', sql.VarChar);
-    ps.prepare('select b.BoxerId, b.BoxerName, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
-                +' from Boxer b'
-                +' inner join BoxerRecord r'
-                +' inner join BoxerStats s' 
-                +' inner join BoxerImage i'
-                +' on i.BoxerID = s.BoxerStatsID'
-                +' on s.BoxerStatsID = r.BoxerRecordID'
-                +' on r.BoxerRecordID = b.BoxerId'
-                +' where b.BoxerName like @searchTerm',async function(err){
+    ps.prepare('select BoxerId, BoxerName, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+                +' from BoxerData b'
+                +' where BoxerName like @searchTerm',async function(err){
                     if(err)
                     {
                         response.send(await loadDbDownPage());
@@ -99,11 +93,11 @@ app.get('/getUpcomingFighterNames', async function(request,response){
     request = new sql.Request();
     request.query('select s1.BoxerName, s2.BoxerName from' 
         +'( select b.BoxerName, u.UpcomingFightID'
-        +' from Boxer b'
+        +' from BoxerData b'
         +' inner join UpcomingFights u on u.BoxerAID = b.BoxerId) s1'
         +' inner join'
         +'(  select b.BoxerName, u.UpcomingFightID'
-        +' from Boxer b'
+        +' from BoxerData b'
         +' inner join UpcomingFights u on u.BoxerBID = b.BoxerId) s2'
         +' on s1.UpcomingFightID = s2.UpcomingFightID', async function (err, recordset){
             if(err)
@@ -116,13 +110,13 @@ app.get('/getUpcomingFighterNames', async function(request,response){
 
 app.get('/getUpcomingFighterRecords',async function(request,response){
     request = new sql.Request();
-    request.query('select s1.TotalWins, s1.TotalWinsKO, s1.TotalLosses, s1.TotalDraws, s2.TotalWins, s2.TotalWinsKO, s2.TotalLosses, s2.TotalDraws from'
-        +'( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
-        +' from BoxerRecord b'
+    request.query('select s1.Wins, s1.WinsKo, s1.Losses, s1.Draws, s2.Wins, s2.WinsKo, s2.Losses, s2.Draws from'
+        +'( select b.Wins, b.WinsKo, b.Losses, b.Draws, u.UpcomingFightID'
+        +' from BoxerData b'
         +' inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
         +' inner join'
-        +' ( select b.TotalWins, b.TotalWinsKO, b.TotalLosses, b.TotalDraws, u.UpcomingFightID'
-        +' from BoxerRecord b'
+        +' ( select b.Wins, b.WinsKo, b.Losses, b.Draws, u.UpcomingFightID'
+        +' from BoxerData b'
         +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
         +' on s1.UpcomingFightID = s2.UpComingFightID', async function (err, recordset){
             if(err)
@@ -137,11 +131,11 @@ app.get('/getUpcomingFighterStats',async function(request,response){
     request = new sql.Request();
     request.query('select s1.Height, s1.Reach, s1.Stance, s1.Nationality, s2.Height, s2.Reach, s2.Stance, s2.Nationality from'
         +'( select b.Height, b.Reach, b.Stance, b.Nationality, u.UpcomingFightID'
-        +'  from BoxerStats b'
+        +'  from BoxerData b'
         +'  inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
         +'  inner join'
         +'( select b.Height, b.Reach, b.Stance, b.Nationality, u.UpcomingFightID'
-        +'  from BoxerStats b'
+        +'  from BoxerData b'
         +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
         +'  on s1.UpcomingFightID = s2.UpComingFightID', async function(err,recordset){
             if(err)
@@ -154,13 +148,13 @@ app.get('/getUpcomingFighterStats',async function(request,response){
 
 app.get('/getUpcomingFighterImages',async function(request,response){
     request = new sql.Request();
-    request.query('select s1.BoxerImageReference, s2.BoxerImageReference from'
-        +'( select b.BoxerImageReference, u.UpcomingFightID'
-        +'  from BoxerImage b' 
+    request.query('select s1.ImageReference, s2.ImageReference from'
+        +'( select b.ImageReference, u.UpcomingFightID'
+        +'  from BoxerData b' 
         +'  inner join UpcomingFights u on u.BoxerAID = b.BoxerID) s1'
         +'  inner join' 
-        +'( select b.BoxerImageReference, u.UpcomingFightID'
-        +'  from BoxerImage b' 
+        +'( select b.ImageReference, u.UpcomingFightID'
+        +'  from BoxerData b' 
         +'  inner join UpcomingFights u on u.BoxerBID = b.BoxerID) s2'
         +'  on s1.UpcomingFightID = s2.UpComingFightID', async function(err,recordset){
             if(err)
@@ -178,9 +172,9 @@ app.get('/getUpcomingFighterLastFiveFightsA/:boxerName',async function(request,r
 
     ps.input('boxerName', sql.VarChar);
     ps.prepare(' select top (5) b.FightDate, b.OpponentName, b.FightResult'
-                +' from BoxerFightHistory b'
+                +' from FightHistoryData b'
                 +' inner join UpcomingFights u on u.BoxerAID = b.BoxerID'
-                +' inner join Boxer c on c.BoxerId = u.BoxerAID where c.BoxerName = @boxerName'
+                +' inner join BoxerData c on c.BoxerId = u.BoxerAID where c.BoxerName = @boxerName'
                 +' order by FightDate desc',async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
                         ps.unprepare(async function(err){
@@ -200,9 +194,9 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',async function(request,r
 
     ps.input('boxerName', sql.VarChar);
     ps.prepare(' select top (5) b.FightDate, b.OpponentName, b.FightResult'
-                +' from BoxerFightHistory b'
+                +' from FightHistoryData b'
                 +' inner join UpcomingFights u on u.BoxerBID = b.BoxerID'
-                +' inner join Boxer c on c.BoxerId = u.BoxerBID where c.BoxerName = @boxerName'
+                +' inner join BoxerData c on c.BoxerId = u.BoxerBID where c.BoxerName = @boxerName'
                 +' order by FightDate desc',async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
                         ps.unprepare(async function(err){
@@ -217,7 +211,7 @@ app.get('/getUpcomingFighterLastFiveFightsB/:boxerName',async function(request,r
 })
 app.get('/getRandomFighterImages',async function(request,response){
     request = new sql.Request();
-    request.query('SELECT top(8) * FROM BoxerImage' 
+    request.query('SELECT top(8) * FROM BoxerData' 
     +' order by newid()'
         ,async function(err,recordset){
             if(err)
@@ -229,7 +223,7 @@ app.get('/getRandomFighterImages',async function(request,response){
 })
 app.get('/getBoxersCount',async function(request,response){
     request = new sql.Request();
-    request.query('select COUNT(BoxerName) as boxerCount from Boxer'
+    request.query('select COUNT(BoxerName) as boxerCount from BoxerData'
         ,async function(err,recordset){
             if(err)
             {
@@ -241,7 +235,7 @@ app.get('/getBoxersCount',async function(request,response){
 app.get('/getAllBoxers',function(request,response){
 
     request = new sql.Request();
-    request.query('select b.BoxerName from Boxer b order by BoxerName asc', function(err, recordset){
+    request.query('select b.BoxerName from BoxerData b order by BoxerName asc', function(err, recordset){
         if(err)
         {
             console.log(err);
@@ -255,10 +249,8 @@ app.get('/getBoxerStats/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select s.Alias, s.Nationality, s.Height, s.Reach, s.Division, s.Stance, s.dob, s.careerweight from BoxerStats s'
-                +' inner join Boxer b'
-                +' on b.BoxerId = s.BoxerID'
-                +' where b.BoxerName = @boxerName', async function(err){
+    ps.prepare('select s.Alias, s.Nationality, s.Height, s.Reach, s.Division, s.Stance, s.dob, s.careerweight from BoxerData s'
+                +' where s.BoxerName = @boxerName', async function(err){
                     if(err){
                         console.log(err);
                     }
@@ -285,7 +277,7 @@ app.get('/getBoxerCountryFlag/:boxerNationality', async function(request,respons
     ps.input('boxerNationality', sql.VarChar);
     ps.prepare('select c.CountryFlagRef'
                 +' from CountryFlags c'
-                +' inner join BoxerStats s'
+                +' inner join BoxerData s'
                 +' on c.CountryId = s.CountryFlagId'
                 +' where Nationality = @boxerNationality', async function(err){
                     if(err){
@@ -312,10 +304,8 @@ app.get('/getBoxerImage/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select i.BoxerImageReference from BoxerImage i'
-                  +' inner join Boxer b'
-                  +' on b.BoxerId = i.BoxerID'
-                  +' where b.BoxerName = @boxerName', async function(err){
+    ps.prepare('select i.ImageReference from BoxerData i'
+                  +' where i.BoxerName = @boxerName', async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
                         ps.unprepare(async function(err){
                             if(err)
@@ -333,10 +323,8 @@ app.get('/getBoxerRecord/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select s.TotalWins, s.TotalWinsKO, s.TotalLosses, s.TotalDraws from BoxerRecord s'
-                +' inner join Boxer b'
-                +' on b.BoxerId = s.BoxerID'
-                +' where b.BoxerName = @boxerName', async function(err){
+    ps.prepare('select s.Wins, s.WinsKo, s.Losses, s.Draws from BoxerData s'
+                +' where s.BoxerName = @boxerName', async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
                         ps.unprepare(async function(err){
                             if(err)
@@ -354,8 +342,8 @@ app.get('/getBoxerFightHistory/:boxerName', async function(request,response){
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select f.FightDate, f.FightWeight, f.OpponentName, f.OpponentRecord, f.FightLocation, f.FightResult from BoxerFightHistory f'
-                +' inner join Boxer b'
+    ps.prepare('select f.FightDate, f.FightWeight, f.OpponentName, f.OpponentRecord, f.FightLocation, f.FightResult from FightHistoryData f'
+                +' inner join BoxerData b'
                 +' on b.BoxerId = f.BoxerID'
                 +' where b.BoxerName = @boxerName', async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
@@ -375,8 +363,8 @@ app.get('/getBoxerFightHistoryLast5/:boxerName', async function(request,response
     var illegalValue = await checkForIllegals(boxerName);
 
     ps.input('boxerName', sql.VarChar);
-    ps.prepare('select top (5) f.FightDate, f.FightWeight, f.OpponentName, f.OpponentRecord, f.FightLocation, f.FightResult from BoxerFightHistory f'
-                +' inner join Boxer b'
+    ps.prepare('select top (5) f.FightDate, f.FightWeight, f.OpponentName, f.OpponentRecord, f.FightLocation, f.FightResult from FightHistoryData f'
+                +' inner join BoxerData b'
                 +' on b.BoxerId = f.BoxerID'
                 +' where b.BoxerName = @boxerName', async function(err){
                     ps.execute({boxerName: illegalValue}, async function(err, recordset){
@@ -405,16 +393,10 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
-                        +' from Boxer b'
-                        +' inner join BoxerRecord r'
-                        +' inner join BoxerStats s' 
-                        +' inner join BoxerImage i'
-                        +' on i.BoxerID = s.BoxerStatsID'
-                        +' on s.BoxerStatsID = r.BoxerRecordID'
-                        +' on r.BoxerRecordID = b.BoxerId'   
-                         +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
-                         +' order by b.BoxerName asc', function(err, recordset){
+            ps.prepare('select BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+                        +' from BoxerData'
+                         +' where Division = @primaryWeight and Gender = @primaryGender'
+                         +' order by BoxerName asc', function(err, recordset){
                              ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){
                                     if(err)
@@ -432,16 +414,10 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryWeight', sql.VarChar);
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
-                        +' from Boxer b'
-                        +' inner join BoxerRecord r'
-                        +' inner join BoxerStats s' 
-                        +' inner join BoxerImage i'
-                        +' on i.BoxerID = s.BoxerStatsID'
-                        +' on s.BoxerStatsID = r.BoxerRecordID'
-                        +' on r.BoxerRecordID = b.BoxerId'   
-                        +' where s.Division = @primaryWeight and s.Gender = @primaryGender'
-                        +' group by b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference'
+            ps.prepare('select BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+                        +' from BoxerData'
+                        +' where Division = @primaryWeight and Gender = @primaryGender'
+                        +' group by BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference'
                         +' order by newid()', function(err, recordset){
                             ps.execute({primaryWeight: illegalValueprimaryWeight, primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){
@@ -458,16 +434,10 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
     else{
         if(illegalValuesortCriteria === 'Alphabetical'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
-                         +' from Boxer b'
-                         +' inner join BoxerRecord r'
-                         +' inner join BoxerStats s' 
-                         +' inner join BoxerImage i'
-                         +' on i.BoxerID = s.BoxerStatsID'
-                         +' on s.BoxerStatsID = r.BoxerRecordID'
-                         +' on r.BoxerRecordID = b.BoxerId'   
-                         +' where s.Gender = @primaryGender'
-                         +' order by b.BoxerName asc', function(err, recordset){
+            ps.prepare('select BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+                         +' from BoxerData'
+                         +' where Gender = @primaryGender'
+                         +' order by BoxerName asc', function(err, recordset){
                              ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){
                                     if(err)
@@ -484,16 +454,9 @@ app.get('/sortBoxerCatalogue/:sortCriteria/:primaryWeight/:primaryGender',async 
         }    
         if(illegalValuesortCriteria === 'Random'){
             ps.input('primaryGender', sql.VarChar);
-            ps.prepare('select b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference' 
-                        +' from Boxer b'
-                        +' inner join BoxerRecord r'
-                        +' inner join BoxerStats s' 
-                        +' inner join BoxerImage i'
-                        +' on i.BoxerID = s.BoxerStatsID'
-                        +' on s.BoxerStatsID = r.BoxerRecordID'
-                        +' on r.BoxerRecordID = b.BoxerId'   
-                        +' where s.Gender = @primaryGender'
-                        +' group by b.BoxerId, b.BoxerName, b.last5, r.TotalWins, r.TotalWinsKO, r.TotalLosses, r.TotalDraws, s.Division, s.Nationality, i.BoxerImageReference'
+            ps.prepare('select BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+                        +' from BoxerData'
+                        +' group by BoxerId, BoxerName, last5, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference'
                         +' order by newid()', function(err, recordset){
                             ps.execute({primaryGender: illegalValueprimaryGender}, async function(err, recordset){
                                 ps.unprepare(async function(err){

@@ -17,12 +17,12 @@ def writeImagePathToDb(boxerName,boxerId):
     singleQuote = "'"
     updateConn = pyodbc.connect('Driver={SQL Server};'
                       'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
-                      'Database=testdata;'
+                      'Database=autoboxing;'
                       'Trusted_Connection=yes;')     
     try:           
         updateCursor = updateConn.cursor()    
         
-        updateQuery = 'Update BoxerImage set BoxerImageReference = {2}img/{0}.png{2} where BoxerID = {1}'.format(boxerName,boxerId,singleQuote)
+        updateQuery = 'Update BoxerData set ImageReference = {2}img/{0}.png{2} where BoxerId = {1}'.format(boxerName,boxerId,singleQuote)
         
         updateCursor.execute(updateQuery)
         
@@ -42,7 +42,7 @@ def saveWldRecord(page,boxerId):
             
         updateConn = pyodbc.connect('Driver={SQL Server};'
                           'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
-                          'Database=testdata;'
+                          'Database=autoboxing;'
                           'Trusted_Connection=yes;')                
         updateCursor = updateConn.cursor()    
         
@@ -54,16 +54,16 @@ def saveWldRecord(page,boxerId):
             loss = linelist[recordIndex[0]+4]
             draws = linelist[recordIndex[0]+5]
             
-            updateWinsQuery = 'Update BoxerRecord set TotalWins = {0} where BoxerID = {1}'.format(wins, boxerId)   
-            updateLossQuery = 'Update BoxerRecord set TotalLosses = {0} where BoxerID = {1}'.format(loss, boxerId)
-            updateDrawsQuery = 'Update BoxerRecord set TotalDraws = {0} where BoxerID = {1}'.format(draws, boxerId)
+            updateWinsQuery = 'Update BoxerData set TotalWins = {0} where BoxerId = {1}'.format(wins, boxerId)   
+            updateLossQuery = 'Update BoxerData set TotalLosses = {0} where BoxerId = {1}'.format(loss, boxerId)
+            updateDrawsQuery = 'Update BoxerData set TotalDraws = {0} where BoxerId = {1}'.format(draws, boxerId)
             
             overallRecord = str(wins+'/'+loss+'/'+draws)
-            overallRecordQuery = 'Update BoxerRecord set CompleteRecord = {2}{0}{2} where BoxerID = {1}'.format(overallRecord, boxerId, singleQuote)
+            overallRecordQuery = 'Update BoxerData set CompleteRecord = {2}{0}{2} where BoxerId = {1}'.format(overallRecord, boxerId, singleQuote)
             
             # if koIndex:
             #     winsKo = linelist[koIndex[-2]+8]
-            #     updateWinsKoQuery = 'Update BoxerRecord set TotalWinsKO = {0} where BoxerID = {1}'.format(winsKo, boxerId)  
+            #     updateWinsKoQuery = 'Update BoxerData set TotalWinsKo = {0} where BoxerId = {1}'.format(winsKo, boxerId)  
             #     updateCursor.execute(updateWinsKoQuery)
                 
             updateCursor.execute(updateWinsQuery)
@@ -83,12 +83,12 @@ nameslist = []
 idlist = []
 conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
-                      'Database=testdata;'
+                      'Database=autoboxing;'
                       'Trusted_Connection=yes;')
 
 cursor = conn.cursor()
 #select every name from db
-cursor.execute('SELECT BoxerName, BoxerId from Boxer')
+cursor.execute('SELECT BoxerName, BoxerId from BoxerData')
 nltk.download('punkt')
 for row in cursor:
     nameslist.append(row[0])
@@ -208,11 +208,11 @@ for name in nameslist:
                                 singleQuote = "'"
                                 updateConn = pyodbc.connect('Driver={SQL Server};'
                                                       'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
-                                                      'Database=testdata;'
+                                                      'Database=autoboxing;'
                                                       'Trusted_Connection=yes;')                
                                 updateCursor = updateConn.cursor()     
-                                heightquery = 'Update BoxerStats set Height = {2}{0}{2} where BoxerID = {1}'.format(searchHeight,boxerId,singleQuote)
-                                reachquery = 'Update BoxerStats set Reach = {2}{0}{2} where BoxerID = {1}'.format(searchReach,boxerId,singleQuote)
+                                heightquery = 'Update BoxerData set Height = {2}{0}{2} where BoxerId = {1}'.format(searchHeight,boxerId,singleQuote)
+                                reachquery = 'Update BoxerData set Reach = {2}{0}{2} where BoxerId = {1}'.format(searchReach,boxerId,singleQuote)
                                 #write stats to db table - each stat is its own row
                                 #write alias aliasquery
                                 #write height
@@ -279,7 +279,7 @@ for name in nameslist:
                                     elif 105 < division <= 108:
                                         division = str(division)
                                         division = 'Minimumweight'
-                                    divisionquery = 'Update BoxerStats set Division = {2}{0}{2} where BoxerID = {1}'.format(division,boxerId,singleQuote)    
+                                    divisionquery = 'Update BoxerData set Division = {2}{0}{2} where BoxerId = {1}'.format(division,boxerId,singleQuote)    
                                     updateCursor.execute(divisionquery)    
                                 except:
                                     print('no division')
@@ -288,26 +288,26 @@ for name in nameslist:
                                     country = birthDate[1]#.encode(encoding='utf_16',errors='strict')
                                     country = str(country)
                                     places = geograpy.get_place_context(text=country)
-                                    nationalityquery  = 'Update BoxerStats set Nationality = {2}{0}{2} where BoxerID = {1}'.format(places.countries[1],boxerId,singleQuote)
+                                    nationalityquery  = 'Update BoxerData set Nationality = {2}{0}{2} where BoxerId = {1}'.format(places.countries[1],boxerId,singleQuote)
                                     updateCursor.execute(nationalityquery) 
                                 except:
                                     print('no nationality')
                                 #write gender
                                 #write stance
                                 try:
-                                    stancequery  = 'Update BoxerStats set Stance = {2}{0}{2} where BoxerID = {1}'.format(stance,boxerId,singleQuote)
+                                    stancequery  = 'Update BoxerData set Stance = {2}{0}{2} where BoxerId = {1}'.format(stance,boxerId,singleQuote)
                                     updateCursor.execute(stancequery) 
                                 except:
                                     print('no stance')
                                 #write birthdate
                                 try:                                    
-                                    dobquery  = 'Update BoxerStats set dob = {2}{0}{2} where BoxerID = {1}'.format(birthDate[0],boxerId,singleQuote)
+                                    dobquery  = 'Update BoxerData set dob = {2}{0}{2} where BoxerId = {1}'.format(birthDate[0],boxerId,singleQuote)
                                     updateCursor.execute(dobquery) 
                                 except:
                                     print('no dob')
                                 #write weight
                                 try:    
-                                    careerweightquery  = 'Update BoxerStats set careerweight = {2}{0}{2} where BoxerID = {1}'.format(searchWeight,boxerId,singleQuote)
+                                    careerweightquery  = 'Update BoxerData set careerweight = {2}{0}{2} where BoxerId = {1}'.format(searchWeight,boxerId,singleQuote)
                                     updateCursor.execute(careerweightquery) 
                                 except:
                                     print('no weight')
