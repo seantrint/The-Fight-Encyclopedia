@@ -52,7 +52,7 @@ app.get('/getSearchResults/:searchTerm', async function(request,response){
     var illegalValue = await checkForIllegals(searchTerm);
     illegalValue = '%'+illegalValue+'%';
     ps.input('searchTerm', sql.VarChar);
-    ps.prepare('select BoxerId, BoxerName, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference' 
+    ps.prepare('select BoxerId, BoxerName, Wins, WinsKo, Losses, Draws, Division, Nationality, ImageReference, CompleteRecord' 
                 +' from BoxerData b'
                 +' where BoxerName like @searchTerm',async function(err){
                     if(err)

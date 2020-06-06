@@ -742,8 +742,8 @@ text-align: center;
         color: var(--links-font-color);
     }
 .filterweightmenu {
-    width: 150px;
-    height: 220px;
+    width: 200px;
+    height: 320px;
     position: absolute;
     margin-left: 43%;
     margin-top: -3%;
@@ -771,7 +771,7 @@ text-align: center;
 
     .filterweightmenu li {
         margin-left: -15px;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         text-align: left;
         color: var(--links-font-color);
     }
@@ -814,7 +814,7 @@ text-align: center;
     position: fixed;
     right: 5px;
     bottom: 30px;
-    background-color: var(--menu-color);
+    background-color: #f8f8f8;
     z-index: 999999999;
     display: none;
     opacity: 0.8;

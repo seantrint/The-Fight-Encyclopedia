@@ -54,16 +54,16 @@ def saveWldRecord(page,boxerId):
             loss = linelist[recordIndex[0]+4]
             draws = linelist[recordIndex[0]+5]
             
-            updateWinsQuery = 'Update BoxerData set TotalWins = {0} where BoxerId = {1}'.format(wins, boxerId)   
-            updateLossQuery = 'Update BoxerData set TotalLosses = {0} where BoxerId = {1}'.format(loss, boxerId)
-            updateDrawsQuery = 'Update BoxerData set TotalDraws = {0} where BoxerId = {1}'.format(draws, boxerId)
+            updateWinsQuery = 'Update BoxerData set Wins = {0} where BoxerId = {1}'.format(wins, boxerId)   
+            updateLossQuery = 'Update BoxerData set Losses = {0} where BoxerId = {1}'.format(loss, boxerId)
+            updateDrawsQuery = 'Update BoxerData set Draws = {0} where BoxerId = {1}'.format(draws, boxerId)
             
             overallRecord = str(wins+'/'+loss+'/'+draws)
             overallRecordQuery = 'Update BoxerData set CompleteRecord = {2}{0}{2} where BoxerId = {1}'.format(overallRecord, boxerId, singleQuote)
             
             # if koIndex:
             #     winsKo = linelist[koIndex[-2]+8]
-            #     updateWinsKoQuery = 'Update BoxerData set TotalWinsKo = {0} where BoxerId = {1}'.format(winsKo, boxerId)  
+            #     updateWinsKoQuery = 'Update BoxerData set WinsKo = {0} where BoxerId = {1}'.format(winsKo, boxerId)  
             #     updateCursor.execute(updateWinsKoQuery)
                 
             updateCursor.execute(updateWinsQuery)
@@ -88,26 +88,28 @@ conn = pyodbc.connect('Driver={SQL Server};'
 
 cursor = conn.cursor()
 #select every name from db
-cursor.execute('SELECT BoxerName, BoxerId from BoxerData')
+cursor.execute('SELECT BoxerName, BoxerId from BoxerData where BoxerId > 836')
 nltk.download('punkt')
 for row in cursor:
     nameslist.append(row[0])
     idlist.append(row[1]) 
+cursor.close()
+conn.close()    
 #search the pdf for every name from the db    
-pathAndFileName = 'C:/Users/Sean/Desktop/projects/textfiles_uncleaned/entirepdf.txt'    
-file = open(pathAndFileName,'w', encoding = "utf-8")
-pdfFileObj = open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf', 'rb')
-doc = fitz.open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf')    
-pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-pageObj = pdfReader.getPage(0)
+#pathAndFileName = 'C:/Users/Sean/Desktop/projects/textfiles_uncleaned/entirepdf.txt'    
+#file = open(pathAndFileName,'w', encoding = "utf-8")
+
 idCount = 0
 for name in nameslist:
-    boxerId = idlist[idCount]
+    boxerId = 1732
     print(boxerId)
-    imageName = name #get this from db
+    imageName = 'Jersey Joe Walcott' #get this from db
     print(imageName)
     i = 0
     picFound = 0
+    pdfFileObj = open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf', 'rb')
+    doc = fitz.open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf')    
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObj)    
     #for every page in book
     while i<pdfReader.getNumPages():
         pageinfo = pdfReader.getPage(i)
@@ -126,9 +128,11 @@ for name in nameslist:
             for line in doc[i].getText().splitlines():
                 linelist.append(line)
                 if(imageName == line):     
-                    pageafter = doc[i+1].getText().splitlines()
-                    if 'WON' in pageafter:
-                        saveWldRecord(pageafter,boxerId)                      
+                    pageafter = doc[i+1].getText()
+                    findResults = str(re.findall('\d+', pageafter))
+                    print(findResults[-70:])
+                    # if 'WON' in pageafter:
+                    #     saveWldRecord(pageafter,boxerId)                      
                     #eliminate occurences when it detects name in the fight history
                     linebefore = linelist[len(linelist)-2]
                     search4digits = re.findall(r"\d{4,7}", linebefore)
@@ -177,10 +181,11 @@ for name in nameslist:
                                 #i.e. if lbs in stanceHeightReachWeightPattern[i] then this = career weight 
                                 stanceHeightReachWeightPattern = re.sub(' ','',str(stanceHeightReachWeightPattern))
                                 stanceHeightReachWeightPattern = re.sub('\.','',str(stanceHeightReachWeightPattern))
-                                stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.replace('’',"'").replace('”','"').replace('–','-').replace('¾','').replace('½','').replace('¼','').replace('1⁄2','').replace('1⁄4','').replace('3⁄4','')
+                                stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.replace('’',"'").replace('”','"').replace('–','-').replace('¾','').replace('½','').replace('¼','').replace('1⁄2','').replace('1⁄4','').replace('3⁄4','').replace('1/2','').replace('3/4','').replace('1/4','')
                                 stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.replace('\\','')
                                 stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.split(';') 
                                 print(stanceHeightReachWeightPattern)
+                                singleQuote = "'"
                                 try:
                                     searchHeight = re.findall(r'\d+\\\'\d+"', str(stanceHeightReachWeightPattern))
                                     if not searchHeight:
@@ -205,30 +210,30 @@ for name in nameslist:
                                 birthDate = re.sub('Born:','', str(birthDate))
                                 birthDate = birthDate.split(',')
                                 searchHeight = re.sub("'","''",str(searchHeight))
-                                singleQuote = "'"
                                 updateConn = pyodbc.connect('Driver={SQL Server};'
                                                       'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
                                                       'Database=autoboxing;'
                                                       'Trusted_Connection=yes;')                
                                 updateCursor = updateConn.cursor()     
-                                heightquery = 'Update BoxerData set Height = {2}{0}{2} where BoxerId = {1}'.format(searchHeight,boxerId,singleQuote)
-                                reachquery = 'Update BoxerData set Reach = {2}{0}{2} where BoxerId = {1}'.format(searchReach,boxerId,singleQuote)
                                 #write stats to db table - each stat is its own row
                                 #write alias aliasquery
                                 #write height
                                 try:
+                                    heightquery = 'Update BoxerData set Height = {2}{0}{2} where BoxerId = {1}'.format(searchHeight,boxerId,singleQuote)                      
                                     updateCursor.execute(heightquery)
                                 except:
                                     print('no height')
                                 #write reach
                                 try:  
+                                    reachquery = 'Update BoxerData set Reach = {2}{0}{2} where BoxerId = {1}'.format(searchReach,boxerId,singleQuote)                                    
                                     updateCursor.execute(reachquery)    
                                 except:
                                     print('no reach')
-                                #write division
+                                #write division)   
                                 try:    
-                                    careerWeights = searchWeight.split('-')
-                                    division = careerWeights[1]
+                                    careerWeights = searchWeight.split('-')      
+                                    lastspot = len(careerWeights)-1
+                                    division = careerWeights[lastspot]
                                     division = re.sub(r'\D','', str(division))
                                     division = int(division)
                                     if division > 200:
@@ -318,4 +323,5 @@ for name in nameslist:
 
         i=i+1
     idCount+=1
-file.close()        
+    pdfFileObj.close()  
+    doc.close()      

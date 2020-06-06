@@ -148,16 +148,17 @@ async function expandUpcomingFights(id){
 
 }
 async function createRemoveSpinner(create = true, rmv = false){
+    var created = false;
+    var z = document.getElementsByClassName('loadingScrollSpinner');
     if(create){
-        var z = document.getElementsByClassName('loadingScrollSpinner');
         var spinner = document.createElement('img')
         spinner.src = '/img/loading.gif'
         spinner.className = 'loadingScrollSpinner'
         spinner.id = 'id'+Math.random(10000)
         document.getElementById('CatalogueGrid').appendChild(spinner)
+        created = true;
     }
     else if(rmv){
-        var z = document.getElementsByClassName('loadingScrollSpinner');
         var elemId='';
     
         if(typeof z != undefined){
@@ -291,7 +292,7 @@ async function loadSearch(searchResultsData){
         var nameParagraph3 = document.createElement('p');
         nameParagraph3.id = 'recordid'+i;
         var wins = document.createElement('span');
-        if(firstSearchArraySlice[key].TotalWins != null){
+        if(firstSearchArraySlice[key].Wins != null){
             wins.textContent = firstSearchArraySlice[key].Wins;
         }
         wins.className='totalwins';
@@ -303,13 +304,13 @@ async function loadSearch(searchResultsData){
         slash2.textContent = '/';
 
         var losses = document.createElement('span');
-        if(firstSearchArraySlice[key].TotalLosses != null){
+        if(firstSearchArraySlice[key].Losses != null){
             losses.textContent = firstSearchArraySlice[key].Losses;
         }
         losses.className='totallosses';
 
         var draws = document.createElement('span');
-        if(firstSearchArraySlice[key].TotalDraws != null){
+        if(firstSearchArraySlice[key].Draws != null){
             draws.textContent = firstSearchArraySlice[key].Draws;
         }
         draws.className='totaldraws';        
@@ -319,7 +320,6 @@ async function loadSearch(searchResultsData){
         nameParagraph3.appendChild(slash2);
         nameParagraph3.appendChild(draws);
         nameParagraph3.className = 'searchresultsparagraphrecord';
-
         searchResultLink.appendChild(countryFlagImg);            
         searchResultLink.appendChild(nameParagraph3);      
 
@@ -396,7 +396,7 @@ async function loadFighterCard(){
         var i = 0;
         var j = 0;
 
-        //boxerStatsData.recordset[0].dob = boxerStatsData.recordset[0].dob.toISOString().split('T')[0];
+        newdob = boxerStatsData.recordset[0].dob;
         //stats
         for (var key in boxerStatsData.recordset) {
             for (var key1 in boxerStatsData.recordset[key]) {
@@ -1875,7 +1875,7 @@ async function previousFight(){
             //images
             try{
                 document.getElementById('fighterAImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].ImageReference[0];
-                document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].BImageReference[1];
+                document.getElementById('fighterBImage').src = upcomingFightsImagesData.recordset[upcomingFightCount].ImageReference[1];
             }
             catch(exception){
                 document.getElementById('fighterAImage').src = '/img/logo.png';
