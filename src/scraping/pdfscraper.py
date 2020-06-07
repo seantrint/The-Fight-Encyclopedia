@@ -184,14 +184,15 @@ for name in nameslist:
                                 stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.replace('’',"'").replace('”','"').replace('–','-').replace('¾','').replace('½','').replace('¼','').replace('1⁄2','').replace('1⁄4','').replace('3⁄4','').replace('1/2','').replace('3/4','').replace('1/4','')
                                 stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.replace('\\','')
                                 stanceHeightReachWeightPattern = stanceHeightReachWeightPattern.split(';') 
-                                print(stanceHeightReachWeightPattern)
+                                print(stanceHeightReachWeightPattern)            
                                 singleQuote = "'"
                                 try:
                                     searchHeight = re.findall(r'\d+\\\'\d+"', str(stanceHeightReachWeightPattern))
-                                    if r'\d+' not in searchHeight:
+                                    if not searchHeight:
                                         searchHeight = re.findall(r"\d+\'", str(stanceHeightReachWeightPattern))
+                                        print(searchHeight)
                                     searchHeight = str(searchHeight[0])
-                                    searchHeight = searchHeight.replace('\\','')
+                                    searchHeight = searchHeight.replace('\\','')        
                                 except:
                                     print('no height')
                                 try:
