@@ -395,14 +395,22 @@ async function loadFighterCard(){
         document.getElementById('fighterInfoImage').src = imagepath;
         var i = 0;
         var j = 0;
-
-        newdob = boxerStatsData.recordset[0].dob;
-        newdob = newdob.split('T')[0]
-        boxerStatsData.recordset[0].dob = newdob;
-
-        newcareerweight = boxerStatsData.recordset[0].careerweight;
-        newcareerweight = newcareerweight.replace('lbs','')
-        boxerStatsData.recordset[0].careerweight = newcareerweight;
+        try{
+            newdob = boxerStatsData.recordset[0].dob;
+            newdob = newdob.split('T')[0]
+            boxerStatsData.recordset[0].dob = newdob;
+        }
+        catch(error){
+            console.log(error)
+        }
+        try{
+            newcareerweight = boxerStatsData.recordset[0].careerweight;
+            newcareerweight = newcareerweight.replace('lbs','')
+            boxerStatsData.recordset[0].careerweight = newcareerweight;
+        }
+        catch(error){
+            console.log(error)
+        }
         
         //stats
         for (var key in boxerStatsData.recordset) {

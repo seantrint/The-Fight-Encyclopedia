@@ -88,7 +88,7 @@ conn = pyodbc.connect('Driver={SQL Server};'
 
 cursor = conn.cursor()
 #select every name from db
-cursor.execute('SELECT BoxerName, BoxerId from BoxerData where BoxerId > 836')
+cursor.execute('SELECT BoxerName, BoxerId from BoxerData')
 nltk.download('punkt')
 for row in cursor:
     nameslist.append(row[0])
@@ -129,10 +129,10 @@ for name in nameslist:
                 linelist.append(line)
                 if(imageName == line):     
                     pageafter = doc[i+1].getText()
-                    findResults = str(re.findall('\d+', pageafter))
-                    print(findResults[-70:])
-                    # if 'WON' in pageafter:
-                    #     saveWldRecord(pageafter,boxerId)                      
+                    # findResults = str(re.findall('\d+', pageafter))
+                    # print(findResults[-70:])
+                    if 'WON' in pageafter:
+                        saveWldRecord(pageafter,boxerId)                      
                     #eliminate occurences when it detects name in the fight history
                     linebefore = linelist[len(linelist)-2]
                     search4digits = re.findall(r"\d{4,7}", linebefore)
@@ -324,7 +324,7 @@ for name in nameslist:
                                 #close file
                                 updateCursor.commit()
                                 updateCursor.close()
-                                updateConn.close()
+                                updateConn.close()            
 
         i=i+1
     idCount+=1
