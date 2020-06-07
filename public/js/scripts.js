@@ -397,6 +397,13 @@ async function loadFighterCard(){
         var j = 0;
 
         newdob = boxerStatsData.recordset[0].dob;
+        newdob = newdob.split('T')[0]
+        boxerStatsData.recordset[0].dob = newdob;
+
+        newcareerweight = boxerStatsData.recordset[0].careerweight;
+        newcareerweight = newcareerweight.replace('lbs','')
+        boxerStatsData.recordset[0].careerweight = newcareerweight;
+        
         //stats
         for (var key in boxerStatsData.recordset) {
             for (var key1 in boxerStatsData.recordset[key]) {

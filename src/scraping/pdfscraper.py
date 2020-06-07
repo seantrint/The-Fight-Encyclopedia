@@ -101,9 +101,9 @@ conn.close()
 
 idCount = 0
 for name in nameslist:
-    boxerId = 1732
+    boxerId = idlist[idCount]
     print(boxerId)
-    imageName = 'Jersey Joe Walcott' #get this from db
+    imageName = name#get this from db
     print(imageName)
     i = 0
     picFound = 0
@@ -206,9 +206,11 @@ for name in nameslist:
                                     searchReach = re.sub('Reach','',searchReach)
                                 except:
                                     print('no reach')
-                                birthDate = re.sub(' ','', str(birthDate))
-                                birthDate = re.sub('Born:','', str(birthDate))
+                                   
+                                #birthDate = re.sub(' ','', str(birthDate))
+                                birthDate = re.sub('Born: ','', str(birthDate))
                                 birthDate = birthDate.split(',')
+                                print(birthDate) 
                                 searchHeight = re.sub("'","''",str(searchHeight))
                                 updateConn = pyodbc.connect('Driver={SQL Server};'
                                                       'Server=WINDOWS-25B0042\SQLEXPRESS,1433;'
@@ -289,9 +291,12 @@ for name in nameslist:
                                 except:
                                     print('no division')
                                 #write nationality
+                               
                                 try:    
                                     country = birthDate[1]#.encode(encoding='utf_16',errors='strict')
                                     country = str(country)
+                                    country = country.lstrip()
+                                    print(country)
                                     places = geograpy.get_place_context(text=country)
                                     nationalityquery  = 'Update BoxerData set Nationality = {2}{0}{2} where BoxerId = {1}'.format(places.countries[1],boxerId,singleQuote)
                                     updateCursor.execute(nationalityquery) 
