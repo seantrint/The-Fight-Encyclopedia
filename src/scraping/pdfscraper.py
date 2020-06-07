@@ -188,9 +188,8 @@ for name in nameslist:
                                 singleQuote = "'"
                                 try:
                                     searchHeight = re.findall(r'\d+\\\'\d+"', str(stanceHeightReachWeightPattern))
-                                    if not searchHeight:
-                                        searchHeight = re.findall(r'\d+\'\“', str(stanceHeightReachWeightPattern))
-                                        searchHeight = searchHeight.replace('“','')
+                                    if r'\d+' not in searchHeight:
+                                        searchHeight = re.findall(r"\d+\'", str(stanceHeightReachWeightPattern))
                                     searchHeight = str(searchHeight[0])
                                     searchHeight = searchHeight.replace('\\','')
                                 except:
