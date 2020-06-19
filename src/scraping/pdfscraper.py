@@ -223,12 +223,14 @@ for name in nameslist:
                                 try:
                                     heightquery = 'Update BoxerData set Height = {2}{0}{2} where BoxerId = {1}'.format(searchHeight,boxerId,singleQuote)                      
                                     updateCursor.execute(heightquery)
+                                    updateCursor.commit()
                                 except:
                                     print('no height')
                                 #write reach
                                 try:  
                                     reachquery = 'Update BoxerData set Reach = {2}{0}{2} where BoxerId = {1}'.format(searchReach,boxerId,singleQuote)                                    
-                                    updateCursor.execute(reachquery)    
+                                    updateCursor.execute(reachquery)   
+                                    updateCursor.commit()
                                 except:
                                     print('no reach')
                                 #write division)   
@@ -288,6 +290,7 @@ for name in nameslist:
                                         division = 'Minimumweight'
                                     divisionquery = 'Update BoxerData set Division = {2}{0}{2} where BoxerId = {1}'.format(division,boxerId,singleQuote)    
                                     updateCursor.execute(divisionquery)    
+                                    updateCursor.commit()
                                 except:
                                     print('no division')
                                 #write nationality
@@ -300,6 +303,7 @@ for name in nameslist:
                                     places = geograpy.get_place_context(text=country)
                                     nationalityquery  = 'Update BoxerData set Nationality = {2}{0}{2} where BoxerId = {1}'.format(places.countries[1],boxerId,singleQuote)
                                     updateCursor.execute(nationalityquery) 
+                                    updateCursor.commit()
                                 except:
                                     print('no nationality')
                                 #write gender
@@ -307,22 +311,25 @@ for name in nameslist:
                                 try:
                                     stancequery  = 'Update BoxerData set Stance = {2}{0}{2} where BoxerId = {1}'.format(stance,boxerId,singleQuote)
                                     updateCursor.execute(stancequery) 
+                                    updateCursor.commit()
                                 except:
                                     print('no stance')
                                 #write birthdate
                                 try:                                    
                                     dobquery  = 'Update BoxerData set dob = {2}{0}{2} where BoxerId = {1}'.format(birthDate[0],boxerId,singleQuote)
                                     updateCursor.execute(dobquery) 
+                                    updateCursor.commit()
                                 except:
                                     print('no dob')
                                 #write weight
                                 try:    
                                     careerweightquery  = 'Update BoxerData set careerweight = {2}{0}{2} where BoxerId = {1}'.format(searchWeight,boxerId,singleQuote)
                                     updateCursor.execute(careerweightquery) 
+                                    updateCursor.commit()
                                 except:
                                     print('no weight')
                                 #close file
-                                updateCursor.commit()
+                                
                                 updateCursor.close()
                                 updateConn.close()            
 
