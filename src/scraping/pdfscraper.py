@@ -111,7 +111,7 @@ for name in nameslist:
     doc = fitz.open('C:/Users/Sean/Desktop/projects/Pdfs_from_scan/The boxing register  International Boxing Hall of Fame official record book by Roberts, James B. Skutt, Alexander G (z-lib.org).pdf')    
     pdfReader = PyPDF2.PdfFileReader(pdfFileObj)    
     #for every page in book
-    while i<pdfReader.getNumPages():
+    while i<818:
         pageinfo = pdfReader.getPage(i)
         textForFile = pageinfo.extractText()
         #search current name against the current page of the pdf
@@ -128,8 +128,8 @@ for name in nameslist:
             for line in doc[i].getText().splitlines():
                 linelist.append(line)
                 if(imageName == line):     
-                    pageafter = doc[i+1].getText()
-                    # findResults = str(re.findall('\d+', pageafter))
+                    pageafter = doc[i+1].getText().splitlines()
+                    #findResults = str(re.findall('\d+', pageafter))
                     # print(findResults[-70:])
                     if 'WON' in pageafter:
                         saveWldRecord(pageafter,boxerId)                      
