@@ -482,19 +482,4 @@ app.get('/getQuotesOfTheDay', async function(request,response){
         response.send(recordset);
     })
 })
-// app.get('/testArrayInput/:array', async function(request,response){
-//     var array = request.params.array;
-//     console.log(array);
-//     console.log(array[0]);
-//     console.log("length is "+array.length);
-//     request = new sql.Request();
-//     request.query('select top (3) quote from SpecialSayings order by newid()', async function (err, recordset){
-//         if(err)
-//         {
-//             response.send(await loadDbDownPage());
-//             console.log(err);
-//         }
-//         response.send(recordset);
-//     })
-// })
 module.exports = app;
